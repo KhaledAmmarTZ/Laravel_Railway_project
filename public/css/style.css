@@ -1,0 +1,108 @@
+/* Custom styles for transparent buttons with borders */
+.custom-btn {
+    background-color: transparent;
+    border: 2px solid #0b87a5; /* Change border color */
+    color: #007BFF; /* Text color */
+    padding: 8px 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.custom-btn:hover {
+    background-color: #58F4F4;
+    color: rgb(0, 0, 0);
+}
+
+/* Login Button */
+.login-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.login-btn:hover {
+    background-color: #025213;
+}
+
+/* Register Button */
+.register-btn {
+    background-color: #007BFF; /* Red */
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.register-btn:hover {
+    background-color: #3fd9ff;
+}
+
+
+/* Transparent search bar */
+.search-bar {
+    background-color: transparent;
+    border: 2px solid #0b87a5; /* Border color */
+    color: #0b87a5; /* Text color */
+    width: 300px; /* Adjust width as needed */
+    padding: 8px 15px;
+    border-radius: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Placeholder color */
+.search-bar::placeholder {
+    color: #0b87a5; /* Light blue */
+}
+
+/* White background when focused */
+.search-bar:focus {
+    background-color: white;
+    color: black; /* Text color */
+    outline: none; /* Remove default focus outline */
+    border-color: #007BFF; /* Darker border on focus */
+}
+
+
+.search-btn {
+    background-color: #0a161a; /* Dark blue */
+    color: rgb(255, 255, 255); /* Text color */
+    padding: 8px 20px;
+    border-radius: 15px;
+}
+
+/* Space between buttons */
+.custom-btn, .login-btn, .register-btn {
+    padding: 8px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+}
+
+.mx-2 { 
+    margin-left: 10px; /* Horizontal spacing */
+    margin-right: 10px;
+}
+
+.mr-4 { 
+    margin-right: 20px; /* Extra space after search bar */
+}
+
+/* Center navbar content */
+.collapse.navbar-collapse {
+    display: flex;
+    justify-content: space-between; /* Ensures space between center content and right-aligned buttons */
+}
+
+/* Ensure navbar content stays centered */
+.mx-auto {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Align login and register buttons to the right */
+.ml-auto {
+    display: flex;
+}
+
