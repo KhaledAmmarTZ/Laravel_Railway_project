@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Train</title>
+@extends('layout.admin')
+
+@section('title', 'Train to Edit')
+
+@section('content')
     <script>
     function generateCompartments(num) {
         const compartmentContainer = document.getElementById('compartment-sections');
@@ -90,5 +89,4 @@
 </form>
 @endif
 
-</body>
-</html>
+@endsection
