@@ -110,7 +110,7 @@ class TrainController extends Controller
 
     // Update the train details
     public function update(Request $request, $id)
-{
+    {
     // Find the train
     $train = Train::findOrFail($id);
 
@@ -172,7 +172,7 @@ class TrainController extends Controller
     $train->save();
 
     return redirect()->route('train.edit.page')->with('success', 'Train updated successfully!');
-}
+    }
 
 
     // Delete the train from the database
@@ -190,6 +190,11 @@ class TrainController extends Controller
         // Now delete the train itself
         $train->delete();
 
-        return redirect()->route('train.index')->with('success', 'Train deleted successfully!');
+        return redirect()->route('train.show')->with('success', 'Train deleted successfully!');
+    }
+    public function show()
+    {
+        $trains = Train::with(['compartments', 'deptime', 'arrtime', 'source', 'destination'])->get();
+        return view('train.show', compact('trains'));
     }
 }

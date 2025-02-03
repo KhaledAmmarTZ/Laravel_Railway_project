@@ -38,12 +38,8 @@
         }
     };
 </script>
-</head>
-<body>
 
 @if (isset($train))
-<h2>Edit Train</h2>
-
 @if ($errors->any())
     <ul>
         @foreach ($errors->all() as $error)
@@ -52,41 +48,70 @@
     </ul>
 @endif
 
-<form action="{{ route('train.update', $train->tid) }}" method="POST">
-    @csrf
-    @method('PUT')
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12"> <!-- Full width column -->
+            <form action="{{ route('train.update', $train->tid) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
+                    <div class="card-header text-white" style="background-color: #005F56">
+                        Edit Train
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="tname" class="form-label">Train Name</label>
+                            <input type="text" id="tname" name="tname" value="{{ $train->tname }}" class="form-control" required>
+                        </div>
 
-    <label>Train Name</label>
-    <input type="text" name="tname" value="{{ $train->tname }}" required>
+                        <div class="mb-3">
+                            <label for="numofcompartment" class="form-label">Number of Compartments</label>
+                            <input type="number" id="numofcompartment" name="numofcompartment" value="{{ $train->numofcompartment }}" class="form-control" required onchange="generateCompartments(this.value)">
+                        </div>
 
-    <label>Number of Compartments</label>
-    <input type="number" name="numofcompartment" id="numofcompartment" value="{{ $train->numofcompartment }}" required 
-           onchange="generateCompartments(this.value)">
+                        <div id="compartment-sections"></div>
 
-    <div id="compartment-sections"></div>
+                        <div class="mb-3">
+                            <label for="deptime" class="form-label">Departure Time</label>
+                            <input type="time" id="deptime" name="deptime" value="{{ $train->deptime->deptime ?? '' }}" class="form-control" required>
+                        </div>
 
-    <label>Departure Time</label>
-    <input type="time" name="deptime" value="{{ $train->deptime->deptime ?? '' }}" required>
+                        <div class="mb-3">
+                            <label for="arrtime" class="form-label">Arrival Time</label>
+                            <input type="time" id="arrtime" name="arrtime" value="{{ $train->arrtime->arrtime ?? '' }}" class="form-control" required>
+                        </div>
 
-    <label>Arrival Time</label>
-    <input type="time" name="arrtime" value="{{ $train->arrtime->arrtime ?? '' }}" required>
+                        <div class="mb-3">
+                            <label for="source" class="form-label">Source</label>
+                            <input type="text" id="source" name="source" value="{{ $train->source->source ?? '' }}" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="destination" class="form-label">Destination</label>
+                            <input type="text" id="destination" name="destination" value="{{ $train->destination->destination ?? '' }}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-transparent border-0 text-center">
+                        <button type="submit" class="btn update-btn mx-2" onclick="return confirm('Are you sure you want to update this train?')">Update Train</button>
+                        
+                        <!-- Delete Form -->
+                        <form action="{{ route('train.destroy', $train->tid) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn delete-btn mx-2" onclick="return confirm('Are you sure you want to delete this train?')">Delete Train</button>
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
-    <label>Source</label>
-    <input type="text" name="source" value="{{ $train->source->source ?? '' }}" required>
-
-    <label>Destination</label>
-    <input type="text" name="destination" value="{{ $train->destination->destination ?? '' }}" required>
-
-    <button type="submit">Update Train</button>
-</form>
 
 
-<form action="{{ route('train.destroy', $train->tid) }}" method="POST">
-    @csrf
-    @method('DELETE')
-    <button type="submit" onclick="return confirm('Are you sure you want to delete this train?')">Delete Train</button>
-</form>
+
 @endif
 
 @endsection

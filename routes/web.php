@@ -27,8 +27,9 @@ Route::put('/train/{id}', [TrainController::class, 'update'])->name('train.updat
 
 // Route to delete the specific train by ID
 Route::delete('/train/{id}', [TrainController::class, 'destroy'])->name('train.destroy');
-
 // Additional Route for Home (could be a dashboard or welcome page)
 Route::get('/home', function () {
     return view('home');
 });
+
+Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');

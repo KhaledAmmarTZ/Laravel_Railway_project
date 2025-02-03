@@ -4,7 +4,7 @@
     border: 2px solid #0b87a5; /* Change border color */
     color: #007BFF; /* Text color */
     padding: 8px 20px;
-    border-radius: 15px;
+    border-radius: 5px;
     transition: all 0.3s ease-in-out;
 }
 
@@ -15,7 +15,7 @@
 
 /* Login Button */
 .login-btn {
-    background-color: #28a745; /* Green */
+    background-color: #28a745; 
     color: white;
     padding: 8px 20px;
     border-radius: 5px;
@@ -24,11 +24,12 @@
 
 .login-btn:hover {
     background-color: #025213;
+    color: white;
 }
 
 /* Register Button */
 .register-btn {
-    background-color: #007BFF; /* Red */
+    background-color: #007BFF; 
     color: white;
     padding: 8px 20px;
     border-radius: 5px;
@@ -39,21 +40,75 @@
     background-color: #3fd9ff;
 }
 
+/* delete Button */
+.delete-btn {
+    background-color: #fa0303; 
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.delete-btn:hover {
+    background-color: #d60000;
+    color: white;
+}
+
+/* update Button */
+.update-btn {
+    background-color: #28a745; 
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+.update-btn:hover {
+    background-color: #025213;
+    color: white;
+}
+
+/* Sidebar Button */
+.sidebar-btn {
+    background-color: #F0FFFC; 
+    color: #1a1a1a; 
+    border: 4px solid #a7edff; 
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    display: block; /* Makes buttons stack vertically */
+    width: 93%; 
+    text-align: center; /* Centers text inside */
+    margin-bottom: 10px; /* Adds spacing between buttons */
+}
+
+.sidebar-btn:hover {
+    background-color: #58F4F4;
+    color: rgb(0, 0, 0);
+}
+
+.btn-success {
+    background-color: #005F56;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid #ccc;
+}
 
 /* Transparent search bar */
 .search-bar {
     background-color: transparent;
     border: 2px solid #0b87a5; /* Border color */
-    color: #0b87a5; /* Text color */
-    width: 300px; /* Adjust width as needed */
+    color: #ffffff; /* Text color */
+    width: 300px; 
     padding: 8px 15px;
-    border-radius: 15px;
+    border-radius: 5px;
     transition: all 0.3s ease-in-out;
 }
 
 /* Placeholder color */
 .search-bar::placeholder {
-    color: #0b87a5; /* Light blue */
+    color: #ffffff; 
 }
 
 /* White background when focused */
@@ -69,7 +124,7 @@
     background-color: #0a161a; /* Dark blue */
     color: rgb(255, 255, 255); /* Text color */
     padding: 8px 20px;
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
 /* Space between buttons */
@@ -91,7 +146,7 @@
 /* Center navbar content */
 .collapse.navbar-collapse {
     display: flex;
-    justify-content: space-between; /* Ensures space between center content and right-aligned buttons */
+    justify-content: space-between; 
 }
 
 /* Ensure navbar content stays centered */
