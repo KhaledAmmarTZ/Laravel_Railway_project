@@ -8,34 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 class Train extends Model
 {
     use HasFactory;
-
     protected $table = 'train';
-    protected $primaryKey = 'tid';
-    protected $fillable = ['tname', 'numofcompartment'];
+    protected $primaryKey = 'trainid';
+    protected $fillable = ['trainname', 'compartmentnumber', 'updownnumber'];
 
-    // Relationships
-    public function compartments()
+    public function traincompartments()
     {
-        return $this->hasMany(TNameOfCompartment::class, 'tid', 'tid');
+        return $this->hasMany(Compartment::class, 'trainid', 'trainid');
     }
 
-    public function deptime()
+    public function trainupdowns()
     {
-        return $this->hasOne(TDepTime::class, 'tid', 'tid');
+        return $this->hasMany(UpDown::class, 'trainid', 'trainid');
     }
 
-    public function arrtime()
-    {
-        return $this->hasOne(TArrTime::class, 'tid', 'tid');
-    }
-
-    public function source()
-    {
-        return $this->hasOne(TSource::class, 'tid', 'tid');
-    }
-
-    public function destination()
-    {
-        return $this->hasOne(TDesti::class, 'tid', 'tid');
-    }
 }

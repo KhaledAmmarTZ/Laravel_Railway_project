@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tnameofcompartment', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('tid');
-            $table->string('nameofeachcompartment');
-            $table->integer('numofseat');
-            $table->foreign('tid')->references('tid')->on('train')->onDelete('cascade');
+        Schema::create('train', function (Blueprint $table) {
+            $table->id('trainid');
+            $table->string('trainname');
+            $table->integer('compartmentnumber');
+            $table->integer('updownnumber');
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tnameofcompartment');
+        Schema::dropIfExists('train');
     }
 };

@@ -2,199 +2,152 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Train;
-use App\Models\TNameOfCompartment;
-use App\Models\TDepTime;
-use App\Models\TArrTime;
-use App\Models\TSource;
-use App\Models\TDesti;
+use App\Models\Compartment;
+use App\Models\Updown;
+use Illuminate\Http\Request;
 
 class TrainController extends Controller
 {
-    // Display the form to create a new train
+    // Show the create form
     public function create()
     {
         return view('train.create');
     }
 
-    // Store the new train data in the database
+    // Store the newly created train along with compartments and updown info
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validatedData = $request->validate([
             'tname' => 'required|string',
-            'numofcompartment' => 'required|integer',
-            'deptime' => 'required|date_format:H:i',
-            'arrtime' => 'required|date_format:H:i',
-            'source' => 'required|string',
-            'destination' => 'required|string',
-            'compartments' => 'required|array',
+            'numofcompartment' => 'required|integer|min:1',
             'compartments.*.name' => 'required|string',
-            'compartments.*.seats' => 'required|integer',
+            'compartments.*.seats' => 'required|integer|min:1',
+            'updownnumber' => 'required|integer|min:1',
+            'updowns.*.source' => 'required|string',
+            'updowns.*.destination' => 'required|string',
+            'updowns.*.deptime' => 'required|date_format:H:i',
+            'updowns.*.arrtime' => 'required|date_format:H:i',
         ]);
 
-        // Create the train
+        // Create Train
         $train = Train::create([
-            'tname' => $validated['tname'],
-            'numofcompartment' => $validated['numofcompartment']
+            'trainname' => $validatedData['tname'],
+            'compartmentnumber' => $validatedData['numofcompartment'],
+            'updownnumber' => $validatedData['updownnumber'],
         ]);
 
-        // Save compartments
-        foreach ($validated['compartments'] as $compartment) {
-            TNameOfCompartment::create([
-                'tid' => $train->tid,
-                'nameofeachcompartment' => $compartment['name'],
-                'numofseat' => $compartment['seats'],
+        // Create Compartments
+        foreach ($validatedData['compartments'] as $compartment) {
+            Compartment::create([
+                'trainid' => $train->trainid,
+                'compartmentname' => $compartment['name'],
+                'seatnumber' => $compartment['seats'],
             ]);
         }
 
-        // Save departure time
-        TDepTime::create([
-            'tid' => $train->tid,
-            'deptime' => $validated['deptime'],
-        ]);
+        // Create Updown info
+        foreach ($validatedData['updowns'] as $updown) {
+            Updown::create([
+                'trainid' => $train->trainid,
+                'tsource' => $updown['source'],
+                'tdestination' => $updown['destination'],
+                'tdeptime' => $updown['deptime'],
+                'tarrtime' => $updown['arrtime'],
+            ]);
+        }
 
-        // Save arrival time
-        TArrTime::create([
-            'tid' => $train->tid,
-            'arrtime' => $validated['arrtime'],
-        ]);
-
-        // Save source
-        TSource::create([
-            'tid' => $train->tid,
-            'source' => $validated['source'],
-        ]);
-
-        // Save destination
-        TDesti::create([
-            'tid' => $train->tid,
-            'destination' => $validated['destination'],
-        ]);
-
-        return redirect()->back()->with('success', 'Train added successfully!');
+        return redirect()->route('train.show')->with('success', 'Train created successfully');
     }
 
-    // List all trains with their details
+    // Show all trains
+
     public function index()
     {
-        $trains = Train::with(['compartments', 'deptime', 'arrtime', 'source', 'destination'])->get();
+        // Get all trains
+        $trains = Train::all();
+    
         return view('train.index', compact('trains'));
     }
+    
 
-    // Display the edit form for a specific train
-    public function edit($id)
+    // This method is for showing a specific train
+    public function show()
     {
-        $train = Train::with(['compartments', 'deptime', 'arrtime', 'source', 'destination'])->findOrFail($id);
+        $trains = Train::all();
+
+
+        return view('train.show', compact('trains'));
+    }
+    // Show the edit form
+    public function edit($trainId)
+    {
+        $train = Train::with('traincompartments', 'trainupdowns')->findOrFail($trainId);
         return view('train.edit', compact('train'));
     }
 
-    // Display the page with a list of all trains for editing
+
     public function showEditPage()
     {
         $trains = Train::all();
         return view('train.list_edit', compact('trains'));
     }
-
-    // Load the selected train's data into the edit form
     public function loadTrainData(Request $request)
     {
-        $train = Train::with(['compartments', 'deptime', 'arrtime', 'source', 'destination'])->find($request->train_id);
-
-        if (!$train) {
-            return back()->with('error', 'Train not found!');
-        }
-
+        $train = Train::with('traincompartments', 'trainupdowns')->findOrFail($request->trainid);
         return view('train.edit', compact('train'));
     }
-
-    // Update the train details
-    public function update(Request $request, $id)
+    public function update(Request $request, $trainId)
     {
-    // Find the train
-    $train = Train::findOrFail($id);
+        $request->validate([
+            'trainname' => 'required|string|max:255',
+            'compartmentnumber' => 'required|integer|min:1',
+            'updownnumber' => 'required|integer|min:1',
+            'compartments' => 'array',
+            'updowns' => 'array',
+        ]);
 
-    // Validate only the fields that are required
-    $validated = $request->validate([
-        'tname' => 'nullable|string',
-        'numofcompartment' => 'nullable|integer',
-        'deptime' => 'nullable', // Removed date format validation
-        'arrtime' => 'nullable', // Removed date format validation
-        'source' => 'nullable|string',
-        'destination' => 'nullable|string',
-        'compartments' => 'nullable|array',
-        'compartments.*.name' => 'nullable|string',
-        'compartments.*.seats' => 'nullable|integer',
-    ]);
+        $train = Train::findOrFail($trainId);
+        $train->trainname = $request->trainname;
+        $train->compartmentnumber = $request->compartmentnumber;
+        $train->updownnumber = $request->updownnumber;
+        $train->save();
 
-    // Update only the fields that are present in the request
-    if (isset($validated['tname'])) {
-        $train->tname = $validated['tname'];
-    }
-
-    if (isset($validated['numofcompartment'])) {
-        $train->numofcompartment = $validated['numofcompartment'];
-    }
-
-    // Only update time fields if they are present in the request
-    if ($request->has('deptime') && !empty($validated['deptime'])) {
-        $train->deptime()->update(['deptime' => $validated['deptime']]);
-    }
-
-    if ($request->has('arrtime') && !empty($validated['arrtime'])) {
-        $train->arrtime()->update(['arrtime' => $validated['arrtime']]);
-    }
-
-    if (isset($validated['source'])) {
-        $train->source()->update(['source' => $validated['source']]);
-    }
-
-    if (isset($validated['destination'])) {
-        $train->destination()->update(['destination' => $validated['destination']]);
-    }
-
-    // Update compartments if they are present
-    if (isset($validated['compartments'])) {
-        // Delete old compartments
-        $train->compartments()->delete();
-
-        // Create new compartments
-        foreach ($validated['compartments'] as $compartment) {
-            TNameOfCompartment::create([
-                'tid' => $train->tid,
-                'nameofeachcompartment' => $compartment['name'],
-                'numofseat' => $compartment['seats'],
-            ]);
+        // Update Compartments
+        $train->traincompartments()->delete(); // Delete old compartments
+        if ($request->has('compartments')) {
+            foreach ($request->compartments as $compartmentData) {
+                $train->traincompartments()->create([
+                    'compartmentname' => $compartmentData['compartmentname'],
+                    'seatnumber' => $compartmentData['seatnumber'],
+                ]);
+            }
         }
+
+        // Update Updowns
+        $train->trainupdowns()->delete(); // Delete old updowns
+        if ($request->has('updowns')) {
+            foreach ($request->updowns as $updownData) {
+                $train->trainupdowns()->create([
+                    'tarrtime' => $updownData['tarrtime'],
+                    'tdeptime' => $updownData['tdeptime'],
+                    'tsource' => $updownData['tsource'],
+                    'tdestination' => $updownData['tdestination'],
+                ]);
+            }
+        }
+
+        return redirect()->route('train.show')->with('success', 'Train updated successfully!');
     }
 
-    // Save the train
-    $train->save();
-
-    return redirect()->route('train.edit.page')->with('success', 'Train updated successfully!');
-    }
-
-
-    // Delete the train from the database
-    public function destroy($id)
+    // Delete a train
+    public function destroy($trainid)
     {
-        $train = Train::findOrFail($id);
-
-        // Delete related records
-        $train->compartments()->delete();
-        $train->deptime()->delete();
-        $train->arrtime()->delete();
-        $train->source()->delete();
-        $train->destination()->delete();
-
-        // Now delete the train itself
+        $train = Train::findOrFail($trainid);
+        $train->traincompartments()->delete();
+        $train->trainupdowns()->delete();
         $train->delete();
 
-        return redirect()->route('train.show')->with('success', 'Train deleted successfully!');
-    }
-    public function show()
-    {
-        $trains = Train::with(['compartments', 'deptime', 'arrtime', 'source', 'destination'])->get();
-        return view('train.show', compact('trains'));
+        return redirect()->route('train.show')->with('success', 'Train deleted successfully');
     }
 }

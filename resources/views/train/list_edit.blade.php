@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="mb-3 d-flex align-items-center">
                 <li>
-                    <a href="{{ route('train.edit', $train->tid) }}">{{ $train->tname }}</a>
+                    <a href="{{ route('train.edit', $train->trainid) }}">{{ $train->trainname }}</a>
                 </li>
             </div>
         </div>

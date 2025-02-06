@@ -23,22 +23,22 @@ index page
             </thead>
             <tbody>
                 @foreach ($trains as $train)
-            <tr>
-                <td>{{ $train->tname }}</td>
-                <td>{{ $train->numofcompartment }}</td>
-                <td>{{ $train->deptime->deptime ?? 'Not Available' }}</td>
-                <td>{{ $train->arrtime->arrtime ?? 'Not Available' }}</td>
-                <td>{{ $train->source->source ?? 'Not Available' }}</td>
-                <td>{{ $train->destination->destination ?? 'Not Available' }}</td>
-                <td>
-                            <ul>
-                                @foreach ($train->compartments as $compartment)
-                                    <li>{{ $compartment->nameofeachcompartment }} (Seats: {{ $compartment->numofseat }})</li>
-                                @endforeach
-                            </ul>
-                        </td>
-            </tr>
-            @endforeach
+                <tr>
+                    <td>{{ $train->trainname }}</td>
+                    <td>{{ $train->compartmentnumber }}</td>
+                    <td>{{ $train->trainupdowns->first()->tdeptime ?? 'Not Available' }}</td>
+                    <td>{{ $train->trainupdowns->first()->tarrtime ?? 'Not Available' }}</td>
+                    <td>{{ $train->trainupdowns->first()->tsource ?? 'Not Available' }}</td>
+                    <td>{{ $train->trainupdowns->first()->tdestination ?? 'Not Available' }}</td>
+                    <td>
+                        <ul>
+                            @foreach ($train->traincompartments as $compartment)
+                                <li>{{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }})</li>
+                            @endforeach
+                        </ul>
+                    </td>
+                </tr>
+                @endforeach
 
             </tbody>
         </table>

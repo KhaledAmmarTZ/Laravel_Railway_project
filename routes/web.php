@@ -20,13 +20,13 @@ Route::get('/train/edit', [TrainController::class, 'showEditPage'])->name('train
 Route::post('/train/edit', [TrainController::class, 'loadTrainData'])->name('train.load'); 
 
 // Route to edit a specific train by ID
-Route::get('/train/{id}/edit', [TrainController::class, 'edit'])->name('train.edit');
+Route::get('/train/{train}/edit', [TrainController::class, 'edit'])->name('train.edit');
 
 // Route to update the specific train by ID
-Route::put('/train/{id}', [TrainController::class, 'update'])->name('train.update'); 
+Route::put('/train/{train}', [TrainController::class, 'update'])->name('train.update'); 
 
 // Route to delete the specific train by ID
-Route::delete('/train/{id}', [TrainController::class, 'destroy'])->name('train.destroy');
+Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
 // Additional Route for Home (could be a dashboard or welcome page)
 Route::get('/home', function () {
     return view('home');
