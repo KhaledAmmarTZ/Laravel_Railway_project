@@ -33,3 +33,5 @@ Route::get('/home', function () {
 });
 
 Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
+Auth::routes();
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
