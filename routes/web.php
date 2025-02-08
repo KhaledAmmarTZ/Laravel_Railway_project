@@ -8,6 +8,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 // Routes for Train Management
 Route::get('/train/create', [TrainController::class, 'create'])->name('train.create');
 Route::post('/train', [TrainController::class, 'store'])->name('train.store');
@@ -27,11 +28,10 @@ Route::put('/train/{train}', [TrainController::class, 'update'])->name('train.up
 
 // Route to delete the specific train by ID
 Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
-// Additional Route for Home (could be a dashboard or welcome page)
-Route::get('/home', function () {
-    return view('home');
-});
 
+// Additional Route for Home (could be a dashboard or welcome page)
 Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
+
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

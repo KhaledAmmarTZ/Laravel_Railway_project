@@ -60,25 +60,75 @@ class TrainController extends Controller
         return redirect()->route('train.show')->with('success', 'Train created successfully');
     }
 
-    // Show all trains
-
-    public function index()
+    public function index(Request $request)
     {
-        // Get all trains
-        $trains = Train::all();
+        $query = Train::query();
+    
+        // Search filter based on user input
+        if ($request->has('search') && $request->search != '') {
+            $searchBy = $request->search_by ?? 'tname'; // Default search by train name
+    
+            if ($searchBy == 'tname') {
+                $query->where('trainname', 'LIKE', '%' . $request->search . '%');
+            } elseif ($searchBy == 'tsource') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tsource', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tdestination') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
+                });
+            }
+        }
+    
+        $trains = $query->with('trainupdowns', 'traincompartments')->get();
+    
+        // If the request is AJAX, return only the table rows
+        if ($request->ajax()) {
+            return view('train.partials.train-table', compact('trains'));
+        }
     
         return view('train.index', compact('trains'));
     }
     
 
+    
+
     // This method is for showing a specific train
-    public function show()
-    {
-        $trains = Train::all();
+    public function show(Request $request)
+{
+    $query = Train::query();
+    
+    // Search filter based on user input
+    if ($request->has('search') && $request->search != '') {
+        $searchBy = $request->search_by ?? 'tname'; // Default search by train name
 
-
-        return view('train.show', compact('trains'));
+        // Apply filter based on selected search type
+        if ($searchBy == 'tname') {
+            $query->where('trainname', 'LIKE', '%' . $request->search . '%');
+        } elseif ($searchBy == 'tsource') {
+            $query->whereHas('trainupdowns', function($q) use ($request) {
+                $q->where('tsource', 'LIKE', '%' . $request->search . '%');
+            });
+        } elseif ($searchBy == 'tdestination') {
+            $query->whereHas('trainupdowns', function($q) use ($request) {
+                $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
+            });
+        }
     }
+
+    // Get the filtered trains with related data
+    $trains = $query->with('trainupdowns', 'traincompartments')->get();
+    
+    // If the request is AJAX, return only the table rows
+    if ($request->ajax()) {
+        return view('train.partials.train-table', compact('trains'));
+    }
+
+    // Return the main view
+    return view('train.show', compact('trains'));
+}
+
     // Show the edit form
     public function edit($trainId)
     {

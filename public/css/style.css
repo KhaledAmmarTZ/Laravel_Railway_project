@@ -99,7 +99,7 @@
 .search-bar {
     background-color: transparent;
     border: 2px solid #0b87a5; /* Border color */
-    color: #ffffff; /* Text color */
+    color: #414141; /* Text color */
     width: 300px; 
     padding: 8px 15px;
     border-radius: 5px;
@@ -108,7 +108,7 @@
 
 /* Placeholder color */
 .search-bar::placeholder {
-    color: #ffffff; 
+    color: #1f1f1f; 
 }
 
 /* White background when focused */

@@ -35,8 +35,9 @@
                                 <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
                                 <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->compartmentnumber }}</td>
                             @endif
-                            <td>{{ $updown->tdeptime }}</td>
-                            <td>{{ $updown->tarrtime }}</td>
+                            <!-- Format the times to AM/PM -->
+                            <td>{{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}</td>
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
 
@@ -67,10 +68,43 @@
         </table>
     </div>
     <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
-        <div class="mx-auto d-flex align-items-center">
-            <input class="search-bar mx-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="search-btn" type="submit">Search</button>                                                    
-        </div>
+        <form method="GET" action="{{ route('train.show') }}" id="search-form">
+            <div class="mx-auto d-flex align-items-center">
+                <!-- Dropdown to select search type -->
+                <select name="search_by" class="form-control mx-2" aria-label="Search by" id="search-by">
+                    <option value="tname" {{ request()->search_by == 'tname' ? 'selected' : '' }}>Train Name</option>
+                    <option value="tsource" {{ request()->search_by == 'tsource' ? 'selected' : '' }}>Source</option>
+                    <option value="tdestination" {{ request()->search_by == 'tdestination' ? 'selected' : '' }}>Destination</option>
+                </select>
+
+                <!-- Input field for search term -->
+                <input class="search-bar mx-2" type="search" id="search-input" name="search" value="{{ request()->search }}" placeholder="Search" aria-label="Search">
+                <button class="search-btn" type="submit">Search</button>  
+            </div>
+        </form>
     </div>
 </div>
+<script>
+$(document).ready(function() {
+    // Listen for input on the search field
+    $('#search-input').on('keyup', function() {
+        var query = $(this).val();
+        var searchBy = $('#search-by').val();
+        
+        // Perform AJAX request
+        $.ajax({
+            url: "{{ route('train.index') }}",
+            method: 'GET',
+            data: {
+                search: query,
+                search_by: searchBy,
+            },
+            success: function(response) {
+                // Update table with the returned HTML
+                $('#train-table tbody').html(response);
+            }
+        });
+    });
+});
+</script>
 @endsection
