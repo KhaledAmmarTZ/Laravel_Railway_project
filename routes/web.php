@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TrainController;
+use App\Http\Controllers\AdminAuthController;
 
 // Home Route
 Route::get('/', function () {
@@ -34,4 +35,10 @@ Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/admin/register', [AdminAuthController::class, 'register']);
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/admin/logout', [AdminAuthController::class, 'logout']);
+});
 
