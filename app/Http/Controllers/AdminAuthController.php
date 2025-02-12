@@ -60,4 +60,8 @@ class AdminAuthController extends Controller
 
         return response()->json(['message' => 'Logged out successfully'], 200);
     }
+    public function profile(Request $request)
+    {
+        return view('admin.profile');
+    }
 }

@@ -86,9 +86,9 @@
         </div>
     @endif
 
-    <div class="container mt-4">
+    <div class="container mt-8">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <form action="{{ route('train.store') }}" method="POST">
                     @csrf
                     <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
@@ -97,19 +97,19 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="tname" class="form-label me-3" style="width: 150px; text-align: right;">Train Name :</label>
+                                <label for="tname" class="form-label me-3" style="width: 150px; text-align: right;">Train Name : &nbsp;</label>
                                 <input type="text" name="tname" id="tname" class="form-control flex-grow-1" required>
                             </div>
 
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="numofcompartment" class="form-label me-3" style="width: 150px; text-align: right;">Number of Compartments :</label>
+                                <label for="numofcompartment" class="form-label me-3" style="width: 150px; text-align: right;">Number of Compartments :&nbsp; </label>
                                 <input type="number" name="numofcompartment" id="numofcompartment" class="form-control flex-grow-1" min="1" onchange="generateCompartments()" required>
                             </div>
 
                             <div id="compartment-sections"></div> <!-- Dynamic compartments will appear here -->
 
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="updownnumber" class="form-label me-3" style="width: 150px; text-align: right;">Number of Updowns :</label>
+                                <label for="updownnumber" class="form-label me-3" style="width: 150px; text-align: right;">Number of Updowns :&nbsp;</label>
                                 <input type="number" name="updownnumber" id="updownnumber" class="form-control flex-grow-1" min="1" onchange="generateUpdowns()" required>
                             </div>
 

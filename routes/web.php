@@ -35,6 +35,8 @@ Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
 
 Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/admin', [AdminAuthController::class, 'profile'])->name('admin.profile');
+Route::get('/admin/profile', [AdminAuthController::class, 'profile'])->name('admin.profile');
 Route::post('/admin/register', [AdminAuthController::class, 'register']);
 Route::post('/admin/login', [AdminAuthController::class, 'login']);
 

@@ -161,3 +161,9 @@
     display: flex;
 }
 
+/* Custom rounded corners */
+.custom-rounded {
+    border-radius: 10px;
+}
+
+
