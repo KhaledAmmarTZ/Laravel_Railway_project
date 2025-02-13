@@ -1,16 +1,16 @@
 /* Custom styles for transparent buttons with borders */
 .custom-btn {
-    background-color: transparent;
-    border: 2px solid #0b87a5; /* Change border color */
-    color: #007BFF; /* Text color */
+    background-color: #F0FFFC;
+    border: 2px solid #2A9D8F; /* Change border color */
+    color: #000000; /* Text color */
     padding: 8px 20px;
     border-radius: 5px;
     transition: all 0.3s ease-in-out;
 }
 
 .custom-btn:hover {
-    background-color: #58F4F4;
-    color: rgb(0, 0, 0);
+    background-color:  #2A9D8F;
+    color: #ffffff;
 }
 
 /* Login Button */

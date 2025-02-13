@@ -32,9 +32,9 @@ Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('trai
 
 // Additional Route for Home (could be a dashboard or welcome page)
 Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
-
-Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Auth::routes();
+
 Route::get('/admin', [AdminAuthController::class, 'profile'])->name('admin.profile');
 Route::get('/admin/profile', [AdminAuthController::class, 'profile'])->name('admin.profile');
 Route::post('/admin/register', [AdminAuthController::class, 'register']);
