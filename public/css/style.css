@@ -1,22 +1,34 @@
 /* Custom styles for transparent buttons with borders */
 .custom-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #F0FFFC;
-    border: 2px solid #2A9D8F; /* Change border color */
-    color: #000000; /* Text color */
+    border: 2px solid #2A9D8F;
+    color: #000000;
+    height: 50px;
     padding: 8px 20px;
     border-radius: 5px;
+    text-decoration: none !important;
     transition: all 0.3s ease-in-out;
 }
+
 
 .custom-btn:hover {
     background-color:  #2A9D8F;
     color: #ffffff;
+    text-decoration: none !important;
 }
 
 /* Login Button */
 .login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #28a745; 
+    border: 2px solid #025213;
     color: white;
+    height: 50px;
     padding: 8px 20px;
     border-radius: 5px;
     transition: all 0.3s ease-in-out;
@@ -25,12 +37,18 @@
 .login-btn:hover {
     background-color: #025213;
     color: white;
+    text-decoration: none !important;
 }
 
 /* Register Button */
 .register-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #007BFF; 
+    border: 2px solid #3fd9ff;
     color: white;
+    height: 50px;
     padding: 8px 20px;
     border-radius: 5px;
     transition: all 0.3s ease-in-out;
@@ -38,6 +56,7 @@
 
 .register-btn:hover {
     background-color: #3fd9ff;
+    text-decoration: none !important;
 }
 
 /* delete Button */
@@ -135,7 +154,7 @@
 }
 
 .mx-2 { 
-    margin-left: 10px; /* Horizontal spacing */
+    margin-left: 20px; /* Horizontal spacing */
     margin-right: 10px;
 }
 
@@ -143,10 +162,9 @@
     margin-right: 20px; /* Extra space after search bar */
 }
 
-/* Center navbar content */
-.collapse.navbar-collapse {
-    display: flex;
-    justify-content: space-between; 
+/* Remove underline from links */
+a {
+    text-decoration: none;
 }
 
 /* Ensure navbar content stays centered */
@@ -166,4 +184,6 @@
     border-radius: 10px;
 }
 
-
+.content {
+    flex: 1;
+  }
