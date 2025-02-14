@@ -2,3 +2,6 @@
 @section('title')
 index page
 @endsection
+@section('content')
+
+@endsection
