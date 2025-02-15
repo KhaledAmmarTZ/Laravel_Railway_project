@@ -25,9 +25,6 @@
             <span class="font-weight-bold">Bangladesh Railway</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
         <!-- Time & Date Section (Stacked Layout) -->
         <div class="ml-auto text-white text-center" id="datetime" style="font-size: 20px; font-weight: bold; display: flex; flex-direction: column; align-items: center; margin-right: 20px;"></div>
