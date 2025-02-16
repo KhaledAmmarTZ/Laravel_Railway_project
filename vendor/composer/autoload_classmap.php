@@ -16,6 +16,8 @@ return array(
     'App\\Http\\Controllers\\Controller' => $baseDir . '/app/Http/Controllers/Controller.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Controllers\\TrainController' => $baseDir . '/app/Http/Controllers/TrainController.php',
+    'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
+    'App\\Http\\Middleware\\AdminRoleMiddleware' => $baseDir . '/app/Http/Middleware/AdminRoleMiddleware.php',
     'App\\Models\\Admin' => $baseDir . '/app/Models/Admin.php',
     'App\\Models\\Compartment' => $baseDir . '/app/Models/Compartment.php',
     'App\\Models\\Train' => $baseDir . '/app/Models/Train.php',

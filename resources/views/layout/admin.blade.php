@@ -48,7 +48,7 @@
                             <!-- Navigation Buttons -->
                             <nav class="bd-links">
                             <div class="d-grid gap-2">
-                                <a href="{{ url('/admin/profile') }}" class="btn btn-success btn-block">Profile</a>
+                                <a href="{{ url('/superadmin/profile') }}" class="btn btn-success btn-block">Profile</a>
                                 <!-- Train Section -->
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#trainOptions">
                                     Train
@@ -104,8 +104,9 @@
                         </nav>
 
                         </div>                     
-                        <div class="card-footer  border-0 text-center" style="background-color: #DFF6F0;">
-                            <form>
+                        <div class="card-footer border-0 text-center" style="background-color: #DFF6F0;">
+                            <form action="{{ route('superadmin.logout') }}" method="POST">
+                                @csrf
                                 <button type="submit" class="btn btn-danger btn-block">Logout</button>
                             </form>
                         </div>

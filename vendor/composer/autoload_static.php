@@ -536,6 +536,8 @@ class ComposerStaticInit626b9e7ddd47fb7eff9aaa53cce0c9ad
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\TrainController' => __DIR__ . '/../..' . '/app/Http/Controllers/TrainController.php',
+        'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Http\\Middleware\\AdminRoleMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/AdminRoleMiddleware.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Compartment' => __DIR__ . '/../..' . '/app/Models/Compartment.php',
         'App\\Models\\Train' => __DIR__ . '/../..' . '/app/Models/Train.php',

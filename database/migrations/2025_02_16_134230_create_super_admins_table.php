@@ -5,25 +5,25 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    public function up(): void
+    public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('super_admins', function (Blueprint $table) {
             $table->id('admin_id');
             $table->string('admin_name');
             $table->string('admin_email')->unique();
             $table->date('admin_date_of_birth');
-            $table->enum('admin_role', ['super_admin', 'admin'])->default('admin');
+            $table->enum('admin_role', ['super admin']);
             $table->string('admin_phoneNumber');
             $table->string('admin_place');
-            $table->string('admin_password');
+            $table->string('admin_password'); // Password will be stored hashed
             $table->string('admin_nid')->unique();
+            $table->string('admin_image')->nullable();
             $table->timestamps();
         });
     }
 
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('super_admins');
     }
 };
-

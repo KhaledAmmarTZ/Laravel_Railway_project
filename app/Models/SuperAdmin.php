@@ -1,16 +1,19 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 
-class Admin extends Authenticatable
+class SuperAdmin extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'admins';
-    protected $primaryKey = 'admin_id';
+    protected $table = 'super_admins'; // Table name
+
+    protected $primaryKey = 'admin_id'; // Custom primary key
 
     protected $fillable = [
         'admin_name',
@@ -21,11 +24,22 @@ class Admin extends Authenticatable
         'admin_place',
         'admin_password',
         'admin_nid',
+        'admin_image',
     ];
 
     protected $hidden = [
         'admin_password',
     ];
+
+    protected $casts = [
+        'admin_date_of_birth' => 'date',
+    ];
+
+    // Automatically hash password before storing
+    public function setAdminPasswordAttribute($value)
+    {
+        $this->attributes['admin_password'] = Hash::make($value);
+    }
 
     public function getAuthPassword()
     {
