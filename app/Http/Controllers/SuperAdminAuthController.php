@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;  // Add this import
 use App\Models\SuperAdmin;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class SuperAdminAuthController extends Controller
 {
@@ -61,26 +62,30 @@ class SuperAdminAuthController extends Controller
      */
     public function login(Request $request)
     {
-
-        // Validate the request fields
+        // Validate the incoming request
         $request->validate([
             'admin_email' => 'required|email',
             'admin_password' => 'required',
         ]);
     
-        // Attempt to find the superadmin with the given email
-        $superAdmin = SuperAdmin::where('admin_email', $request->admin_email)->first();
+        // Attempt to authenticate using the super_admin guard
+        if (Auth::guard('superadmin')->attempt([
+            'admin_email' => $request->admin_email,
+            'password' => $request->admin_password // It will check the hashed password
+        ])) {
+            // If authentication is successful, regenerate the session
+            $request->session()->regenerate();
     
-        // Check if the superadmin exists and the password is correct
-        if ($superAdmin && Hash::check($request->admin_password, $superAdmin->admin_password)) {
-            Auth::guard('superadmin')->login($superAdmin);
+            // Redirect to the Super Admin profile
             return redirect()->route('superadmin.profile');
         }
-
-        // If credentials are invalid, return back with error
+    
+        // If authentication fails, return with an error message
         return back()->withErrors(['admin_email' => 'Invalid credentials.']);
     }
+    
 
+    
     /**
      * Show Super Admin Profile
      */

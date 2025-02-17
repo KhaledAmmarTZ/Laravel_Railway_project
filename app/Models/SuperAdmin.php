@@ -11,6 +11,8 @@ class SuperAdmin extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    protected $guard = 'superadmin';
+
     protected $table = 'super_admins'; // Table name
 
     protected $primaryKey = 'admin_id'; // Custom primary key

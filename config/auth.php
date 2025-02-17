@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
+        'guard' => env('AUTH_GUARD', 'web'),  // This will default to 'web' guard, or 'superadmin' if specified in .env
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),  // This will default to 'users' broker
     ],
 
     /*
@@ -26,10 +26,6 @@ return [
     | Next, you may define every authentication guard for your application.
     | Of course, a great default configuration has been defined for you
     | which utilizes session storage plus the Eloquent user provider.
-    |
-    | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
-    | system used by the application. Typically, Eloquent is utilized.
     |
     | Supported: "session"
     |
@@ -43,7 +39,7 @@ return [
 
         'superadmin' => [
             'driver' => 'session',
-            'provider' => 'super_admins',
+            'provider' => 'super_admins',  // Using the super_admins provider here
         ],
     ],
 
@@ -72,7 +68,7 @@ return [
 
         'super_admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\SuperAdmin::class, // Ensure this model exists
+            'model' => App\Models\SuperAdmin::class,  // Ensure this model exists and is correctly referenced
         ],
 
     ],
