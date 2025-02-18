@@ -40,8 +40,8 @@
                         <div class="card-body"> 
                             <!-- Profile Section -->
                             <form class="bd-search d-flex align-items-center mb-3">
-                                <img src="{{ asset('images/Trainlogo.png') }}" alt="Profile Picture" class="rounded-circle border" width="40" height="40">
-                                <span class="ml-2 font-weight-bold">John Doe</span>
+                                <img src="{{ auth()->guard('admin')->user()->admin_image ? asset('storage/' . auth()->guard('admin')->user()->admin_image) : asset('images/default-profile.png') }}" alt="Profile Picture" class="rounded-circle border" width="40" height="40">
+                                <span class="ml-2 font-weight-bold">{{ auth()->guard('admin')->user()->name }}</span>
                             </form>
                             <hr class="my-3">
                             

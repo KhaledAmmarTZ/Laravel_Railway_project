@@ -14,7 +14,7 @@
                     : asset('images/default-profile.png') }}" 
                     class="border custom-rounded img-fluid" width="220" height="220" 
                     alt="Profile Picture">
-                <div class="ms-4">
+                <div class="ms-4" style="margin-left: 30px;">
                     <!-- Display the logged-in super admin's name -->
                     <h3 class="mb-1">{{ auth()->guard('admin')->user()->name }}</h3>
                     

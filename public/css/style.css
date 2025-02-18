@@ -114,6 +114,10 @@
     border: 2px solid #ccc;
 }
 
+.btn-success:hover {
+    background-color: #F0FFFC;
+    color: rgb(0, 0, 0);
+}
 /* Transparent search bar */
 .search-bar {
     background-color: transparent;
