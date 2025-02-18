@@ -379,6 +379,10 @@ class Str
             $needles = (array) $needles;
         }
 
+        if (is_null($haystack)) {
+            return false;
+        }
+
         foreach ($needles as $needle) {
             if ((string) $needle !== '' && str_ends_with($haystack, $needle)) {
                 return true;
@@ -477,9 +481,10 @@ class Str
      *
      * @param  string|iterable<string>  $pattern
      * @param  string  $value
+     * @param  bool  $ignoreCase
      * @return bool
      */
-    public static function is($pattern, $value)
+    public static function is($pattern, $value, $ignoreCase = false)
     {
         $value = (string) $value;
 
@@ -497,6 +502,10 @@ class Str
                 return true;
             }
 
+            if ($ignoreCase && mb_strtolower($pattern) === mb_strtolower($value)) {
+                return true;
+            }
+
             $pattern = preg_quote($pattern, '#');
 
             // Asterisks are translated into zero-or-more regular expression wildcards
@@ -504,7 +513,7 @@ class Str
             // pattern such as "library/*", making any string check convenient.
             $pattern = str_replace('\*', '.*', $pattern);
 
-            if (preg_match('#^'.$pattern.'\z#u', $value) === 1) {
+            if (preg_match('#^'.$pattern.'\z#'.($ignoreCase ? 'iu' : 'u'), $value) === 1) {
                 return true;
             }
         }
@@ -1581,6 +1590,10 @@ class Str
     {
         if (! is_iterable($needles)) {
             $needles = [$needles];
+        }
+
+        if (is_null($haystack)) {
+            return false;
         }
 
         foreach ($needles as $needle) {

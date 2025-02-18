@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),  // This will default to 'web' guard, or 'superadmin' if specified in .env
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),  // This will default to 'users' broker
+        'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
     /*
@@ -27,6 +27,10 @@ return [
     | Of course, a great default configuration has been defined for you
     | which utilizes session storage plus the Eloquent user provider.
     |
+    | All authentication guards have a user provider, which defines how the
+    | users are actually retrieved out of your database or other storage
+    | system used by the application. Typically, Eloquent is utilized.
+    |
     | Supported: "session"
     |
     */
@@ -36,10 +40,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-
-        'superadmin' => [
+        'admin' => [
             'driver' => 'session',
-            'provider' => 'super_admins',  // Using the super_admins provider here
+            'provider' => 'admins',
         ],
     ],
 
@@ -63,14 +66,17 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        'super_admins' => [
+        'admins' => [
             'driver' => 'eloquent',
-            'model' => App\Models\SuperAdmin::class,  // Ensure this model exists and is correctly referenced
-        ],
-
+            'model' => env('AUTH_MODEL', App\Models\Admin::class),
+        ]
+        // 'users' => [
+        //     'driver' => 'database',
+        //     'table' => 'users',
+        // ],
     ],
 
     /*
@@ -95,19 +101,11 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'super_admins' => [
-            'provider' => 'super_admins',
-            'table' => 'password_resets',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
             'expire' => 60,
             'throttle' => 60,
         ],
     ],
-
 
     /*
     |--------------------------------------------------------------------------

@@ -48,15 +48,15 @@
                             <!-- Navigation Buttons -->
                             <nav class="bd-links">
                             <div class="d-grid gap-2">
-                                <a href="{{ url('/superadmin/profile') }}" class="btn btn-success btn-block">Profile</a>
+                                <a href="{{ url('/admin/profiles') }}" class="btn btn-success btn-block">Profile</a>
                                 <!-- Train Section -->
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#trainOptions">
                                     Train
                                 </button>
                                 <div class="collapse mb-3 " id="trainOptions">
-                                    <a href="{{ url('/train/edit') }}" class="btn sidebar-btn btn-block ml-3">Edit Train</a>
-                                    <a href="{{ url('/train/create') }}" class="btn sidebar-btn btn-block ml-3">Add Train</a>
-                                    <a href="{{ url('/train/show') }}" class="btn sidebar-btn btn-block ml-3">View Trains</a>
+                                    <a href="{{ url('/admin/train/edit') }}" class="btn sidebar-btn btn-block ml-3">Edit Train</a>
+                                    <a href="{{ url('/admin/train/create') }}" class="btn sidebar-btn btn-block ml-3">Add Train</a>
+                                    <a href="{{ url('/admin/train/show') }}" class="btn sidebar-btn btn-block ml-3">View Trains</a>
                                 </div>
 
                                 <!-- Station Section -->
@@ -105,7 +105,7 @@
 
                         </div>                     
                         <div class="card-footer border-0 text-center" style="background-color: #DFF6F0;">
-                            <form action="{{ route('superadmin.logout') }}" method="POST">
+                            <form action="{{ route('admin.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-block">Logout</button>
                             </form>
