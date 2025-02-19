@@ -26,13 +26,13 @@ Index Page
 
                 <h1 style="font-size: 40px; 
                         font-weight: bold; 
-                        color: #005F56; 
+                        color: #081F5C; 
                         margin-bottom: 15px;">
                     Welcome to Bangladesh Railway
                 </h1>
 
                 <p style="font-size: 20px; 
-                        color: #005F56; 
+                        color: #081F5C; 
                         max-width: 500px; /* Limits text width for better readability */">
                     Explore the best train services, book your tickets, and enjoy a smooth journey across Bangladesh.
                 </p>
@@ -40,7 +40,7 @@ Index Page
             </div>
             <!-- Right Side (Image Section) -->
             <div style="flex: 1; text-align: right; display: flex; justify-content: center; align-items: center;">
-            <img src="{{ asset('images/heroTrain.jpg') }}" alt="Train Image" 
+            <img src="{{ asset('images/train(5).jpg') }}" alt="Train Image" 
                 style="width: 90%; /* Adjust the size */
                         max-width: 1000px; /* Optional: Set a maximum width */
                         height: auto; 
@@ -52,7 +52,7 @@ Index Page
         </div>
     </div>
     <div class="bd-example" style="display: flex; justify-content: center; align-items: center; height: 100vh; border-radius: 10px;">
-        <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel" style="width: 98.3%; height: 100%; border-radius: 10px;">
+        <div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-ride="carousel" style="width: 98.3%; height: 100%; border-radius: 15px; border: 4px solid #ccc;">
             <ol class="carousel-indicators">
                 <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
                 <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
@@ -60,21 +60,21 @@ Index Page
             </ol>
             <div class="carousel-inner" style="height: 100%;">
                 <div class="carousel-item active" data-interval="2000" style="height: 100%; border-radius: 10px;">
-                    <img src="{{ asset('images/heroTrain.jpg') }}" class="d-block w-100" alt="Train Image" style="height: 100%; object-fit: cover; border-radius: 10px;">
+                    <img src="{{ asset('images/train (3).jpg') }}" class="d-block w-100" alt="Train Image" style="height: 100%; object-fit: cover; border-radius: 10px;">
                     <div class="carousel-caption d-none d-md-block" style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 10px;">
                         <h5>First slide label</h5>
                         <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
                     </div>
                 </div>
                 <div class="carousel-item" data-interval="2000" style="height: 100%;">
-                    <img src="{{ asset('images/Trainlogo.png') }}" class="d-block w-100" alt="Train Logo" style="height: 100%; object-fit: contain; border-radius: 10px;">
+                    <img src="{{ asset('images/train (6).jpg') }}" class="d-block w-100" alt="Train Logo" style="height: 100%; object-fit: contain; border-radius: 10px;">
                     <div class="carousel-caption d-none d-md-block" style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 10px;">
                         <h5>Second slide label</h5>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     </div>
                 </div>
                 <div class="carousel-item" data-interval="2000" style="height: 100%;">
-                    <img src="{{ asset('images/heroTrain.jpg') }}" class="d-block w-100" alt="Train Image" style="height: 100%; object-fit: cover; border-radius: 10px;">
+                    <img src="{{ asset('images/train (1).jpg') }}" class="d-block w-100" alt="Train Image" style="height: 100%; object-fit: cover; border-radius: 10px;">
                     <div class="carousel-caption d-none d-md-block" style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 10px;">
                         <h5>Third slide label</h5>
                         <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
@@ -92,46 +92,47 @@ Index Page
         </div>
     </div>
     <div style="height: 160px;"></div> <!-- Spacer div -->
-    <div class="card-deck" style=" width: 99.7%; margin: 0 auto; border-radius: 10px;">
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-            <h5 class="card-title" style="text-align: center;">Train</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    <div class="card-deck" style="width: 99.7%; margin: 0 auto; border-radius: 10px; background-color: #F0FFFC; ">
+        <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
+            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+                <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
+                <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
+                <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
-            <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
-            </div>
-        </div>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-            <h5 class="card-title" style="text-align: center;">Ticket Booking</h5>
-            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
+            <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                <small class="text-muted">Last updated 3 mins ago</small>
             </div>
         </div>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-            <h5 class="card-title" style="text-align: center;">Ticket Cancellation</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+        <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
+            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+                <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
+                <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
+                <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
-            <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
+            <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                <small class="text-muted">Last updated 3 mins ago</small>
             </div>
         </div>
-        <div class="card">
-            <img src="..." class="card-img-top" alt="...">
-            <div class="card-body">
-            <h5 class="card-title" style="text-align: center;">Contact Us</h5>
-            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+        <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
+            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+                <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
+                <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
+                <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
             </div>
-            <div class="card-footer">
-            <small class="text-muted">Last updated 3 mins ago</small>
+            <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </div>
+        <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
+            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+                <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
+                <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
+                <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            </div>
+            <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                <small class="text-muted">Last updated 3 mins ago</small>
             </div>
         </div>
     </div>
+    <div style="height: 160px;"></div> <!-- Spacer div -->
 @endsection

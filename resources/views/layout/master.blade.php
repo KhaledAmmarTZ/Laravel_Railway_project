@@ -34,7 +34,7 @@
       }
 
       footer {
-        background-color: #005F56;
+        background-color: #081F5C;
         color: white;
         margin: 10px 17px;
         width: 98.3;
@@ -56,7 +56,7 @@
         padding-top: 100px;">
     
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
+    <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #081F5C; font-family: 'Sansation', sans-serif; font-weight: 700;">
         <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
             <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
             <span class="font-weight-bold">Bangladesh Railway</span>
@@ -67,11 +67,11 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="custom-btn mx-2" href="{{ url('/') }}">Home </a>
+                <li class="nav-item">
+                    <a class="custom-btn mx-2 {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="custom-btn mx-2" href="{{ url('/train') }}">Train</a>
+                    <a class="custom-btn mx-2 {{ Request::is('train') ? 'active' : '' }}" href="{{ url('/train') }}">Train</a>
                 </li>
                 <li class="nav-item">
                     <a class="custom-btn mx-2" href="#">Ticket</a>
