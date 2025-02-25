@@ -36,8 +36,8 @@
                                 <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->compartmentnumber }}</td>
                             @endif
                             <!-- Format the times to AM/PM -->
-                            <td>{{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($updown->tdeptime)->format('d-m-Y h:i A') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($updown->tarrtime)->format('d-m-Y h:i A') }}</td>
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
 
@@ -46,7 +46,7 @@
                                 <td rowspan="{{ count($train->trainupdowns) }}">
                                     <ul>
                                         @foreach ($train->traincompartments as $compartment)
-                                            <li>Name:{{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }})</li>
+                                            <li>Name:{{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }}) (Type: {{ $compartment->compartmenttype }})</li>
                                         @endforeach
                                     </ul>
                                 </td>

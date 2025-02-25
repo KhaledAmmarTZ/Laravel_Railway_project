@@ -10,7 +10,7 @@ class Compartment extends Model
     use HasFactory;
     protected $table = 'traincompartments';
     protected $primaryKey = 'id';
-    protected $fillable = ['trainid', 'seatnumber', 'compartmentname'];
+    protected $fillable = ['trainid', 'seatnumber', 'compartmentname', 'compartmenttype'];
 
     public function train()
     {

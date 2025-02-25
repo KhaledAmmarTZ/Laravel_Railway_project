@@ -28,6 +28,13 @@
                             </label>
                             <input type="number" name="compartments[${i}][seats]" id="compartments[${i}][seats]" class="form-control flex-grow-1" required>
                         </div>
+
+                        <div class="d-flex align-items-center mt-2">
+                            <label for="compartments[${i}][type]" class="form-label me-4" style="width: 350px; text-align: right;">
+                                Compartment ${i} Type:
+                            </label>
+                            <input type="text" name="compartments[${i}][type]" id="compartments[${i}][type]" class="form-control flex-grow-1" required>
+                        </div>
                     `;
                     compartmentContainer.appendChild(compartmentDiv);
                 }
@@ -61,16 +68,16 @@
 
                         <div class="d-flex align-items-center mt-2">
                             <label for="updowns[${i}][deptime]" class="form-label me-4" style="width: 350px; text-align: right;">
-                                Updown ${i} Departure Time:
+                                Updown ${i} Departure:
                             </label>
-                            <input type="time" name="updowns[${i}][deptime]" id="updowns[${i}][deptime]" class="form-control flex-grow-1" required>
+                            <input type="datetime-local" name="updowns[${i}][deptime]" id="updowns[${i}][deptime]" class="form-control flex-grow-1" required>
                         </div>
 
                         <div class="d-flex align-items-center mt-2">
                             <label for="updowns[${i}][arrtime]" class="form-label me-4" style="width: 350px; text-align: right;">
-                                Updown ${i} Arrival Time:
+                                Updown ${i} Arrival:
                             </label>
-                            <input type="time" name="updowns[${i}][arrtime]" id="updowns[${i}][arrtime]" class="form-control flex-grow-1" required>
+                            <input type="datetime-local" name="updowns[${i}][arrtime]" id="updowns[${i}][arrtime]" class="form-control flex-grow-1" required>
                         </div>
                     `;
                     updownContainer.appendChild(updownDiv);

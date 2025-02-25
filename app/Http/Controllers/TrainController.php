@@ -23,11 +23,12 @@ class TrainController extends Controller
             'numofcompartment' => 'required|integer|min:1',
             'compartments.*.name' => 'required|string',
             'compartments.*.seats' => 'required|integer|min:1',
+            'compartments.*.type' => 'required|string',
             'updownnumber' => 'required|integer|min:1',
             'updowns.*.source' => 'required|string',
             'updowns.*.destination' => 'required|string',
-            'updowns.*.deptime' => 'required|date_format:H:i',
-            'updowns.*.arrtime' => 'required|date_format:H:i',
+            'updowns.*.deptime' => 'required|date_format:Y-m-d\TH:i',
+            'updowns.*.arrtime' => 'required|date_format:Y-m-d\TH:i',
         ]);
 
         // Create Train
@@ -43,6 +44,7 @@ class TrainController extends Controller
                 'trainid' => $train->trainid,
                 'compartmentname' => $compartment['name'],
                 'seatnumber' => $compartment['seats'],
+                'compartmenttype' => $compartment['type'],
             ]);
         }
 
@@ -52,13 +54,14 @@ class TrainController extends Controller
                 'trainid' => $train->trainid,
                 'tsource' => $updown['source'],
                 'tdestination' => $updown['destination'],
-                'tdeptime' => $updown['deptime'],
-                'tarrtime' => $updown['arrtime'],
+                'tdeptime' => date('Y-m-d H:i:s', strtotime($updown['deptime'])),
+                'tarrtime' => date('Y-m-d H:i:s', strtotime($updown['arrtime'])),
             ]);
         }
 
         return redirect()->route('train.show')->with('success', 'Train created successfully');
     }
+
 
     public function index(Request $request)
     {
@@ -66,7 +69,7 @@ class TrainController extends Controller
     
         // Search filter based on user input
         if ($request->has('search') && $request->search != '') {
-            $searchBy = $request->search_by ?? 'tname'; // Default search by train name
+            $searchBy = $request->search_by ?? 'tname'; 
     
             if ($searchBy == 'tname') {
                 $query->where('trainname', 'LIKE', '%' . $request->search . '%');
@@ -91,43 +94,40 @@ class TrainController extends Controller
         return view('train.index', compact('trains'));
     }
     
-
-    
-
     // This method is for showing a specific train
     public function show(Request $request)
-{
-    $query = Train::query();
-    
-    // Search filter based on user input
-    if ($request->has('search') && $request->search != '') {
-        $searchBy = $request->search_by ?? 'tname'; // Default search by train name
+    {
+        $query = Train::query();
+        
+        // Search filter based on user input
+        if ($request->has('search') && $request->search != '') {
+            $searchBy = $request->search_by ?? 'tname';
 
-        // Apply filter based on selected search type
-        if ($searchBy == 'tname') {
-            $query->where('trainname', 'LIKE', '%' . $request->search . '%');
-        } elseif ($searchBy == 'tsource') {
-            $query->whereHas('trainupdowns', function($q) use ($request) {
-                $q->where('tsource', 'LIKE', '%' . $request->search . '%');
-            });
-        } elseif ($searchBy == 'tdestination') {
-            $query->whereHas('trainupdowns', function($q) use ($request) {
-                $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
-            });
+            // Apply filter based on selected search type
+            if ($searchBy == 'tname') {
+                $query->where('trainname', 'LIKE', '%' . $request->search . '%');
+            } elseif ($searchBy == 'tsource') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tsource', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tdestination') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
+                });
+            }
         }
-    }
 
-    // Get the filtered trains with related data
-    $trains = $query->with('trainupdowns', 'traincompartments')->get();
-    
-    // If the request is AJAX, return only the table rows
-    if ($request->ajax()) {
-        return view('train.partials.train-table', compact('trains'));
-    }
+        // Get the filtered trains with related data
+        $trains = $query->with('trainupdowns', 'traincompartments')->get();
+        
+        // If the request is AJAX, return only the table rows
+        if ($request->ajax()) {
+            return view('train.partials.train-table', compact('trains'));
+        }
 
-    // Return the main view
-    return view('train.show', compact('trains'));
-}
+        // Return the main view
+        return view('train.show', compact('trains'));
+    }
 
     // Show the edit form
     public function edit($trainId)
@@ -136,17 +136,18 @@ class TrainController extends Controller
         return view('train.edit', compact('train'));
     }
 
-
     public function showEditPage()
     {
         $trains = Train::all();
         return view('train.list_edit', compact('trains'));
     }
+
     public function loadTrainData(Request $request)
     {
         $train = Train::with('traincompartments', 'trainupdowns')->findOrFail($request->trainid);
         return view('train.edit', compact('train'));
     }
+
     public function update(Request $request, $trainId)
     {
         $request->validate([
@@ -170,6 +171,7 @@ class TrainController extends Controller
                 $train->traincompartments()->create([
                     'compartmentname' => $compartmentData['compartmentname'],
                     'seatnumber' => $compartmentData['seatnumber'],
+                    'compartmenttype' => $compartmentData['compartmenttype'],
                 ]);
             }
         }

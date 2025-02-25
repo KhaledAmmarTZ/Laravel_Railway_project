@@ -19,7 +19,7 @@ class AdminProfileController extends Controller
      */
     public function edit(Request $request)
     {
-        $admin = Auth::guard('admin')->user(); // ✅ Correct way to get the authenticated admin
+        $admin = Auth::guard('admin')->user(); 
         return view('admin.profile.edit', compact('admin'));
     }
 
@@ -28,11 +28,11 @@ class AdminProfileController extends Controller
      */
     public function update(AdminProfileUpdateRequest $request)
     {
-        $admin = Auth::guard('admin')->user(); // ✅ Correct way to get the authenticated admin
+        $admin = Auth::guard('admin')->user(); 
     
         $validatedData = $request->validated();
     
-        // If updating the image (optional)
+        // If updating the image 
         if ($request->hasFile('admin_image')) {
             $imagePath = $request->file('admin_image')->store('admin_images', 'public');
             $validatedData['admin_image'] = $imagePath;
@@ -54,7 +54,7 @@ class AdminProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        $admin = auth()->guard('admin')->user(); // Get the authenticated admin
+        $admin = auth()->guard('admin')->user(); 
 
         if (!$admin) {
             return redirect()->back()->withErrors(['error' => 'Admin not found.']);
@@ -70,9 +70,9 @@ class AdminProfileController extends Controller
             }
         }
 
-        Auth::guard('admin')->logout(); // Log out the admin
+        Auth::guard('admin')->logout(); 
 
-        $admin->delete(); // Delete the admin record from the database
+        $admin->delete(); 
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

@@ -37,6 +37,10 @@
                     <label class="form-label me-4">Number of Seats:</label>
                     <input type="number" name="compartments[${i}][seatnumber]" class="form-control" value="${compartment.seatnumber}" required>
                 </div>
+                <div class="d-flex align-items-center mt-2">
+                    <label class="form-label me-4">Type:</label>
+                    <input type="text" name="compartments[${i}][compartmenttype]" class="form-control" value="${compartment.compartmenttype}" required>
+                </div>
                 <button type="button" class="btn btn-danger mt-2" onclick="removeCompartment(${i})">Delete</button>
             `;
 
@@ -70,22 +74,39 @@
             
             updownDiv.innerHTML = `
                 <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
+
                 <div class="d-flex align-items-center">
-                    <label class="form-label me-4">Arrival Time ${i + 1}:</label>
-                    <input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required>
+                    <label class="form-label me-4">Arrival ${i + 1}:</label>
+                    <input type="datetime-local" name="updowns[${i}][tarrtime]" 
+                        class="form-control" 
+                        value="${new Date(updown.tarrtime).toISOString().slice(0, 16)}" 
+                        required>
                 </div>
+
                 <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Departure Time ${i + 1}:</label>
-                    <input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required>
+                    <label class="form-label me-4">Departure ${i + 1}:</label>
+                    <input type="datetime-local" name="updowns[${i}][tdeptime]" 
+                        class="form-control" 
+                        value="${new Date(updown.tdeptime).toISOString().slice(0, 16)}" 
+                        required>
                 </div>
+
                 <div class="d-flex align-items-center mt-2">
                     <label class="form-label me-4">Source ${i + 1}:</label>
-                    <input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required>
+                    <input type="text" name="updowns[${i}][tsource]" 
+                        class="form-control" 
+                        value="${updown.tsource}" 
+                        required>
                 </div>
+
                 <div class="d-flex align-items-center mt-2">
                     <label class="form-label me-4">Destination ${i + 1}:</label>
-                    <input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required>
+                    <input type="text" name="updowns[${i}][tdestination]" 
+                        class="form-control" 
+                        value="${updown.tdestination}" 
+                        required>
                 </div>
+
                 <button type="button" class="btn btn-danger mt-2" onclick="removeUpdown(${i})">Delete</button>
             `;
 

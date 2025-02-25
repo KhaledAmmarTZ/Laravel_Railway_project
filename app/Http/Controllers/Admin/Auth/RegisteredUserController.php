@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
             'phoneNumber' => ['required', 'string', 'max:20'],
             'place' => ['required', 'string', 'max:255'],
             'admin_nid' => ['required', 'string', 'max:50', 'unique:admins,admin_nid'],
-            'admin_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], // Image validation
+            'admin_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:2048'], 
         ]);
 
         // Handle Image Upload
@@ -51,7 +51,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'date_of_birth' => $request->date_of_birth,
-            'role' => 'admin', // Default role
+            'role' => 'admin',
             'phoneNumber' => $request->phoneNumber,
             'place' => $request->place,
             'admin_nid' => $request->admin_nid,
