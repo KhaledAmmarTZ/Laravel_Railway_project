@@ -36,8 +36,14 @@
                                 <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->compartmentnumber }}</td>
                             @endif
                             <!-- Format the times to AM/PM -->
-                            <td>{{ \Carbon\Carbon::parse($updown->tdeptime)->format('d-m-Y h:i A') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($updown->tarrtime)->format('d-m-Y h:i A') }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
+                                {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
+                            </td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
+                                {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
+                            </td>
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
 

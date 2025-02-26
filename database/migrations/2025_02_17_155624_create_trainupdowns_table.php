@@ -13,12 +13,15 @@ class CreateTrainupdownsTable extends Migration
             $table->unsignedBigInteger('trainid');
             $table->time('tarrtime');
             $table->time('tdeptime');
+            $table->date('tarrdate');
+            $table->date('tdepdate');
             $table->string('tsource');
             $table->string('tdestination');
             $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade');  // Corrected line
             $table->timestamps();
         });
     }
+
 
     public function down()
     {

@@ -17,50 +17,55 @@ class TrainController extends Controller
 
     // Store the newly created train along with compartments and updown info
     public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'tname' => 'required|string',
-            'numofcompartment' => 'required|integer|min:1',
-            'compartments.*.name' => 'required|string',
-            'compartments.*.seats' => 'required|integer|min:1',
-            'compartments.*.type' => 'required|string',
-            'updownnumber' => 'required|integer|min:1',
-            'updowns.*.source' => 'required|string',
-            'updowns.*.destination' => 'required|string',
-            'updowns.*.deptime' => 'required|date_format:Y-m-d\TH:i',
-            'updowns.*.arrtime' => 'required|date_format:Y-m-d\TH:i',
+{
+    $validatedData = $request->validate([
+        'tname' => 'required|string',
+        'numofcompartment' => 'required|integer|min:1',
+        'compartments.*.name' => 'required|string',
+        'compartments.*.seats' => 'required|integer|min:1',
+        'compartments.*.type' => 'required|string',
+        'updownnumber' => 'required|integer|min:1',
+        'updowns.*.source' => 'required|string',
+        'updowns.*.destination' => 'required|string',
+        'updowns.*.deptime' => 'required|date_format:H:i',
+        'updowns.*.arrtime' => 'required|date_format:H:i',
+        'updowns.*.tarrdate' => 'required|date_format:Y-m-d',
+        'updowns.*.tdepdate' => 'required|date_format:Y-m-d',
+    ]);
+
+    // Create Train
+    $train = Train::create([
+        'trainname' => $validatedData['tname'],
+        'compartmentnumber' => $validatedData['numofcompartment'],
+        'updownnumber' => $validatedData['updownnumber'],
+    ]);
+
+    // Create Compartments
+    foreach ($validatedData['compartments'] as $compartment) {
+        Compartment::create([
+            'trainid' => $train->trainid,
+            'compartmentname' => $compartment['name'],
+            'seatnumber' => $compartment['seats'],
+            'compartmenttype' => $compartment['type'],
         ]);
-
-        // Create Train
-        $train = Train::create([
-            'trainname' => $validatedData['tname'],
-            'compartmentnumber' => $validatedData['numofcompartment'],
-            'updownnumber' => $validatedData['updownnumber'],
-        ]);
-
-        // Create Compartments
-        foreach ($validatedData['compartments'] as $compartment) {
-            Compartment::create([
-                'trainid' => $train->trainid,
-                'compartmentname' => $compartment['name'],
-                'seatnumber' => $compartment['seats'],
-                'compartmenttype' => $compartment['type'],
-            ]);
-        }
-
-        // Create Updown info
-        foreach ($validatedData['updowns'] as $updown) {
-            Updown::create([
-                'trainid' => $train->trainid,
-                'tsource' => $updown['source'],
-                'tdestination' => $updown['destination'],
-                'tdeptime' => date('Y-m-d H:i:s', strtotime($updown['deptime'])),
-                'tarrtime' => date('Y-m-d H:i:s', strtotime($updown['arrtime'])),
-            ]);
-        }
-
-        return redirect()->route('train.show')->with('success', 'Train created successfully');
     }
+
+    // Create Updown info
+    foreach ($validatedData['updowns'] as $updown) {
+        Updown::create([
+            'trainid' => $train->trainid,
+            'tsource' => $updown['source'],
+            'tdestination' => $updown['destination'],
+            'tdeptime' => date('H:i:s', strtotime($updown['deptime'])),  // Corrected time format
+            'tarrtime' => date('H:i:s', strtotime($updown['arrtime'])),  // Corrected time format
+            'tarrdate' => $updown['tarrdate'],
+            'tdepdate' => $updown['tdepdate'],
+        ]);
+    }
+
+    return redirect()->route('train.show')->with('success', 'Train created successfully');
+}
+
 
 
     public function index(Request $request)
@@ -80,6 +85,22 @@ class TrainController extends Controller
             } elseif ($searchBy == 'tdestination') {
                 $query->whereHas('trainupdowns', function($q) use ($request) {
                     $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tdeptime') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tdeptime', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tarrtime') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tarrtime', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tdepdate') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tdepdate', 'LIKE', '%' . $request->search . '%');
+                });
+            } elseif ($searchBy == 'tarrdate') {
+                $query->whereHas('trainupdowns', function($q) use ($request) {
+                    $q->where('tarrdate', 'LIKE', '%' . $request->search . '%');
                 });
             }
         }
@@ -183,6 +204,8 @@ class TrainController extends Controller
                 $train->trainupdowns()->create([
                     'tarrtime' => $updownData['tarrtime'],
                     'tdeptime' => $updownData['tdeptime'],
+                    'tarrdate' => $updownData['tarrdate'],
+                    'tdepdate' => $updownData['tdepdate'],
                     'tsource' => $updownData['tsource'],
                     'tdestination' => $updownData['tdestination'],
                 ]);

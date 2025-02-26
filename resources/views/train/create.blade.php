@@ -68,16 +68,30 @@
 
                         <div class="d-flex align-items-center mt-2">
                             <label for="updowns[${i}][deptime]" class="form-label me-4" style="width: 350px; text-align: right;">
-                                Updown ${i} Departure:
+                                Updown ${i} Departure Time:
                             </label>
-                            <input type="datetime-local" name="updowns[${i}][deptime]" id="updowns[${i}][deptime]" class="form-control flex-grow-1" required>
+                            <input type="time" name="updowns[${i}][deptime]" id="updowns[${i}][deptime]" class="form-control flex-grow-1" required>
                         </div>
 
                         <div class="d-flex align-items-center mt-2">
                             <label for="updowns[${i}][arrtime]" class="form-label me-4" style="width: 350px; text-align: right;">
-                                Updown ${i} Arrival:
+                                Updown ${i} Arrival Time:
                             </label>
-                            <input type="datetime-local" name="updowns[${i}][arrtime]" id="updowns[${i}][arrtime]" class="form-control flex-grow-1" required>
+                            <input type="time" name="updowns[${i}][arrtime]" id="updowns[${i}][arrtime]" class="form-control flex-grow-1" required>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-2">
+                            <label for="updowns[${i}][tarrdate]" class="form-label me-4" style="width: 350px; text-align: right;">
+                                Updown ${i} Arrival Date:
+                            </label>
+                            <input type="date" name="updowns[${i}][tarrdate]" id="updowns[${i}][tarrdate]" class="form-control flex-grow-1" required>
+                        </div>
+
+                        <div class="d-flex align-items-center mt-2">
+                            <label for="updowns[${i}][tdepdate]" class="form-label me-4" style="width: 350px; text-align: right;">
+                                Updown ${i} Departure Date:
+                            </label>
+                            <input type="date" name="updowns[${i}][tdepdate]" id="updowns[${i}][tdepdate]" class="form-control flex-grow-1" required>
                         </div>
                     `;
                     updownContainer.appendChild(updownDiv);

@@ -58,6 +58,8 @@
                 id: updownDiv.querySelector(`[name="updowns[${index}][id]"]`).value,
                 tarrtime: updownDiv.querySelector(`[name="updowns[${index}][tarrtime]"]`).value,
                 tdeptime: updownDiv.querySelector(`[name="updowns[${index}][tdeptime]"]`).value,
+                tarrdate: updownDiv.querySelector(`[name="updowns[${index}][tarrdate]"]`).value,
+                tdepdate: updownDiv.querySelector(`[name="updowns[${index}][tdepdate]"]`).value,
                 tsource: updownDiv.querySelector(`[name="updowns[${index}][tsource]"]`).value,
                 tdestination: updownDiv.querySelector(`[name="updowns[${index}][tdestination]"]`).value
             });
@@ -66,7 +68,7 @@
         updownContainer.innerHTML = '';
 
         for (let i = 0; i < numUpdown; i++) {
-            let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tsource: '', tdestination: '' };
+            let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '' ,tsource: '', tdestination: '' };
 
             const updownDiv = document.createElement('div');
             updownDiv.classList.add('mb-3', 'updown-item');
@@ -77,17 +79,33 @@
 
                 <div class="d-flex align-items-center">
                     <label class="form-label me-4">Arrival ${i + 1}:</label>
-                    <input type="datetime-local" name="updowns[${i}][tarrtime]" 
+                    <input type="time" name="updowns[${i}][tarrtime]" 
                         class="form-control" 
-                        value="${new Date(updown.tarrtime).toISOString().slice(0, 16)}" 
+                        value="${(updown.tarrtime)}" 
                         required>
                 </div>
 
                 <div class="d-flex align-items-center mt-2">
                     <label class="form-label me-4">Departure ${i + 1}:</label>
-                    <input type="datetime-local" name="updowns[${i}][tdeptime]" 
+                    <input type="time" name="updowns[${i}][tdeptime]" 
                         class="form-control" 
-                        value="${new Date(updown.tdeptime).toISOString().slice(0, 16)}" 
+                        value="${(updown.tdeptime)}" 
+                        required>
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <label class="form-label me-4">Arrival Date ${i + 1}:</label>
+                    <input type="date" name="updowns[${i}][tarrdate]" 
+                        class="form-control" 
+                        value="${updown.tarrdate}" 
+                        required>
+                </div>
+
+                <div class="d-flex align-items-center mt-2">
+                    <label class="form-label me-4">Departure Date ${i + 1}:</label>
+                    <input type="date" name="updowns[${i}][tdepdate]" 
+                        class="form-control" 
+                        value="${updown.tdepdate}" 
                         required>
                 </div>
 

@@ -25,8 +25,14 @@ Index Page
                     @foreach ($train->trainupdowns as $updown)
                         <tr>
                             <td>{{ $train->trainname }}</td>
-                            <td>{{ \Carbon\Carbon::parse($updown->tdeptime)->format('d-m-Y h:i A') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($updown->tarrtime)->format('d-m-Y h:i A') }}</td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
+                                {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
+                            </td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
+                                {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
+                            </td>
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
                             <td>
@@ -43,7 +49,7 @@ Index Page
         </table>
     </div>
     <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
-    <form method="GET" action="{{ route('train.index') }}" id="search-form">
+        <form method="GET" action="{{ route('train.index') }}" id="search-form">
             <div class="mx-auto d-flex align-items-center">
                 <!-- Dropdown to select search type -->
                 <select name="search_by" class="form-control mx-2" aria-label="Search by" id="search-by">
@@ -57,6 +63,22 @@ Index Page
                 <button class="search-btn" type="submit">Search</button>  
             </div>
         </form>
+        <!-- <form method="GET" action="{{ route('train.index') }}" id="reset-form">
+            <div class="mx-auto d-flex align-items-center">
+                <select name="search_by" class="form-control mx-2" aria-label="Search by" id="search-by">
+                    <option value="tarrdate" {{ request()->search_by == 'tarrdate' ? 'selected' : '' }}>Arrival Date</option>
+                    <option value="tdepdate" {{ request()->search_by == 'tdepdate' ? 'selected' : '' }}>Departure Date</option>
+                </select>
+                <input class="search-bar mx-2"
+                type="date"
+                id="date-input"
+                name="search_date"
+                value="{{ request()->search_date }}"
+                placeholder="Select Date"
+                aria-label="Search">
+                <button class="search-btn" type="submit">Search</button>
+            </div>
+        </form> -->
     </div>
 </div>
 
