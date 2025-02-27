@@ -26,13 +26,13 @@ Index Page
 
                 <h1 style="font-size: 40px; 
                         font-weight: bold; 
-                        color: #081F5C; 
+                        color: #005F56; 
                         margin-bottom: 15px;">
                     Welcome to Bangladesh Railway
                 </h1>
 
                 <p style="font-size: 20px; 
-                        color: #081F5C; 
+                        color: #005F56; 
                         max-width: 500px; /* Limits text width for better readability */">
                     Explore the best train services, book your tickets, and enjoy a smooth journey across Bangladesh.
                 </p>
@@ -94,7 +94,7 @@ Index Page
     <div style="height: 160px;"></div> <!-- Spacer div -->
     <div class="card-deck" style="width: 99.7%; margin: 0 auto; border-radius: 10px; background-color: #F0FFFC; ">
         <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
-            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+            <div class="card-body"  style="background-color: #005F56; border-radius: 5px 5px 0 0;">
                 <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
                 <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
                 <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -104,7 +104,7 @@ Index Page
             </div>
         </div>
         <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
-            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+            <div class="card-body"  style="background-color: #005F56; border-radius: 5px 5px 0 0;">
                 <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
                 <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
                 <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -114,7 +114,7 @@ Index Page
             </div>
         </div>
         <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
-            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+            <div class="card-body"  style="background-color: #005F56; border-radius: 5px 5px 0 0;">
                 <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
                 <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
                 <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
@@ -124,7 +124,7 @@ Index Page
             </div>
         </div>
         <div class="card custom-card" style="border-radius: 6px; background-color: transparent;">
-            <div class="card-body"  style="background-color: #081F5C; border-radius: 5px 5px 0 0;">
+            <div class="card-body"  style="background-color: #005F56; border-radius: 5px 5px 0 0;">
                 <img src="{{ asset('images/train (1).jpg') }}" class="card-img" alt="Train" style="display: block; margin: 0 auto; width: 80%; border-radius: 5px;">
                 <h5 class="card-title text-center" style="color: #F0FFFC;">Train</h5>
                 <p class="card-text" style="color: #F0FFFC;">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>

@@ -34,7 +34,7 @@
       }
 
       footer {
-        background-color: #081F5C;
+        background-color: #005F56;
         color: white;
         margin: 10px 17px;
         width: 98.3;
@@ -56,7 +56,7 @@
         padding-top: 100px;">
     
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #081F5C; font-family: 'Sansation', sans-serif; font-weight: 700;">
+    <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
         <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
             <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
             <span class="font-weight-bold">Bangladesh Railway</span>
