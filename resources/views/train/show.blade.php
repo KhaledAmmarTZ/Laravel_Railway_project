@@ -5,7 +5,7 @@
 @section('content')
 <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
     <div class="card-header text-white" style="background-color: #005F56">
-      Train List
+      Train Details
       @if(session('success'))
         <div class="alert alert-success text-center w-100">
             {{ session('success') }}
@@ -23,12 +23,28 @@
                     <th>Source</th>
                     <th>Destination</th>
                     <th>Compartments</th>
+                    <th>Status</th> <!-- New Status Column -->
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($trains as $train)
                     @foreach ($train->trainupdowns as $index => $updown)
+                        @php
+                            $currentTime = \Carbon\Carbon::now(); // Get current date and time
+                            $departureTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime); // Parse the train departure time
+                            
+                            $status = '';
+                            
+                            // Check if the departure time is in the past
+                            if ($departureTime->isPast()) {
+                                $status = 'Unavailable'; // Train has already departed
+                            } 
+                            // Check if the train is available (future departure)
+                            elseif ($departureTime->isFuture()) {
+                                $status = 'Available'; // Train will depart in the future
+                            }
+                        @endphp
                         <tr>
                             @if ($index == 0)
                                 <!-- Only show train details for the first updown entry -->
@@ -55,6 +71,10 @@
                                             <li>Name:{{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }}) (Type: {{ $compartment->compartmenttype }})</li>
                                         @endforeach
                                     </ul>
+                                </td>
+                                <td rowspan="{{ count($train->trainupdowns) }}">
+                                    <!-- Status Column -->
+                                    <strong>{{ $status }}</strong>
                                 </td>
                                 <td rowspan="{{ count($train->trainupdowns) }}">
                                     <!-- Edit Button -->
@@ -99,7 +119,7 @@ $(document).ready(function() {
         
         // Perform AJAX request
         $.ajax({
-            url: "{{ route('train.index') }}",
+            url: "{{ route('train.show') }}", // Adjust this to your show route
             method: 'GET',
             data: {
                 search: query,

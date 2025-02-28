@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Train;
 use App\Models\Compartment;
 use App\Models\Updown;
+use App\Models\Station;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class TrainController extends Controller
@@ -12,7 +14,14 @@ class TrainController extends Controller
     // Show the create form
     public function create()
     {
-        return view('train.create');
+        $stations = Station::all();
+        return view('train.create' , compact('stations'));
+    }
+
+        // Define the convertTo24HourFormat function inside the TrainController
+    private function convertTo24HourFormat($time) {
+        // Convert time from 'HH:MM' to 'HH:MM:SS' 24-hour format
+        return date('H:i:s', strtotime($time));
     }
 
     // Store the newly created train along with compartments and updown info
@@ -56,8 +65,8 @@ class TrainController extends Controller
             'trainid' => $train->trainid,
             'tsource' => $updown['source'],
             'tdestination' => $updown['destination'],
-            'tdeptime' => date('H:i:s', strtotime($updown['deptime'])),  // Corrected time format
-            'tarrtime' => date('H:i:s', strtotime($updown['arrtime'])),  // Corrected time format
+            'tdeptime' => $this->convertTo24HourFormat($updown['deptime']),  // Using the defined function
+            'tarrtime' => $this->convertTo24HourFormat($updown['arrtime']),  // Using the defined function
             'tarrdate' => $updown['tarrdate'],
             'tdepdate' => $updown['tdepdate'],
         ]);
@@ -148,6 +157,25 @@ class TrainController extends Controller
 
         // Return the main view
         return view('train.show', compact('trains'));
+    }
+
+    public function showtrain(Request $request)
+    {
+        // Get the current time
+        $currentTime = \Carbon\Carbon::now();
+
+        // Fetch the unavailable trains
+        $unavailableTrains = Train::with('trainupdowns')
+            ->whereHas('trainupdowns', function ($query) use ($currentTime) {
+                $query->where('tdepdate', '<', $currentTime->format('Y-m-d'))
+                    ->orWhere(function ($query) use ($currentTime) {
+                        $query->where('tdepdate', '=', $currentTime->format('Y-m-d'))
+                                ->where('tdeptime', '<', $currentTime->format('H:i:s'));
+                    });
+            })
+            ->get();
+
+        return view('admin.profiles', compact('unavailableTrains'));
     }
 
     // Show the edit form

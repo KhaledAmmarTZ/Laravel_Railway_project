@@ -22,7 +22,6 @@ class CreateTrainupdownsTable extends Migration
         });
     }
 
-
     public function down()
     {
         Schema::dropIfExists('trainupdowns');

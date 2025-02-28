@@ -20,32 +20,36 @@
 
         compartmentContainer.innerHTML = '';
 
+        const table = document.createElement('table');
+        table.classList.add('table', 'table-bordered');
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = `
+            <th>Compartment Name</th>
+            <th>Number of Seats</th>
+            <th>Type</th>
+            <th>Actions</th>
+        `;
+        table.appendChild(headerRow);
+
         for (let i = 0; i < numCompartment; i++) {
             let compartment = storedData[i] || existingCompartments[i] || { id: '', compartmentname: '', seatnumber: '' };
 
-            const compartmentDiv = document.createElement('div');
-            compartmentDiv.classList.add('mb-3', 'compartment-item');
-            compartmentDiv.dataset.index = i;
-            
-            compartmentDiv.innerHTML = `
+            const compartmentRow = document.createElement('tr');
+            compartmentRow.classList.add('compartment-item');
+            compartmentRow.dataset.index = i;
+
+            compartmentRow.innerHTML = `
                 <input type="hidden" name="compartments[${i}][id]" value="${compartment.id}">
-                <div class="d-flex align-items-center">
-                    <label class="form-label me-4">Compartment ${i + 1} Name:</label>
-                    <input type="text" name="compartments[${i}][compartmentname]" class="form-control" value="${compartment.compartmentname}" required>
-                </div>
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Number of Seats:</label>
-                    <input type="number" name="compartments[${i}][seatnumber]" class="form-control" value="${compartment.seatnumber}" required>
-                </div>
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Type:</label>
-                    <input type="text" name="compartments[${i}][compartmenttype]" class="form-control" value="${compartment.compartmenttype}" required>
-                </div>
-                <button type="button" class="btn btn-danger mt-2" onclick="removeCompartment(${i})">Delete</button>
+                <td><input type="text" name="compartments[${i}][compartmentname]" class="form-control" value="${compartment.compartmentname}" required></td>
+                <td><input type="number" name="compartments[${i}][seatnumber]" class="form-control" value="${compartment.seatnumber}" required></td>
+                <td><input type="text" name="compartments[${i}][compartmenttype]" class="form-control" value="${compartment.compartmenttype}" required></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeCompartment(${i})">Delete</button></td>
             `;
 
-            compartmentContainer.appendChild(compartmentDiv);
+            table.appendChild(compartmentRow);
         }
+
+        compartmentContainer.appendChild(table);
     }
 
     function generateUpdowns(existingUpdowns = []) {
@@ -67,69 +71,42 @@
 
         updownContainer.innerHTML = '';
 
+        const table = document.createElement('table');
+        table.classList.add('table', 'table-bordered');
+        const headerRow = document.createElement('tr');
+        headerRow.innerHTML = `
+            <th>Arrival Time</th>
+            <th>Departure Time</th>
+            <th>Arrival Date</th>
+            <th>Departure Date</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Actions</th>
+        `;
+        table.appendChild(headerRow);
+
         for (let i = 0; i < numUpdown; i++) {
             let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '' ,tsource: '', tdestination: '' };
 
-            const updownDiv = document.createElement('div');
-            updownDiv.classList.add('mb-3', 'updown-item');
-            updownDiv.dataset.index = i;
-            
-            updownDiv.innerHTML = `
+            const updownRow = document.createElement('tr');
+            updownRow.classList.add('updown-item');
+            updownRow.dataset.index = i;
+
+            updownRow.innerHTML = `
                 <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
-
-                <div class="d-flex align-items-center">
-                    <label class="form-label me-4">Arrival ${i + 1}:</label>
-                    <input type="time" name="updowns[${i}][tarrtime]" 
-                        class="form-control" 
-                        value="${(updown.tarrtime)}" 
-                        required>
-                </div>
-
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Departure ${i + 1}:</label>
-                    <input type="time" name="updowns[${i}][tdeptime]" 
-                        class="form-control" 
-                        value="${(updown.tdeptime)}" 
-                        required>
-                </div>
-
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Arrival Date ${i + 1}:</label>
-                    <input type="date" name="updowns[${i}][tarrdate]" 
-                        class="form-control" 
-                        value="${updown.tarrdate}" 
-                        required>
-                </div>
-
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Departure Date ${i + 1}:</label>
-                    <input type="date" name="updowns[${i}][tdepdate]" 
-                        class="form-control" 
-                        value="${updown.tdepdate}" 
-                        required>
-                </div>
-
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Source ${i + 1}:</label>
-                    <input type="text" name="updowns[${i}][tsource]" 
-                        class="form-control" 
-                        value="${updown.tsource}" 
-                        required>
-                </div>
-
-                <div class="d-flex align-items-center mt-2">
-                    <label class="form-label me-4">Destination ${i + 1}:</label>
-                    <input type="text" name="updowns[${i}][tdestination]" 
-                        class="form-control" 
-                        value="${updown.tdestination}" 
-                        required>
-                </div>
-
-                <button type="button" class="btn btn-danger mt-2" onclick="removeUpdown(${i})">Delete</button>
+                <td><input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
+                <td><input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
+                <td><input type="date" name="updowns[${i}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
+                <td><input type="date" name="updowns[${i}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
+                <td><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
+                <td><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${i})">Delete</button></td>
             `;
 
-            updownContainer.appendChild(updownDiv);
+            table.appendChild(updownRow);
         }
+
+        updownContainer.appendChild(table);
     }
 
     function removeCompartment(index) {
@@ -152,7 +129,6 @@
     });
 </script>
 
-
 @if(session('success'))
     <div class="alert alert-success">
         {{ session('success') }}
@@ -161,7 +137,7 @@
 
 <div class="container mt-4">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <form action="{{ route('train.update', $train->trainid) }}" method="POST">
                 @csrf
                 @method('PUT')
@@ -183,7 +159,7 @@
                         <div id="compartment-sections"></div>
 
                         <div class="mb-3">
-                            <label class="form-label">Number of Updowns:</label>
+                            <label class="form-label">Number of Schedules:</label>
                             <input type="number" name="updownnumber" id="updownnumber" class="form-control" onchange="generateUpdowns()" value="{{ count($train->trainupdowns) }}">
                         </div>
                         <div id="updown-sections"></div>

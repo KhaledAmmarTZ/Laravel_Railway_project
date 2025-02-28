@@ -43,6 +43,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::get('/profiles/edit', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
     Route::patch('/profiles/edit', [AdminProfileController::class, 'update'])->name('admin.profile.update');
     Route::delete('/profiles/edit', [AdminProfileController::class, 'destroy'])->name('admin.profile.destroy');
+    Route::get('/profiles',[TrainController::class, 'showtrain'])->name('admin.profiles');
 
     Route::get('verify-email', EmailVerificationPromptController::class)
         ->name('admin.verification.notice');
