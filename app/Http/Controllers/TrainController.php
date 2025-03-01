@@ -187,9 +187,36 @@ class TrainController extends Controller
 
     public function showEditPage()
     {
-        $trains = Train::all();
+        // Get all trains with their associated trainupdowns
+        $trains = Train::with('trainupdowns')->get();
+    
+        // Get the current time
+        $currentTime = \Carbon\Carbon::now();
+    
+        // Loop through each train and check its availability
+        foreach ($trains as $train) {
+            // Check if train has any associated trainupdowns
+            if ($train->trainupdowns->isNotEmpty()) {
+                // Get the first departure date and time for the train
+                $departureCarbon = \Carbon\Carbon::parse($train->trainupdowns->first()->tdepdate . ' ' . $train->trainupdowns->first()->tdeptime);
+    
+                // Check if the departure time has passed compared to the current time
+                if ($departureCarbon->isPast()) {
+                    $train->status = 'Unavailable';
+                } else {
+                    $train->status = 'Available';
+                }
+            } else {
+                // If no trainupdowns are available, set as unavailable
+                $train->status = 'Unavailable';
+            }
+        }
+    
+        // Pass the trains data to the view
         return view('train.list_edit', compact('trains'));
     }
+    
+    
 
     public function loadTrainData(Request $request)
     {

@@ -75,12 +75,12 @@
         table.classList.add('table', 'table-bordered');
         const headerRow = document.createElement('tr');
         headerRow.innerHTML = `
+            <th>Source</th>
+            <th>Destination</th>
             <th>Arrival Time</th>
             <th>Departure Time</th>
             <th>Arrival Date</th>
-            <th>Departure Date</th>
-            <th>Source</th>
-            <th>Destination</th>
+            <th>Departure Date</th> 
             <th>Actions</th>
         `;
         table.appendChild(headerRow);
@@ -93,13 +93,14 @@
             updownRow.dataset.index = i;
 
             updownRow.innerHTML = `
+                <td><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
+                <td><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
                 <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
                 <td><input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
                 <td><input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
                 <td><input type="date" name="updowns[${i}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
                 <td><input type="date" name="updowns[${i}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
-                <td><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
-                <td><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
+                
                 <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${i})">Delete</button></td>
             `;
 
@@ -135,7 +136,6 @@
     </div>
 @endif
 
-<div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <form action="{{ route('train.update', $train->trainid) }}" method="POST">
@@ -152,11 +152,15 @@
                             <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
                         </div>
 
+                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+
                         <div class="mb-3">
-                            <label class="form-label">Number of Compartments:</label>
+                            <label class="form-label" st yle="text-size: bold">Number of Compartments:</label>
                             <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
                         </div>
                         <div id="compartment-sections"></div>
+
+                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
 
                         <div class="mb-3">
                             <label class="form-label">Number of Schedules:</label>
@@ -164,12 +168,13 @@
                         </div>
                         <div id="updown-sections"></div>
 
+                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+
                         <button type="submit" class="btn btn-success">Update Train</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-</div>
 
 @endsection
