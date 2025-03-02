@@ -11,47 +11,67 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>S</th>
                         <th>Train Name</th>
-                        <th>Train Description</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Arrival</th>
+                        <th>Departure</th>
                         <th>Availability</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @php $serial = 1; @endphp <!-- Initialize serial number -->
                     @foreach ($trains as $train)
-                        @php
-                            $arrivalDate = $arrivalTime = $departureDate = $departureTime = null;
-                            $availability = 'Unavailable';  // Default is Unavailable
+                        @if ($train->trainupdowns->isNotEmpty())
+                            @php
+                                $firstRow = true; // Flag to track first row for rowspan
+                            @endphp
+                            @foreach ($train->trainupdowns as $updown)
+                                @php
+                                    $arrivalDateTime = \Carbon\Carbon::parse($updown->tarrdate . ' ' . $updown->tarrtime);
+                                    $departureDateTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime);
+                                    $currentDate = \Carbon\Carbon::now();
 
-                            // Check if trainupdowns is not empty
-                            if ($train->trainupdowns->isNotEmpty()) {
-                                $arrivalDate = \Carbon\Carbon::parse($train->trainupdowns->first()->tarrdate)->format('d-m-Y');
-                                $arrivalTime = \Carbon\Carbon::parse($train->trainupdowns->first()->tarrtime)->format('h:i A');
-                                $departureDate = \Carbon\Carbon::parse($train->trainupdowns->first()->tdepdate)->format('d-m-Y');
-                                $departureTime = \Carbon\Carbon::parse($train->trainupdowns->first()->tdeptime)->format('h:i A');
+                                    // Check availability for this specific source-destination pair
+                                    $isAvailable = $currentDate->lessThanOrEqualTo($departureDateTime);
+                                    $availability = $isAvailable ? 'Available' : 'Unavailable';
 
-                                // Check if the current date is before the departure date
-                                $currentDate = \Carbon\Carbon::now();
-                                $departureDatetime = \Carbon\Carbon::parse($train->trainupdowns->first()->tdepdate . ' ' . $train->trainupdowns->first()->tdeptime);
-
-                                if ($currentDate->lessThanOrEqualTo($departureDatetime)) {
-                                    $availability = 'Available';  // Train is available if current date is before departure
-                                }
-                            }
-                        @endphp
-                        <tr>
-                            <td>{{ $train->trainname }}</td>
-                            <td>
-                                @if($arrivalDate && $arrivalTime && $departureDate && $departureTime)
-                                    Arrival: ({{ $arrivalDate }} {{ $arrivalTime }})<br>
-                                    Departure: ({{ $departureDate }} {{ $departureTime }})
-                                @else
-                                    Data not available
-                                @endif
-                            </td>
-                            <td>{{ $availability }}</td>  <!-- Show availability -->
-                            <td><a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary">Edit</a>/td>
-                        </tr>
+                                    // Column color when train is unavailable
+                                    $columnStyle = $isAvailable ? '' : 'background-color: #ffcccc;';
+                                @endphp
+                                <tr>
+                                    @if ($firstRow)
+                                        <td rowspan="{{ $train->trainupdowns->count() }}">{{ $serial }}</td> <!-- Serial Number Column -->
+                                        <td rowspan="{{ $train->trainupdowns->count() }}">{{ $train->trainname }}</td>
+                                        @php $firstRow = false; @endphp
+                                    @endif
+                                    <td style="{{ $columnStyle }}">{{ $updown->tsource }}</td>
+                                    <td style="{{ $columnStyle }}">{{ $updown->tdestination }}</td>
+                                    <td style="{{ $columnStyle }}">{{ $arrivalDateTime->format('d-m-Y h:i A') }}</td>
+                                    <td style="{{ $columnStyle }}">{{ $departureDateTime->format('d-m-Y h:i A') }}</td>
+                                    <td style="{{ $columnStyle }}">
+                                        <span style="color: {{ $isAvailable ? 'green' : 'red' }};">
+                                            {{ $availability }}
+                                        </span>
+                                    </td>
+                                    @if ($loop->first)
+                                        <td rowspan="{{ $train->trainupdowns->count() }}">
+                                            <a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary">Edit</a>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                            @php $serial++; @endphp <!-- Increment serial number -->
+                        @else
+                            <tr>
+                                <td>{{ $serial }}</td> <!-- Serial number for trains with no updowns -->
+                                <td>{{ $train->trainname }}</td>
+                                <td colspan="6">No data available for this train.</td>
+                            </tr>
+                            @php $serial++; @endphp <!-- Increment serial number -->
+                        @endif
                     @endforeach
                 </tbody>
             </table>

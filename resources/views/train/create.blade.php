@@ -226,8 +226,8 @@ function updateArrTime(selectElement, index) {
         </div>
     @endif
 
-    <div class="container mt-8">
-        <div class="row justify-content-center">
+
+
             <div class="col-md-12">
                 <form action="{{ route('train.store') }}" method="POST">
                     @csrf
@@ -237,24 +237,24 @@ function updateArrTime(selectElement, index) {
                         </div>
                         <div class="card-body">
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="tname" class="form-label me-3" style="width: 150px; text-align: right;">Train Name : &nbsp;</label>
+                                <label for="tname" class="form-label me-3" style="width: 350px; text-align: right;">Train Name : &nbsp;</label>
                                 <input type="text" name="tname" id="tname" class="form-control flex-grow-1" required>
                             </div>
-
+                            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="numofcompartment" class="form-label me-3" style="width: 150px; text-align: right;">Number of Compartments :&nbsp; </label>
+                                <label for="numofcompartment" class="form-label me-3" style="width: 350px; text-align: right;">Number of Compartments : &nbsp; </label>
                                 <input type="number" name="numofcompartment" id="numofcompartment" class="form-control flex-grow-1" min="1" onchange="generateCompartments()" required>
                             </div>
-
+                            
                             <div id="compartment-sections"></div> <!-- Dynamic compartments will appear here -->
-
+                            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                             <div class="mb-3 d-flex align-items-center">
-                                <label for="updownnumber" class="form-label me-3" style="width: 150px; text-align: right;">Number of Schedules :&nbsp;</label>
+                                <label for="updownnumber" class="form-label me-3" style="width: 350px; text-align: right;">Number of Schedules : &nbsp;</label>
                                 <input type="number" name="updownnumber" id="updownnumber" class="form-control flex-grow-1" min="1" onchange="generateUpdowns()" required>
                             </div>
 
                             <div id="updown-sections"></div> <!-- Dynamic updown sections will appear here -->
-
+                            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                             <button type="submit" class="btn search-btn">Submit</button>
                         </div>
                     </div>

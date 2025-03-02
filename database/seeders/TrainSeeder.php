@@ -27,12 +27,12 @@ class TrainSeeder extends Seeder
 
         $compartmentTypes = ['AC', 'Sleeper', 'First Class', 'Economy', 'Business', 'Women', 'Handicap'];
 
-        for ($i = 1; $i <= 30; $i++) {
+        foreach ($trainNames as $trainName) {
             $compartmentNumber = rand(1, 7); 
             $updownNumber = rand(1, 3);   
 
             $trainId = DB::table('train')->insertGetId([
-                'trainname' => $trainNames[array_rand($trainNames)], 
+                'trainname' => $trainName, 
                 'compartmentnumber' => $compartmentNumber,
                 'updownnumber' => $updownNumber,
                 'created_at' => now(),
@@ -60,12 +60,15 @@ class TrainSeeder extends Seeder
                     $tdestination = $stations[array_rand($stations)];
                 }
 
+                $tdepdate = now()->addDays(rand(1, 7));
+                $tarrdate = $tdepdate->copy()->addDays(rand(1, 7));
+
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
                     'tarrtime' => now()->addHours(rand(1, 12))->format('H:i:s'),
                     'tdeptime' => now()->addHours(rand(13, 24))->format('H:i:s'),
-                    'tarrdate' => now()->addDays(rand(1, 7))->format('Y-m-d'),
-                    'tdepdate' => now()->addDays(rand(1, 7))->format('Y-m-d'),
+                    'tdepdate' => $tdepdate->format('Y-m-d'),
+                    'tarrdate' => $tarrdate->format('Y-m-d'),
                     'tsource' => $tsource,
                     'tdestination' => $tdestination,
                     'created_at' => now(),

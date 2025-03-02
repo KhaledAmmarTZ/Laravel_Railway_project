@@ -1,4 +1,5 @@
 @extends('layout.master')
+
 @section('title')
 Index Page
 @endsection
@@ -12,6 +13,7 @@ Index Page
         <table class="table" border="2" id="train-table">
             <thead>
                 <tr>
+                    <th>S</th>
                     <th>Train Name</th>
                     <th>Arrival Time</th>
                     <th>Departure Time</th>
@@ -21,9 +23,11 @@ Index Page
                 </tr>
             </thead>
             <tbody>
+                @php $serial = 1; @endphp <!-- Initialize serial number -->
                 @foreach ($trains as $train)
                     @foreach ($train->trainupdowns as $updown)
                         <tr>
+                            <td>{{ $serial }}</td> <!-- Serial Number Column -->
                             <td>{{ $train->trainname }}</td>
                             <td>
                                 {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
@@ -43,6 +47,7 @@ Index Page
                                 </ul>
                             </td>
                         </tr>
+                        @php $serial++; @endphp <!-- Increment serial number -->
                     @endforeach
                 @endforeach
             </tbody>
@@ -63,22 +68,6 @@ Index Page
                 <button class="search-btn" type="submit">Search</button>  
             </div>
         </form>
-        <!-- <form method="GET" action="{{ route('train.index') }}" id="reset-form">
-            <div class="mx-auto d-flex align-items-center">
-                <select name="search_by" class="form-control mx-2" aria-label="Search by" id="search-by">
-                    <option value="tarrdate" {{ request()->search_by == 'tarrdate' ? 'selected' : '' }}>Arrival Date</option>
-                    <option value="tdepdate" {{ request()->search_by == 'tdepdate' ? 'selected' : '' }}>Departure Date</option>
-                </select>
-                <input class="search-bar mx-2"
-                type="date"
-                id="date-input"
-                name="search_date"
-                value="{{ request()->search_date }}"
-                placeholder="Select Date"
-                aria-label="Search">
-                <button class="search-btn" type="submit">Search</button>
-            </div>
-        </form> -->
     </div>
 </div>
 

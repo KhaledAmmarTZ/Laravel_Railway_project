@@ -53,62 +53,69 @@
     }
 
     function generateUpdowns(existingUpdowns = []) {
-        const numUpdown = parseInt(document.getElementById('updownnumber').value) || 0;
-        const updownContainer = document.getElementById('updown-sections');
+    const numUpdown = parseInt(document.getElementById('updownnumber').value) || 0;
+    const updownContainer = document.getElementById('updown-sections');
 
-        let storedData = [];
-        document.querySelectorAll('#updown-sections .updown-item').forEach((updownDiv, index) => {
-            storedData.push({
-                id: updownDiv.querySelector(`[name="updowns[${index}][id]"]`).value,
-                tarrtime: updownDiv.querySelector(`[name="updowns[${index}][tarrtime]"]`).value,
-                tdeptime: updownDiv.querySelector(`[name="updowns[${index}][tdeptime]"]`).value,
-                tarrdate: updownDiv.querySelector(`[name="updowns[${index}][tarrdate]"]`).value,
-                tdepdate: updownDiv.querySelector(`[name="updowns[${index}][tdepdate]"]`).value,
-                tsource: updownDiv.querySelector(`[name="updowns[${index}][tsource]"]`).value,
-                tdestination: updownDiv.querySelector(`[name="updowns[${index}][tdestination]"]`).value
-            });
+    let storedData = [];
+    document.querySelectorAll('#updown-sections .updown-item').forEach((updownDiv, index) => {
+        storedData.push({
+            id: updownDiv.querySelector(`[name="updowns[${index}][id]"]`).value,
+            tarrtime: updownDiv.querySelector(`[name="updowns[${index}][tarrtime]"]`).value,
+            tdeptime: updownDiv.querySelector(`[name="updowns[${index}][tdeptime]"]`).value,
+            tarrdate: updownDiv.querySelector(`[name="updowns[${index}][tarrdate]"]`).value,
+            tdepdate: updownDiv.querySelector(`[name="updowns[${index}][tdepdate]"]`).value,
+            tsource: updownDiv.querySelector(`[name="updowns[${index}][tsource]"]`).value,
+            tdestination: updownDiv.querySelector(`[name="updowns[${index}][tdestination]"]`).value
         });
+    });
 
-        updownContainer.innerHTML = '';
+    updownContainer.innerHTML = '';
 
-        const table = document.createElement('table');
-        table.classList.add('table', 'table-bordered');
-        const headerRow = document.createElement('tr');
-        headerRow.innerHTML = `
-            <th>Source</th>
-            <th>Destination</th>
-            <th>Arrival Time</th>
-            <th>Departure Time</th>
-            <th>Arrival Date</th>
-            <th>Departure Date</th> 
-            <th>Actions</th>
+    const table = document.createElement('table');
+    table.classList.add('table', 'table-bordered');
+    const headerRow = document.createElement('tr');
+    headerRow.innerHTML = `
+        <th>Source</th>
+        <th>Destination</th>
+        <th>Arrival Time</th>
+        <th>Departure Time</th>
+        <th>Arrival Date</th>
+        <th>Departure Date</th> 
+        <th>Actions</th>
+    `;
+    table.appendChild(headerRow);
+
+    for (let i = 0; i < numUpdown; i++) {
+        let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '', tsource: '', tdestination: '' };
+
+        const updownRow = document.createElement('tr');
+        updownRow.classList.add('updown-item');
+        updownRow.dataset.index = i;
+
+        // Check if the current updown entry is available (future time)
+        const currentTime = new Date();
+        const departureTime = new Date(`${updown.tdepdate}T${updown.tdeptime}`);
+
+        // If the departure time is in the future, it's available; otherwise, it's unavailable
+        const isAvailable = departureTime > currentTime;
+        const rowStyle = isAvailable ? '' : 'background-color: #ffcccc;';  // Red color if unavailable
+
+        updownRow.innerHTML = `
+            <td style="${rowStyle}"><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
+            <td style="${rowStyle}"><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
+            <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
+            <td style="${rowStyle}"><input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
+            <td style="${rowStyle}"><input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
+            <td style="${rowStyle}"><input type="date" name="updowns[${i}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
+            <td style="${rowStyle}"><input type="date" name="updowns[${i}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
+            <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${i})">Delete</button></td>
         `;
-        table.appendChild(headerRow);
 
-        for (let i = 0; i < numUpdown; i++) {
-            let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '' ,tsource: '', tdestination: '' };
-
-            const updownRow = document.createElement('tr');
-            updownRow.classList.add('updown-item');
-            updownRow.dataset.index = i;
-
-            updownRow.innerHTML = `
-                <td><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
-                <td><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
-                <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
-                <td><input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
-                <td><input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
-                <td><input type="date" name="updowns[${i}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
-                <td><input type="date" name="updowns[${i}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
-                
-                <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${i})">Delete</button></td>
-            `;
-
-            table.appendChild(updownRow);
-        }
-
-        updownContainer.appendChild(table);
+        table.appendChild(updownRow);
     }
+
+    updownContainer.appendChild(table);
+}
 
     function removeCompartment(index) {
         let compartments = document.querySelectorAll('#compartment-sections .compartment-item');

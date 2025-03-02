@@ -19,21 +19,21 @@
 </head>
   <body style="background-color: #F0FFFC;">
     <div class="container-fluid">
+        <!-- Fixed Navbar -->
         <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
-        <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
-            <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
-            <span class="font-weight-bold">Bangladesh Railway</span>
-        </a>
+            <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
+                <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
+                <span class="font-weight-bold">Bangladesh Railway</span>
+            </a>
 
-
-        <!-- Time & Date Section (Stacked Layout) -->
-        <div class="ml-auto text-white text-center" id="datetime" style="font-size: 20px; font-weight: bold; display: flex; flex-direction: column; align-items: center; margin-right: 20px;"></div>
-    </nav>
+            <!-- Time & Date Section (Stacked Layout) -->
+            <div class="ml-auto text-white text-center" id="datetime" style="font-size: 20px; font-weight: bold; display: flex; flex-direction: column; align-items: center; margin-right: 20px;"></div>
+        </nav>
         <div class="container-fluid">
             <div class="row flex-xl-nowrap" style="min-height: 100vh;">
                 <!-- Sidebar with Border-Right for Vertical Line -->
-                <div class="col-12 col-md-3 col-xl-2 p-3 border-right" style="border-right: 2px solid #ccc;">
-                    <div class="card shadow h-100;" style="background-color: #DFF6F0;">
+                <div class="col-12 col-md-3 col-xl-2 p-3 sidebar" >
+                    <div class="card  h-100" style="background-color: #DFF6F0; border: none;">
                         <!-- Sidebar Header <div class="card-header bg-primary text-white text-center">
                             Sidebar Menu
                         </div> -->
@@ -114,8 +114,8 @@
                 </div>
 
                 <!-- Main Content Section -->
-                <div class="col p-3">
-                    <div class="d-flex justify-content-center align-items-start shadow p-3 mb-5 rounded" style="height: auto; padding-top: 50px; background-color: #DFF6F0; border: 1px solid #ccc;">
+                <div class="col p-3 main-content">
+                    <div class="d-flex justify-content-center align-items-start  p-3 mb-5 rounded" style=" padding-top: 50px; background-color: #DFF6F0;">
                         @yield('content')
                     </div>
                 </div>

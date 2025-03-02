@@ -47,12 +47,12 @@
             </div>
         </div>
 
-        <hr>
+        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
 
         <!-- Display the Unavailable Train Section -->
         <div class="row">
             <div class="col-12">
-                <h4>Unavailable Trains</h4>
+                <h4 class="mb-3" style="text-align: center;">Unavailable Trains</h4>
 
                 @if($unavailableTrains->isEmpty())
                     <p>No unavailable trains found.</p>
@@ -65,7 +65,7 @@
                                 <th>Arrival Time</th>
                                 <th>Source</th>
                                 <th>Destination</th>
-                                <th>Reschedule</th>
+                                <th style="text-align: center;" >Reschedule</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -87,7 +87,7 @@
                                             <td>{{ $updown->tdestination }}</td>
                                             <td>
                                                 <!-- Reschedule Button -->
-                                                <a href="{{ route('train.edit', $train->trainid) }}" class="btn update-btn btn-sm">Reschedule</a>
+                                                <a style="position: relative; left: 50%; transform: translateX(-50%); text-align: center;" href="{{ route('train.edit', $train->trainid) }}" class="btn update-btn btn-sm">Reschedule</a>
                                             </td>
                                         </tr>
                                     @endif

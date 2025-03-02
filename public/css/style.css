@@ -111,6 +111,39 @@
     color: rgb(0, 0, 0);
 }
 
+/* Navbar fixed at the top */
+nav.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 98%;
+    z-index: 1000; /* Ensures it's above other elements */
+    background-color: #005F56; /* Match your design */
+    height: 100px; /* Adjust to match your navbar height */
+}
+
+/* Sidebar and main content are pushed below the fixed navbar */
+.container-fluid {
+    margin-top: 100px; /* Height of the navbar */
+}
+
+.sidebar {
+    position: fixed;
+    top: 100px; /* Adjust to match navbar height */
+    left: 0;
+    width: 18%; /* Adjust the sidebar width as needed */
+    height: calc(100vh - 100px); /* Full height minus navbar */
+    background-color: #F0FFFC;
+    padding-top: 30px;
+    z-index: 999; /* Ensure it stays behind the navbar */
+}
+
+.main-content {
+    right: -10px; /* Adjust to match sidebar width */
+    margin-left: 15%; /* Sidebar width */
+    padding-top: 30px; /* To give space below navbar */
+}
+
 .btn-success {
     background-color: #005F56;
     color: white;
