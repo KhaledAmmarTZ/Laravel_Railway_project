@@ -75,4 +75,5 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::put('/train/{train}', [TrainController::class, 'update'])->name('train.update');
     Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
     Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
+
 });

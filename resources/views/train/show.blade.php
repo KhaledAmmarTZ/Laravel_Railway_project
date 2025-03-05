@@ -18,12 +18,10 @@
                 <tr>
                     <th>S</th>
                     <th>Train Name</th>
-                    <th>Number of Compartments</th>
                     <th>Departure Time</th>
                     <th>Arrival Time</th>
                     <th>Source</th>
                     <th>Destination</th>
-                    <th>Compartments</th>
                     <th>Status</th> <!-- Individual Status Column -->
                     <th>Action</th>
                 </tr>
@@ -45,7 +43,6 @@
                 @if ($index == 0)
                     <td rowspan="{{ count($train->trainupdowns) }}">{{ $serial }}</td> <!-- Serial Number Column -->
                     <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
-                    <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->compartmentnumber }}</td>
                 @endif
                 <td style="{{ $columnStyle }}">
                     {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
@@ -58,15 +55,6 @@
                 <td style="{{ $columnStyle }}">{{ $updown->tsource }}</td>
                 <td style="{{ $columnStyle }}">{{ $updown->tdestination }}</td>
 
-                @if ($index == 0)
-                    <td rowspan="{{ count($train->trainupdowns) }}">
-                        <ul>
-                            @foreach ($train->traincompartments as $compartment)
-                                <li>Name: {{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }}) (Type: {{ $compartment->compartmenttype }})</li>
-                            @endforeach
-                        </ul>
-                    </td>
-                @endif
                 <td style="{{ $columnStyle }}">
                     <strong>{{ $status }}</strong>
                 </td>
