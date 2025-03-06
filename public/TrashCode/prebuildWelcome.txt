@@ -303,3 +303,27 @@ $(document).ready(function() {
 });
 </script>
 @endsection
+
+
+navbar
+
+<!-- Fixed Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light" style="height: 50px; margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
+            <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
+                <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
+                <span class="font-weight-bold">Bangladesh Railway</span>
+            </a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="ml-auto text-white text-center" style="margin-right: 20px; margin-top: 15px;">
+                <form class="bd-search d-flex align-items-center mb-3">
+                    <img src="{{ auth()->guard('admin')->user()->admin_image ? asset('storage/' . auth()->guard('admin')->user()->admin_image) : asset('images/default-profile.png') }}" alt="Profile Picture" class="rounded-circle border" width="20" height="20">
+                    <span class="ml-2 font-weight-bold">{{ auth()->guard('admin')->user()->name }}</span>
+                </form>
+                <form class="bd-search d-flex align-items-center mb-3" action="{{ route('admin.logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger btn-block">Logout</button>
+                </form>
+            </div>
+            </div>
+        </nav>

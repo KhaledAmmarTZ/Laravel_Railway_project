@@ -111,38 +111,6 @@
     color: rgb(0, 0, 0);
 }
 
-/* Navbar fixed at the top */
-nav.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 98%;
-    z-index: 1000; /* Ensures it's above other elements */
-    background-color: #005F56; /* Match your design */
-    height: 100px; /* Adjust to match your navbar height */
-}
-
-/* Sidebar and main content are pushed below the fixed navbar */
-.container-fluid {
-    margin-top: 100px; /* Height of the navbar */
-}
-
-.sidebar {
-    position: fixed;
-    top: 100px; /* Adjust to match navbar height */
-    left: 0;
-    width: 18%; /* Adjust the sidebar width as needed */
-    height: calc(100vh - 100px); /* Full height minus navbar */
-    background-color: #F0FFFC;
-    padding-top: 30px;
-    z-index: 999; /* Ensure it stays behind the navbar */
-}
-
-.main-content {
-    right: -10px; /* Adjust to match sidebar width */
-    margin-left: 15%; /* Sidebar width */
-    padding-top: 30px; /* To give space below navbar */
-}
 
 .btn-success {
     background-color: #005F56;
@@ -230,3 +198,14 @@ a {
 .content {
     flex: 1;
   }
+
+.navbar-toggler {
+    border-color: white !important; /* Optional: Makes the button border white */
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
+    background-color: transparent !important;
+}
+
+

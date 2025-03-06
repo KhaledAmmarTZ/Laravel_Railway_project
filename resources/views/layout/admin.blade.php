@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Sansation&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+
+
 
 
 
@@ -19,35 +24,66 @@
 </head>
   <body style="background-color: #F0FFFC;">
     <div class="container-fluid">
-        <!-- Fixed Navbar -->
-        <nav class="navbar navbar-expand-lg navbar-light" style="height: 100px; margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
-            <a class="navbar-brand d-flex align-items-center text-white" style="margin-left: 20px; font-weight: bold;" href="#">
-                <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 50px; width: auto; margin-right: 10px;">
+            <nav class="navbar navbar-expand-lg navbar-light" style=" margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
+                <a class="navbar-brand text-white" href="#">
+                <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 30px; width: auto; margin-right: 10px;">
                 <span class="font-weight-bold">Bangladesh Railway</span>
-            </a>
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <!-- Time & Date Section (Stacked Layout) -->
-            <div class="ml-auto text-white text-center" id="datetime" style="font-size: 20px; font-weight: bold; display: flex; flex-direction: column; align-items: center; margin-right: 20px;"></div>
-        </nav>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+
+                    <!-- Profile Section -->
+                    <form class="form-inline my-2 my-lg-0 mx-3">
+                        <img src="{{ auth()->guard('admin')->user()->admin_image ? asset('storage/' . auth()->guard('admin')->user()->admin_image) : asset('images/default-profile.png') }}" 
+                            alt="Profile Picture" class="rounded-circle border" width="25" height="25">
+                        <span class="ml-2 font-weight-bold text-white">{{ auth()->guard('admin')->user()->name }}</span>
+                    </form>
+
+                    <!-- Vertical Line -->
+                    <div class="mx-2" style="border-left: 1px solid white; height: 25px;"></div>
+
+                    <!-- Profile Icon (Thin) -->
+                    <a href="{{ route('admin.profiles') }}" class="mx-2 d-flex align-items-center">
+                        <i class="bi bi-person" style="color: white; font-size: 22px;"></i>
+                    </a>
+
+                    <!-- Settings Icon -->
+                    <a href="{{ route('admin.profile.edit') }}" class="mx-2 d-flex align-items-center">
+                        <i class="bi bi-gear" style="color: white; font-size: 22px;"></i> 
+                    </a>
+
+                    <form class="form-inline my-2 my-lg-0 ml-3" action="{{ route('admin.logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger btn-block" style="background: none; border: none; padding: 0;">
+                            <i class="fa-solid fa-arrow-right-from-bracket" style="color: white; font-size: 20px;"></i>
+                        </button>
+                    </form>
+                </div>
+            </nav>
         <div class="container-fluid">
-            <div class="row flex-xl-nowrap" style="min-height: 100vh;">
+            <div class="row flex-xl-nowrap" style="min-height: 90vh; max-height: 91vh;">
                 <!-- Sidebar with Border-Right for Vertical Line -->
                 <div class="col-12 col-md-3 col-xl-2 p-3 sidebar" >
-                    <div class="card  h-100" style="background-color: #DFF6F0; border: none;">
+                    <div class="card  h-100" style="background-color: #F0FFFC; border: 1px solid #005F56;">
                         <!-- Sidebar Header <div class="card-header bg-primary text-white text-center">
                             Sidebar Menu
                         </div> -->
                         <div class="card-body"> 
-                            <!-- Profile Section -->
-                            <form class="bd-search d-flex align-items-center mb-3">
-                                <img src="{{ auth()->guard('admin')->user()->admin_image ? asset('storage/' . auth()->guard('admin')->user()->admin_image) : asset('images/default-profile.png') }}" alt="Profile Picture" class="rounded-circle border" width="40" height="40">
-                                <span class="ml-2 font-weight-bold">{{ auth()->guard('admin')->user()->name }}</span>
-                            </form>
-                            <hr class="my-3">
-                            
                             <!-- Navigation Buttons -->
                             <nav class="bd-links">
                             <div class="d-grid gap-2">
+                                <a href="{{ url('/admin/dashboard') }}" class="btn btn-success btn-block">Dashboard</a>
                                 <a href="{{ url('/admin/profiles') }}" class="btn btn-success btn-block">Profile</a>
                                 <!-- Train Section -->
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#trainOptions">
@@ -104,18 +140,18 @@
                         </nav>
 
                         </div>                     
-                        <div class="card-footer border-0 text-center" style="background-color: #DFF6F0;">
+                        <!-- <div class="card-footer border-0 text-center" style="background-color: #F0FFFC;">
                             <form action="{{ route('admin.logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-block">Logout</button>
                             </form>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
                 <!-- Main Content Section -->
                 <div class="col p-3 main-content">
-                    <div class="d-flex justify-content-center align-items-start  p-3 mb-5 rounded" style=" padding-top: 50px; background-color: #DFF6F0;">
+                    <div class="d-flex justify-content-center align-items-start  p-3 mb-5 rounded" style=" padding-top: 50px; background-color: #F0FFFC; border: 1px solid #005F56;">
                         @yield('content')
                     </div>
                 </div>
