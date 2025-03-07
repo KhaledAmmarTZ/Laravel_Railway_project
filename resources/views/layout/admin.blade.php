@@ -90,7 +90,7 @@
                                     Train
                                 </button>
                                 <div class="collapse mb-3 " id="trainOptions">
-                                    <a href="{{ url('/admin/train/edit') }}" class="btn sidebar-btn btn-block ml-3">Edit Train</a>
+                                    <!-- <a href="{{ url('/admin/train/edit') }}" class="btn sidebar-btn btn-block ml-3">Edit Train</a> -->
                                     <a href="{{ url('/admin/train/create') }}" class="btn sidebar-btn btn-block ml-3">Add Train</a>
                                     <a href="{{ url('/admin/train/show') }}" class="btn sidebar-btn btn-block ml-3">View Trains</a>
                                 </div>

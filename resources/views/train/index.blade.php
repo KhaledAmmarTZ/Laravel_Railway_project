@@ -1,34 +1,78 @@
 @extends('layout.master')
 
 @section('title')
-Index Page
+    Index Page
 @endsection
 
 @section('content')
-<div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
-    <div class="card-header text-white" style="background-color: #005F56">
-        Train List
-    </div>
-    <div class="card-body">
-        <table class="table" border="2" id="train-table">
-            <thead>
-                <tr>
-                    <th>S</th>
-                    <th>Train Name</th>
-                    <th>Arrival Time</th>
-                    <th>Departure Time</th>
-                    <th>Source</th>
-                    <th>Destination</th>
-                    <th>Compartment</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php $serial = 1; @endphp <!-- Initialize serial number -->
-                @foreach ($trains as $train)
-                    @foreach ($train->trainupdowns as $updown)
+    <style>
+        .custom-table {
+            border: 4px solid black !important;
+        }
+
+        .custom-table th, 
+        .custom-table td {
+            border: 3px solid black !important;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .custom-table thead {
+            background-color: #343a40;
+            color: white;
+            font-size: 18px;
+        }
+
+        .custom-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .pagination {
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #005F56;
+            border-color: #005F56;
+            color: white;
+        }
+
+        .pagination .page-item .page-link {
+            color: black;
+            font-weight: bold;
+            border: 2px solid black;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: gray;
+            border-color: #ccc;
+        }
+    </style>
+
+    <div class="card text-center" style="width: 98%; margin-left: 1%; background-color: #f8f9fa; border: 2px solid #000;">
+        <div class="card-header text-white" style="background-color: #005F56">
+            Train List
+        </div>
+        <div class="card-body">
+            <table class="table custom-table" id="train-table">
+                <thead>
+                    <tr>
+                        <th>S</th>
+                        <th>Train Name</th>
+                        <th>Arrival Time</th>
+                        <th>Departure Time</th>
+                        <th>Source</th>
+                        <th>Destination</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $serial = ($updowns->currentPage() - 1) * $updowns->perPage() + 1; @endphp
+                    @foreach ($updowns as $updown)
                         <tr>
-                            <td>{{ $serial }}</td> <!-- Serial Number Column -->
-                            <td>{{ $train->trainname }}</td>
+                            <td>{{ $serial }}</td>
+                            <td>{{ $updown->train->trainname }}</td>
                             <td>
                                 {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
                                 {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
@@ -39,21 +83,20 @@ Index Page
                             </td>
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
-                            <td>
-                                <ul>
-                                    @foreach ($train->traincompartments as $compartment)
-                                        <li>Name: {{ $compartment->compartmentname }} (Seats: {{ $compartment->seatnumber }}) (Type: {{ $compartment->compartmenttype }})</li>
-                                    @endforeach
-                                </ul>
-                            </td>
                         </tr>
-                        @php $serial++; @endphp <!-- Increment serial number -->
+                        @php $serial++; @endphp
                     @endforeach
-                @endforeach
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center mt-3">
+            {!! $updowns->onEachSide(1)->links('vendor.pagination.custom') !!}
+        </div>
     </div>
-    <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
+
+    <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56; width: 98%; margin-left: 1%;">
         <form method="GET" action="{{ route('train.index') }}" id="search-form">
             <div class="mx-auto d-flex align-items-center">
                 <!-- Dropdown to select search type -->
@@ -69,32 +112,27 @@ Index Page
             </div>
         </form>
     </div>
-</div>
-
 @endsection
 
 @section('scripts')
 <script>
-$(document).ready(function() {
-    // Listen for input on the search field
-    $('#search-input').on('keyup', function() {
-        var query = $(this).val();
-        var searchBy = $('#search-by').val();
-        
-        // Perform AJAX request
-        $.ajax({
-            url: "{{ route('train.index') }}",
-            method: 'GET',
-            data: {
-                search: query,
-                search_by: searchBy,
-            },
-            success: function(response) {
-                // Update table with the returned HTML
-                $('#train-table tbody').html(response);
-            }
+    $(document).ready(function() {
+        $('#search-input').on('keyup', function() {
+            var query = $(this).val();
+            var searchBy = $('#search-by').val();
+            
+            $.ajax({
+                url: "{{ route('train.index') }}",
+                method: 'GET',
+                data: {
+                    search: query,
+                    search_by: searchBy,
+                },
+                success: function(response) {
+                    $('#train-table tbody').html(response);
+                }
+            });
         });
     });
-});
 </script>
 @endsection

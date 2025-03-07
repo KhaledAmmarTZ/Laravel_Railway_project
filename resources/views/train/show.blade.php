@@ -13,69 +13,11 @@
       @endif
     </div>
     <div class="card-body">
-        <table class="table" border="2">
-            <thead>
-                <tr>
-                    <th>S</th>
-                    <th>Train Name</th>
-                    <th>Departure Time</th>
-                    <th>Arrival Time</th>
-                    <th>Source</th>
-                    <th>Destination</th>
-                    <th>Status</th> <!-- Individual Status Column -->
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-    @php $serial = 1; @endphp <!-- Initialize serial number -->
-    @foreach ($trains as $train)
-        @foreach ($train->trainupdowns as $index => $updown)
-            @php
-                $currentTime = \Carbon\Carbon::now();
-                $departureTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime);
-                
-                $isAvailable = $departureTime->isFuture();
-                $status = $isAvailable ? 'Available' : 'Unavailable';
-
-                $columnStyle = $isAvailable ? '' : 'background-color: #ffcccc;';
-            @endphp
-            <tr>
-                @if ($index == 0)
-                    <td rowspan="{{ count($train->trainupdowns) }}">{{ $serial }}</td> <!-- Serial Number Column -->
-                    <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
-                @endif
-                <td style="{{ $columnStyle }}">
-                    {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
-                    {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
-                </td>
-                <td style="{{ $columnStyle }}">
-                    {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
-                    {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
-                </td>
-                <td style="{{ $columnStyle }}">{{ $updown->tsource }}</td>
-                <td style="{{ $columnStyle }}">{{ $updown->tdestination }}</td>
-
-                <td style="{{ $columnStyle }}">
-                    <strong>{{ $status }}</strong>
-                </td>
-                @if ($index == 0)
-                    <td rowspan="{{ count($train->trainupdowns) }}">
-                        <a href="{{ route('train.edit', $train->trainid) }}" class="btn update-btn btn-sm">Edit</a>
-                        <form action="{{ route('train.destroy', $train->trainid) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn delete-btn btn-sm" onclick="return confirm('Are you sure you want to delete this train?')">Delete</button>
-                        </form>
-                    </td>
-                @endif
-            </tr>
-        @endforeach
-        @php $serial++; @endphp <!-- Increment serial number for next train -->
-    @endforeach
-</tbody>
-
-        </table>
+        <div id="train-table">
+            @include('train.partials.train_table')
+        </div>
     </div>
+
     <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
         <form method="GET" action="{{ route('train.show') }}" id="search-form">
             <div class="mx-auto d-flex align-items-center">
@@ -90,21 +32,34 @@
         </form>
     </div>
 </div>
+
 <script>
 $(document).ready(function() {
+    function fetchTrainData(url) {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                $('#train-table').html(response);
+            }
+        });
+    }
+
+    // Live search event
     $('#search-input').on('keyup', function() {
         var query = $(this).val();
         var searchBy = $('#search-by').val();
         
-        $.ajax({
-            url: "{{ route('train.show') }}",
-            method: 'GET',
-            data: { search: query, search_by: searchBy },
-            success: function(response) {
-                $('#train-table tbody').html(response);
-            }
-        });
+        fetchTrainData("{{ route('train.show') }}?search=" + query + "&search_by=" + searchBy);
+    });
+
+    // Pagination click event
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        fetchTrainData(url);
     });
 });
 </script>
+
 @endsection

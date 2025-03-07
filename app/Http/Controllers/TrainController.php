@@ -77,87 +77,77 @@ class TrainController extends Controller
 
 
 
-    public function index(Request $request)
+public function index(Request $request)
     {
-        $query = Train::query();
-    
+        $query = Updown::query();  // Paginate Updown models, not trains
+
         // Search filter based on user input
         if ($request->has('search') && $request->search != '') {
             $searchBy = $request->search_by ?? 'tname'; 
-    
+
             if ($searchBy == 'tname') {
-                $query->where('trainname', 'LIKE', '%' . $request->search . '%');
+                // Join the train table to search by train name
+                $query->whereHas('train', function($q) use ($request) {
+                    $q->where('trainname', 'LIKE', '%' . $request->search . '%');
+                });
             } elseif ($searchBy == 'tsource') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tsource', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tsource', 'LIKE', '%' . $request->search . '%');
             } elseif ($searchBy == 'tdestination') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tdestination', 'LIKE', '%' . $request->search . '%');
             } elseif ($searchBy == 'tdeptime') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tdeptime', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tdeptime', 'LIKE', '%' . $request->search . '%');
             } elseif ($searchBy == 'tarrtime') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tarrtime', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tarrtime', 'LIKE', '%' . $request->search . '%');
             } elseif ($searchBy == 'tdepdate') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tdepdate', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tdepdate', 'LIKE', '%' . $request->search . '%');
             } elseif ($searchBy == 'tarrdate') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tarrdate', 'LIKE', '%' . $request->search . '%');
-                });
+                $query->where('tarrdate', 'LIKE', '%' . $request->search . '%');
             }
         }
-    
-        $trains = $query->with('trainupdowns', 'traincompartments')->get();
-    
-        // If the request is AJAX, return only the table rows
+
+        // Paginate the Updown models with a limit per page (10)
+        $updowns = $query->with('train')->paginate(10); 
+
+        // If the request is AJAX, return only the table rows (partial view)
         if ($request->ajax()) {
-            return view('train.partials.train-table', compact('trains'));
+            return view('train.partials.train-table', compact('updowns'));
         }
-    
-        return view('train.index', compact('trains'));
+
+        return view('train.index', compact('updowns'));
     }
+
     
     // This method is for showing a specific train
     public function show(Request $request)
-    {
-        $query = Train::query();
-        
-        // Search filter based on user input
-        if ($request->has('search') && $request->search != '') {
-            $searchBy = $request->search_by ?? 'tname';
+{
+    $search = $request->input('search');
+    $searchBy = $request->input('search_by');
 
-            // Apply filter based on selected search type
-            if ($searchBy == 'tname') {
-                $query->where('trainname', 'LIKE', '%' . $request->search . '%');
-            } elseif ($searchBy == 'tsource') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tsource', 'LIKE', '%' . $request->search . '%');
-                });
-            } elseif ($searchBy == 'tdestination') {
-                $query->whereHas('trainupdowns', function($q) use ($request) {
-                    $q->where('tdestination', 'LIKE', '%' . $request->search . '%');
-                });
-            }
+    $query = Train::with('trainupdowns');
+
+    if ($search) {
+        if ($searchBy == 'tname') {
+            $query->where('trainname', 'like', "%$search%");
+        } elseif ($searchBy == 'tsource') {
+            $query->whereHas('trainupdowns', function ($q) use ($search) {
+                $q->where('tsource', 'like', "%$search%");
+            });
+        } elseif ($searchBy == 'tdestination') {
+            $query->whereHas('trainupdowns', function ($q) use ($search) {
+                $q->where('tdestination', 'like', "%$search%");
+            });
         }
-
-        // Get the filtered trains with related data
-        $trains = $query->with('trainupdowns', 'traincompartments')->get();
-        
-        // If the request is AJAX, return only the table rows
-        if ($request->ajax()) {
-            return view('train.partials.train-table', compact('trains'));
-        }
-
-        // Return the main view
-        return view('train.show', compact('trains'));
     }
+
+    $trains = $query->paginate(6); // Show 10 trains per page
+
+    if ($request->ajax()) {
+        return view('train.partials.train_table', compact('trains'))->render();
+    }
+
+    return view('train.show', compact('trains'));
+}
+
 
     public function showtrain(Request $request)
     {
