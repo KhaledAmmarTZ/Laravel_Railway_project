@@ -165,7 +165,7 @@ public function index(Request $request)
             })
             ->get();
 
-        return view('admin.profiles', compact('unavailableTrains'));
+        return view('admin.dashboard', compact('unavailableTrains'));
     }
 
     // Show the edit form
