@@ -49,54 +49,5 @@
 
         <hr style="width: 100%; height: 2px; background-color: black; border: none;">
 
-        <!-- Display the Unavailable Train Section -->
-        <div class="row">
-            <div class="col-12">
-                <h4 class="mb-3" style="text-align: center;">Unavailable Trains</h4>
-
-                @if($unavailableTrains->isEmpty())
-                    <p>No unavailable trains found.</p>
-                @else
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Train Name</th>
-                                <th>Departure Time</th>
-                                <th>Arrival Time</th>
-                                <th>Source</th>
-                                <th>Destination</th>
-                                <th style="text-align: center;" >Reschedule</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($unavailableTrains as $train)
-                                @foreach($train->trainupdowns as $index => $updown)
-                                    @php
-                                        $departureTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime);
-                                        $status = $departureTime->isPast() ? 'Unavailable' : 'Available';
-                                    @endphp
-
-                                    @if($status === 'Unavailable')
-                                        <tr>
-                                            <td>{{ $train->trainname }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
-                                                {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
-                                                {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}</td>
-                                            <td>{{ $updown->tsource }}</td>
-                                            <td>{{ $updown->tdestination }}</td>
-                                            <td>
-                                                <!-- Reschedule Button -->
-                                                <a style="position: relative; left: 50%; transform: translateX(-50%); text-align: center;" href="{{ route('train.edit', $train->trainid) }}" class="btn update-btn btn-sm">Reschedule</a>
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endif
-            </div>
-        </div>
-    </div>
+       
 @endsection

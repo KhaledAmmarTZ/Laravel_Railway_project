@@ -14,6 +14,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
+
+
+
+
+
+
+
 </head>
   <body style="background-color: #F0FFFC;">
     <div class="container-fluid">
@@ -68,7 +75,7 @@
             <div class="row flex-xl-nowrap" style="min-height: 90vh; max-height: 91vh;">
                 <!-- Sidebar with Border-Right for Vertical Line -->
                 <div class="col-12 col-md-3 col-xl-2 p-3 sidebar" >
-                    <div class="card  h-100" style="background-color: #F0FFFC; border: 1px solid #005F56;">
+                    <div class="card  h-100" style="background-color: #F0FFFC; border: none !important;">
                         <!-- Sidebar Header <div class="card-header bg-primary text-white text-center">
                             Sidebar Menu
                         </div> -->
