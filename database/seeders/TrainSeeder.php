@@ -60,13 +60,19 @@ class TrainSeeder extends Seeder
                     $tdestination = $stations[array_rand($stations)];
                 }
 
-                $tdepdate = now()->addDays(rand(1, 7));
-                $tarrdate = $tdepdate->copy()->addDays(rand(1, 7));
+                // Randomly set the arrival date between 10-15 days from today
+                $tarrdate = now()->addDays(rand(10, 15));
+                // Departure date will be 1 day before the arrival date
+                $tdepdate = $tarrdate->copy()->subDay();
+
+                // Random arrival and departure times
+                $tarrtime = now()->addHours(rand(1, 12))->format('H:i:s');
+                $tdeptime = now()->addHours(rand(13, 24))->format('H:i:s');
 
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
-                    'tarrtime' => now()->addHours(rand(1, 12))->format('H:i:s'),
-                    'tdeptime' => now()->addHours(rand(13, 24))->format('H:i:s'),
+                    'tarrtime' => $tarrtime,
+                    'tdeptime' => $tdeptime,
                     'tdepdate' => $tdepdate->format('Y-m-d'),
                     'tarrdate' => $tarrdate->format('Y-m-d'),
                     'tsource' => $tsource,

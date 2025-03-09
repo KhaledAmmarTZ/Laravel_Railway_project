@@ -149,24 +149,32 @@ public function index(Request $request)
 }
 
 
-    public function showtrain(Request $request)
-    {
-        // Get the current time
-        $currentTime = \Carbon\Carbon::now();
+public function showtrain(Request $request)
+{
+    // Get the current time
+    $currentTime = \Carbon\Carbon::now();
 
-        // Fetch the unavailable trains
-        $unavailableTrains = Train::with('trainupdowns')
-            ->whereHas('trainupdowns', function ($query) use ($currentTime) {
-                $query->where('tdepdate', '<', $currentTime->format('Y-m-d'))
-                    ->orWhere(function ($query) use ($currentTime) {
-                        $query->where('tdepdate', '=', $currentTime->format('Y-m-d'))
-                                ->where('tdeptime', '<', $currentTime->format('H:i:s'));
-                    });
-            })
-            ->get();
+    // Fetch the unavailable trains
+    $unavailableTrains = Train::with('trainupdowns')
+        ->whereHas('trainupdowns', function ($query) use ($currentTime) {
+            $query->where('tdepdate', '<', $currentTime->format('Y-m-d'))
+                ->orWhere(function ($query) use ($currentTime) {
+                    $query->where('tdepdate', '=', $currentTime->format('Y-m-d'))
+                          ->where('tdeptime', '<', $currentTime->format('H:i:s'));
+                });
+        })
+        ->get();
 
-        return view('admin.dashboard', compact('unavailableTrains'));
-    }
+    // Fetch total trains
+    $totalTrains = Train::count();
+
+    // Calculate the number of available trains
+    $availableTrains = $totalTrains - $unavailableTrains->count();
+
+    return view('admin.dashboard', compact('unavailableTrains', 'availableTrains'));
+}
+
+
 
     // Show the edit form
     public function edit($trainId)

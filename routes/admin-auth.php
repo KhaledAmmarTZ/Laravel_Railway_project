@@ -40,7 +40,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
     Route::get('/dashboard',[TrainController::class, 'showtrain'])->name('admin.dashboard');
-
+    
     Route::get('/profiles', function () {
         return view('admin.profiles');
     })->name('admin.profiles');

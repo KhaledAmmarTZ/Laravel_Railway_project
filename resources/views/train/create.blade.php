@@ -227,7 +227,8 @@ function updateArrTime(selectElement, index) {
     @endif
 
 
-
+<div class="container">
+    <div class="row">
             <div class="col-md-12">
                 <form action="{{ route('train.store') }}" method="POST">
                     @csrf
