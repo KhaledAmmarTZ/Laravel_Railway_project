@@ -6,6 +6,7 @@ use App\Models\Train;
 use App\Models\Compartment;
 use App\Models\Updown;
 use App\Models\Station;
+use App\Models\TrainRoute;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -278,4 +279,18 @@ public function showtrain(Request $request)
 
         return redirect()->route('train.show')->with('success', 'Train deleted successfully');
     }
+
+    // In your StationController.php
+public function getStations()
+{
+    $stations = Station::all(); 
+    return response()->json($stations);
+}
+
+// In your TrainController.php
+public function getTrains()
+{
+    $trains = Train::all(); 
+    return response()->json($trains);
+}
 }

@@ -11,5 +11,10 @@ class Station extends Model
 
     protected $table = 'stations'; // Ensure the table name is correct
     protected $fillable = ['stationname', 'deeptime', 'artime']; // Add relevant columns
+
+    public function trainRoutes()
+    {
+        return $this->hasMany(TrainRoute::class, 'station_id', 'stid');
+    }
 }
 

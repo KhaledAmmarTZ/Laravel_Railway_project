@@ -11,7 +11,7 @@
 
             <!-- Left Column (Stacked Cards) -->
             <div class="d-flex flex-column" style="flex: 1.5; gap: 20px;">
-                <div class="card p-3">
+                <div class="card p-3" style="border: none; !important; background-color:rgb(255, 255, 255);">
                     <div class="card-body">
                         <h5 class="card-title text-center">Unavailable Trains</h5>
                         <div style="width: 200px; height: 200px; margin: auto;">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
 
-                <div class="card p-3 flex-grow-1">
+                <div class="card p-3 flex-grow-1" style="border: none; !important;">
                     <div class="card-body">
                         <h5 class="card-title">User Count</h5>
                         <p class="card-text">The number of users currently in the system:</p>
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Middle Column (Main Content) -->
-            <div class="card p-3">
+            <div class="card p-3" style="border: none; !important;">
                 <div class="card-body">
                     <h5 class="card-title text-center">Monthly Data Chart</h5>
                     <div style="display: flex; justify-content: center; overflow-x: auto;">
@@ -63,7 +63,7 @@
             </div>
             
             <!-- Right Column (Single Full-Row Card) -->
-            <div class="card p-3" style="flex: 1.5; max-width: 250px; width: 100%;"> <!-- Adjust flex and added max-width -->
+            <div class="card p-3" style="flex: 1.5; max-width: 250px; width: 100%; border: none; !important;"> <!-- Adjust flex and added max-width -->
               <div class="card-body">
                   <div class="calendar">
                       <div class="calendar-header">
@@ -99,42 +99,42 @@
         </div>
 
         <!-- Card Deck Section (Cards in Rows) -->
-        <div class="d-flex mt-4" style="gap: 20px;">
-            <div class="card col-8">
-                <div class="card-body">
-                    <h5 class="card-title">Customer Feedback</h5>
-                    <!-- Recent Feedback List -->
-                    <div id="feedbackList">
-                        <div class="feedback-item mb-3">
-                            <p class="card-text"><strong>John Doe:</strong> "Great service, very satisfied!"</p>
-                            <p class="card-text"><small class="text-muted">Last updated 2 mins ago</small></p>
-                        </div>
-                        <div class="feedback-item">
-                            <p class="card-text"><strong>Jane Smith:</strong> "The website was easy to navigate, I will definitely return."</p>
-                            <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
-                        </div>
-                    </div>
+<div class="d-flex mt-4" style="gap: 20px;">
+    <div class="card col-8" style="border: none;">
+        <div class="card-body">
+            <h5 class="card-title">Customer Feedback</h5>
+            <!-- Recent Feedback List -->
+            <div id="feedbackList">
+                <div class="feedback-item mb-3">
+                    <p class="card-text"><strong>John Doe:</strong> "Great service, very satisfied!"</p>
+                    <p class="card-text"><small class="text-muted">Last updated 2 mins ago</small></p>
                 </div>
-            </div>
-
-
-            <div class="card p-3" style="flex: 2.5;">
-                <div class="card-body">
-                    <h5 class="card-title">Customer Reports</h5>
-                    <!-- Recent Reports List -->
-                    <div id="reportList">
-                        <div class="report-item mb-3">
-                            <p class="card-text" style="font-size: 0.7rem;"><strong>Report by John Doe:</strong> "The product quality is excellent, but delivery took longer than expected."</p>
-                            <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 10 mins ago</small></p>
-                        </div>
-                        <div class="report-item">
-                            <p class="card-text" style="font-size: 0.7rem;"><strong>Report by Jane Smith:</strong> "The support team was helpful in resolving my issue quickly."</p>
-                            <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 15 mins ago</small></p>
-                        </div>
-                    </div>
+                <div class="feedback-item">
+                    <p class="card-text"><strong>Jane Smith:</strong> "The website was easy to navigate, I will definitely return."</p>
+                    <p class="card-text"><small class="text-muted">Last updated 5 mins ago</small></p>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="card p-3 flex-grow-1" style="border: none;">
+        <div class="card-body">
+            <h5 class="card-title">Customer Reports</h5>
+            <!-- Recent Reports List -->
+            <div id="reportList">
+                <div class="report-item mb-3">
+                    <p class="card-text" style="font-size: 0.7rem;"><strong>Report by John Doe:</strong> "The product quality is excellent, but delivery took longer than expected."</p>
+                    <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 10 mins ago</small></p>
+                </div>
+                <div class="report-item">
+                    <p class="card-text" style="font-size: 0.7rem;"><strong>Report by Jane Smith:</strong> "The support team was helpful in resolving my issue quickly."</p>
+                    <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 15 mins ago</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
     </div>
 
     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
