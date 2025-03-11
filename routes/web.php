@@ -3,7 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\StationController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -11,12 +11,17 @@ Route::get('/', function () {
 });
 
 
-Route::get('/stations', [StationController::class, 'getStations']);
-
-Route::get('/user', [UserController::class, 'showProfile']);
+Route::get('/stations', [TrainController::class, 'getStations']);
 Route::get('/train_route',function (){
     return view('train.train_route');
 });
+Route::get('/trains', function () {
+    $trains = \App\Models\Train::all(['trainname']);  // Fetch only the train name
+    return response()->json($trains);
+});
+
+Route::get('/user', [UserController::class, 'showProfile']);
+
 
 
 Route::get('/dashboard', function () {

@@ -92,6 +92,7 @@
 
   <div id="contextMenu" class="context-menu">
     <button onclick="deleteBox()">Delete Box</button>
+    <button onclick="disconnectConnection()">Disconnect</button>
   </div>
 
   <canvas id="lineCanvas"></canvas>
@@ -144,7 +145,7 @@
       if (!stationName) return;
 
       // Check if a box with the same station name already exists
-      if (allBoxes.some(box => box.textContent === stationName)) {
+      if (allBoxes.some(box => box.textContent.includes(stationName))) {
         alert(`Box for station "${stationName}" already exists.`);
         return;
       }
@@ -152,12 +153,14 @@
       const box = document.createElement('div');
       box.classList.add('box');
       box.setAttribute('draggable', true);
-      box.textContent = stationName;
-      box.id = `box-${stationName}`;
+      box.textContent = `${stationName} (${boxCount + 1})`;
+      box.id = `box-${boxCount + 1}`;
+      box.dataset.sequence = boxCount + 1;
       box.style.left = `${Math.random() * 90}vw`;
       box.style.top = `${Math.random() * 70}vh`;
 
       allBoxes.push(box);
+      boxCount++;
 
       box.addEventListener('dragstart', (e) => {
         e.dataTransfer.setData('text', box.id);
@@ -193,7 +196,7 @@
       draggingBox.style.top = `${mouseY - 50}px`;
     });
 
-    // Context menu for box options
+    // Show context menu with options for the selected box
     async function showContextMenu(x, y) {
       const contextMenu = document.getElementById('contextMenu');
       contextMenu.style.left = `${x}px`;
@@ -202,20 +205,21 @@
       const availableBoxes = allBoxes.filter(box => box !== currentBox);
       contextMenu.innerHTML = '<button onclick="deleteBox()">Delete Box</button>';
 
-      // Fetch the station names and add them as options to create boxes
-    //   const stations = await fetchStations();
-    //   stations.forEach(station => {
-    //     const connectButton = document.createElement('button');
-    //     connectButton.textContent = `Create Box for ${station.stationname}`;
-    //     connectButton.onclick = () => createBox(station.stationname);
-    //     contextMenu.appendChild(connectButton);
-    //   });
-
+      // Add connect buttons for available boxes
       availableBoxes.forEach(box => {
         const connectButton = document.createElement('button');
         connectButton.textContent = `Connect to ${box.textContent}`;
         connectButton.onclick = () => connectBoxes(currentBox, box);
         contextMenu.appendChild(connectButton);
+      });
+
+      // Add disconnect buttons for existing connections
+      const connectedBoxes = connections.filter(connection => connection.box1 === currentBox || connection.box2 === currentBox);
+      connectedBoxes.forEach(connection => {
+        const disconnectButton = document.createElement('button');
+        disconnectButton.textContent = `Disconnect from ${connection.box1 === currentBox ? connection.box2.textContent : connection.box1.textContent}`;
+        disconnectButton.onclick = () => disconnectBoxes(connection);
+        contextMenu.appendChild(disconnectButton);
       });
 
       contextMenu.style.display = 'flex';
@@ -229,21 +233,37 @@
     // Delete a box
     function deleteBox() {
       if (currentBox) {
+        const deletedSequence = parseInt(currentBox.dataset.sequence);
         currentBox.remove();
         allBoxes = allBoxes.filter(box => box !== currentBox);
         connections = connections.filter(connection => connection.box1 !== currentBox && connection.box2 !== currentBox);
+        updateSequenceNumbers(deletedSequence);
         updateConnections();
         document.getElementById('contextMenu').style.display = 'none';
       }
     }
 
+    // Update sequence numbers after deletion
+    function updateSequenceNumbers(deletedSequence) {
+      allBoxes.forEach((box, index) => {
+        const sequence = index + 1;
+        box.textContent = box.textContent.split('(')[0] + ` (${sequence})`; // Update text content
+        box.dataset.sequence = sequence; // Update dataset
+      });
+    }
+
     // Connect two boxes
     function connectBoxes(box1, box2) {
+      // Check if a connection already exists in the direction box1 -> box2
       const existingConnection = connections.find(connection =>
-        (connection.box1 === box1 && connection.box2 === box2) ||
-        (connection.box1 === box2 && connection.box2 === box1)
+        (connection.box1 === box1 && connection.box2 === box2)
       );
 
+      // If a connection from box1 to box2 already exists, return without doing anything
+      if (existingConnection) {
+        alert('Connection from this box to the selected box already exists.');
+        return;
+      }
 
       const box1Rect = box1.getBoundingClientRect();
       const box2Rect = box2.getBoundingClientRect();
@@ -260,6 +280,13 @@
 
       connections.push({ box1, box2, box1Edge, box2Edge });
 
+      updateConnections();
+      document.getElementById('contextMenu').style.display = 'none';
+    }
+
+    // Disconnect two boxes
+    function disconnectBoxes(connection) {
+      connections = connections.filter(conn => conn !== connection);
       updateConnections();
       document.getElementById('contextMenu').style.display = 'none';
     }

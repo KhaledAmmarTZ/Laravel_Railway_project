@@ -281,11 +281,14 @@ public function showtrain(Request $request)
     }
 
     // In your StationController.php
-public function getStations()
-{
-    $stations = Station::all(); 
-    return response()->json($stations);
-}
+    public function getStations()
+    {
+        // Fetching all stations from the database
+        $stations = Station::all(['stationname']);  // Only fetch the station name
+
+        // Returning the stations as a JSON response
+        return response()->json($stations);
+    }
 
 // In your TrainController.php
 public function getTrains()
