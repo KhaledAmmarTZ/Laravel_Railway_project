@@ -175,14 +175,14 @@ public function showtrain(Request $request)
     return view('admin.dashboard', compact('unavailableTrains', 'availableTrains'));
 }
 
+public function edit($id)
+{
+    $train = Train::with('traincompartments', 'trainupdowns')->findOrFail($id);
+    $stations = Station::all(); // Fetch all stations from the database
 
+    return view('train.edit', compact('train', 'stations'));
+}
 
-    // Show the edit form
-    public function edit($trainId)
-    {
-        $train = Train::with('traincompartments', 'trainupdowns')->findOrFail($trainId);
-        return view('train.edit', compact('train'));
-    }
 
     public function showEditPage()
     {

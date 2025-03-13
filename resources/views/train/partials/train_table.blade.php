@@ -88,13 +88,13 @@
                                 <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
                             @endif
                             <td>
-                                {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
-                                {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
-                            </td>
-                            <td>
                                 {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
                                 {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
                             </td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
+                                {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
+                            </td>                            
                             <td>{{ $updown->tsource }}</td>
                             <td>{{ $updown->tdestination }}</td>
                             <td class="{{ $statusClass }}">

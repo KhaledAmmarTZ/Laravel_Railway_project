@@ -12,74 +12,86 @@ class TrainSeeder extends Seeder
     public function run()
     {
         $trainNames = [
-            'Padma Express', 'Sonar Bangla Express', 'Suborno Express', 'Jamuna Express', 
-            'Mahananda Express', 'Dhaka Mail', 'Kishoreganj Express', 'Chattala Express', 
-            'Chittagong Express', 'Khulna Express', 'Sylhet Express', 'Rajshahi Express', 
+            'Padma Express', 'Sonar Bangla Express', 'Suborno Express', 'Jamuna Express',
+            'Mahananda Express', 'Dhaka Mail', 'Kishoreganj Express', 'Chattala Express',
+            'Chittagong Express', 'Khulna Express', 'Sylhet Express', 'Rajshahi Express',
             'Rajendra Express', 'Madhumati Express', 'Bhawal Express', 'Dhalai Express',
-            'Faridpur Express', 'Manikganj Express', 'Madaripur Express', 'Gopalganj Express', 
-            'Rupsha Express', 'Brahmaputra Express', 'Ganges Express', 'Dholai Express', 
-            'Tungabhadra Express', 'North Bengal Express', 'South Bengal Express', 
+            'Faridpur Express', 'Manikganj Express', 'Madaripur Express', 'Gopalganj Express',
+            'Rupsha Express', 'Brahmaputra Express', 'Ganges Express', 'Dholai Express',
+            'Tungabhadra Express', 'North Bengal Express', 'South Bengal Express',
             'Moulvibazar Express', 'Comilla Express', 'Sundarbans Express', 'Bagerhat Express'
         ];
 
         $stations = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
-                     'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong'];
+                     'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong', 'Khulna'];
 
         $compartmentTypes = ['AC', 'Sleeper', 'First Class', 'Economy', 'Business', 'Women', 'Handicap'];
 
+        $routes = [
+            ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Dhaka'],
+            ['Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Chittagong'],
+            ['Dhaka', 'Gazipur', 'Madaripur', 'Manikganj', 'Dhaka'],
+            ['Faridpur', 'Gopalganj', 'Kishoreganj', 'Chittagong', 'Faridpur'],
+            ['Khulna', 'Sylhet', 'Rajshahi', 'Dhaka', 'Khulna'],
+            ['Jamalpur', 'Gazipur', 'Madaripur', 'Manikganj', 'Jamalpur'],
+            ['Chittagong', 'Sylhet', 'Rajshahi', 'Gopalganj', 'Chittagong'],
+        ];
+
         foreach ($trainNames as $trainName) {
-            $compartmentNumber = rand(1, 7); 
-            $updownNumber = rand(1, 3);   
+            $compartmentNumber = rand(1, 7);
+            $route = $routes[array_rand($routes)]; 
+            $updownNumber = count($route) - 1; 
 
             $trainId = DB::table('train')->insertGetId([
-                'trainname' => $trainName, 
+                'trainname' => $trainName,
                 'compartmentnumber' => $compartmentNumber,
                 'updownnumber' => $updownNumber,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            for ($j = 1; $j <= $compartmentNumber; $j++) {
-                $compartmentType = $compartmentTypes[array_rand($compartmentTypes)]; 
+            $baseDate = now()->addDays(rand(10, 15)); 
+            $prevArrDate = $baseDate;
+            $prevArrTime = now()->addHours(rand(6, 12))->format('H:i:s'); 
 
-                DB::table('traincompartments')->insert([
-                    'trainid' => $trainId,
-                    'seatnumber' => $j,
-                    'compartmentname' => 'Compartment ' . $j,
-                    'compartmenttype' => $compartmentType,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
+            for ($k = 0; $k < $updownNumber; $k++) {
+                $tsource = $route[$k];
+                $tdestination = $route[$k + 1];
 
-            for ($k = 1; $k <= $updownNumber; $k++) {
-                $tsource = $stations[array_rand($stations)]; 
-                $tdestination = $stations[array_rand($stations)]; 
+                $tdepdate = $prevArrDate->format('Y-m-d');
 
-                while ($tsource === $tdestination) {
-                    $tdestination = $stations[array_rand($stations)];
+                $tarrdate = clone $prevArrDate;
+                if (rand(0, 1) == 1) {
+                    $tarrdate = $prevArrDate->addDays(1);
                 }
 
-                // Randomly set the arrival date between 10-15 days from today
-                $tarrdate = now()->addDays(rand(10, 15));
-                // Departure date will be 1 day before the arrival date
-                $tdepdate = $tarrdate->copy()->subDay();
+                if ($tarrdate->format('Y-m-d') == $tdepdate) {
+                    $tarrtime = now()->setTime(rand(14, 23), rand(0, 59))->format('H:i:s');
+                } else {
+                    $tarrtime = now()->setTime(rand(0, 23), rand(0, 59))->format('H:i:s');
+                }
 
-                // Random arrival and departure times
-                $tarrtime = now()->addHours(rand(1, 12))->format('H:i:s');
-                $tdeptime = now()->addHours(rand(13, 24))->format('H:i:s');
+                if ($k == 0) {
+                    $tdeptime = $prevArrTime;
+                } else {
+                    $prevArrTimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime);
+                    $tdeptime = $prevArrTimeObj->addMinutes(15)->format('H:i:s');
+                }
 
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
                     'tarrtime' => $tarrtime,
                     'tdeptime' => $tdeptime,
-                    'tdepdate' => $tdepdate->format('Y-m-d'),
+                    'tdepdate' => $tdepdate,
                     'tarrdate' => $tarrdate->format('Y-m-d'),
                     'tsource' => $tsource,
                     'tdestination' => $tdestination,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
+
+                $prevArrDate = $tarrdate;
+                $prevArrTime = $tarrtime;
             }
         }
     }

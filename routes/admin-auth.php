@@ -72,13 +72,20 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
         ->name('admin.logout');
 
     // Train Routes (Admin Only)
+    Route::get('/stations', [TrainController::class, 'getStations']);
+
     Route::get('/train/create', [TrainController::class, 'create'])->name('train.create');
     Route::post('/train', [TrainController::class, 'store'])->name('train.store');
     Route::get('/train/edit', [TrainController::class, 'showEditPage'])->name('train.edit.page');
     Route::post('/train/edit', [TrainController::class, 'loadTrainData'])->name('train.load');
-    Route::get('/train/{train}/edit', [TrainController::class, 'edit'])->name('train.edit');
-    Route::put('/train/{train}', [TrainController::class, 'update'])->name('train.update');
+    Route::get('/train/edit/{trainid}', [TrainController::class, 'edit'])->name('train.edit');
+Route::put('/train/update/{trainid}', [TrainController::class, 'update'])->name('train.update');
+
     Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
     Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
 
+    
+    Route::get('/train_route',function (){
+        return view('train.train_route');
+    });
 });

@@ -3,6 +3,40 @@
 Add Train
 @endsection
 @section('content')
+<style>
+    #updown-sections table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #updown-sections th, 
+    #updown-sections td {
+        border: 3px solid black; /* Increase border thickness */
+        padding: 8px;
+        text-align: center;
+    }
+
+    #updown-sections th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+    #compartment-sections table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    #compartment-sections th, 
+    #compartment-sections td {
+        border: 3px solid black; /* Increased border thickness */
+        padding: 8px;
+        text-align: center;
+    }
+
+    #compartment-sections th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+</style>
 <script>
 const stations = @json($stations);
 
@@ -145,16 +179,25 @@ function generateUpdowns() {
 
 function disablePreviousDestinations() {
     const updowns = document.querySelectorAll("#updown-sections table tbody tr");
-    for (let i = 0; i < updowns.length - 1; i++) {
-        const destinationSelect = updowns[i].querySelector('select[name*="destination"]');
-        
-        destinationSelect.addEventListener('click', function(event) {
-            const userResponse = confirm("Don't change this. Do you want to continue?");
-            if (!userResponse) {
-                event.preventDefault();  // Prevent the user from interacting with the select if they cancel
-            }
-        });
-    }
+
+    updowns.forEach((row, index) => {
+        if (index < updowns.length - 1) { // Apply only to all except the last row
+            const destinationSelect = row.querySelector('select[name*="destination"]');
+            
+            destinationSelect.addEventListener('change', function(event) {
+                const userResponse = confirm("Don't change this. Do you want to continue?");
+                if (!userResponse) {
+                    event.preventDefault();  // Prevent the change
+                    this.value = this.dataset.previousValue || ""; // Reset to the previous value
+                } else {
+                    this.dataset.previousValue = this.value; // Store the new value
+                }
+            });
+
+            // Store the initial value to reset if needed
+            destinationSelect.dataset.previousValue = destinationSelect.value;
+        }
+    });
 }
 
 
@@ -299,12 +342,12 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()">
     @csrf
-    <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
+    <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
         <div class="card-header text-white" style="background-color: #005F56">
             Add Train
         </div>
 
-        <div class="card-body">
+        <div class="card-body" >
             <hr style="width: 100%; height: 2px; background-color: transparent; border: none;">
             <div class="mb-3 d-flex align-items-center">
                 <label for="tname" class="form-label me-3" style="width: 250px; text-align: right;">Train Name :
@@ -314,23 +357,41 @@ function deleteUpdown() {
                 </div>
             </div>
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-            <div class="mb-3 d-flex align-items-center">
-                <label for="numofcompartment" class="form-label me-3" style="width: 250px; text-align: right;">Number of
-                    Compartments : &nbsp; </label>
-                <div class="flex-grow-1">
-                    <input type="number" name="numofcompartment" id="numofcompartment" class="form-control w-75" min="1"
-                        onchange="generateCompartments()" required>
-                </div>
+            
+            <div class="row" style="justify-content: center; gap: 30px">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment">Set Train Compartment</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
             </div>
 
-            <div id="compartment-sections"></div>
+            <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg fullscreen-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Train Compartment</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                        <div class="mb-3 d-flex align-items-center">
+                            <label for="numofcompartment" class="form-label me-3" style="width: 250px; text-align: right;">Number of
+                                Compartments : &nbsp; </label>
+                            <div class="flex-grow-1">
+                                <input type="number" name="numofcompartment" id="numofcompartment" class="form-control w-75" min="1"
+                                    onchange="generateCompartments()" required>
+                            </div>
+                        </div>
+
+                        <div id="compartment-sections"></div>
+                    </div>
+                </div>
+            </div>
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
-            <div class="card">
-                <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                    <div id="route-display">
-                    <!-- 15 Boxes for route display -->
+            <div class="card" style="background-color: transparent; border: none;" >
+                <div class="card-body" style="background-color: transparent; border: none;">
+                <h5 class="card-title">Shown Train Routes</h5>
+                    <div id="route-display" style="background-color: transparent; border: none;">
                     <div class="route-box" id="route-box-1"></div>
                     <div class="route-box" id="route-box-2"></div>
                     <div class="route-box" id="route-box-3"></div>
@@ -350,93 +411,104 @@ function deleteUpdown() {
                 </div>
             </div>
 
-            
-
             <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
 
-            <!-- Extra large modal -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Train Route</button>
+            <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg fullscreen-modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Train Route</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div id="updown-sections"></div>
+                        
+                        <input type="hidden" name="updownnumber" id="updownnumber" value="1">
 
-<div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg fullscreen-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Train Route</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                        <div class="mb-3 d-flex align-items-center justify-content-center">
+                            <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
-            <div id="updown-sections"></div>
-            
-            <input type="hidden" name="updownnumber" id="updownnumber" value="1">
 
-            <div class="mb-3 d-flex align-items-center justify-content-center">
-                <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
-                <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
-            </div>
+            <style>
+                .fullscreen-modal {
+                    max-width: 1400px;
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                }
 
-        </div>
-    </div>
-</div>
+                .modal-dialog {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh; /* Center vertically */
+                    margin: 0 auto; /* Center horizontally */
+                }
 
-<style>
-    .fullscreen-modal {
-        max-width: 100%;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
+                .modal-content {
+                    height: 100%;
+                    margin: auto;
+                    padding: 20px;
+                    border: none;
+                }
 
-    .modal-dialog {
-        height: 100%;
-        margin: 0;
-    }
+                .modal-header .close {
+                    font-size: 2rem;
+                    color: #000;
+                }
 
-    .modal-content {
-        height: 100%;
-        border: none;
-    }
+                #route-display {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 10px;
+                cursor: grab;
+                scroll-behavior: smooth;
+                border: 2px solid #ccc;
+                width: 100%;
+                max-width: 800px;
+                position: relative;
+                align-items: center;
+            }
 
-    .modal-header .close {
-        font-size: 2rem;
-        color: #000;
-    }
+            .route-box {
+                width: 160px;
+                height: 40px;
+                border: 2px solid #005F56;
+                background-color: #f8f9fa;
+                text-align: center;
+                line-height: 35px;
+                font-weight: bold;
+                font-size: 12px;
+                border-radius: 5px;
+                user-select: none;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+            }
 
-    #route-display {
-        display: flex;
-        gap: 10px;
-        overflow-x: auto;
-        white-space: nowrap;
-        padding: 10px;
-        cursor: grab;
-        scroll-behavior: smooth;
-        border: 2px solid #ccc;
-        width: 100%;
-        max-width: 800px; /* Adjust as needed */
-        position: relative;
-    }
-
-    .route-box {
-        width: 160px;
-        height: 40px;
-        border: 2px solid #28a745;
-        background-color: #f8f9fa;
-        text-align: center;
-        line-height: 35px;
-        font-weight: bold;
-        font-size: 12px; /* Smaller font */
-        border-radius: 5px;
-        user-select: none;
-        position: relative;
-    }
-</style>
+            .route-arrow {
+                font-size: 20px;
+                font-weight: bold;
+                color: #005F56;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            </style>
 
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             <button type="submit" class="btn search-btn">Submit</button>
             <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
         </div>
     </div>
-    
 </form>
 
 <script>
@@ -462,7 +534,7 @@ function validateUpdownSections() {
 }
 function updateRouteDisplay() {
     const routeDisplay = document.getElementById('route-display');
-    routeDisplay.innerHTML = ''; // Clear previous boxes
+    routeDisplay.innerHTML = ''; 
 
     let routeStations = [];
     let updownSections = document.querySelectorAll("#updown-sections tbody tr");
@@ -471,11 +543,10 @@ function updateRouteDisplay() {
         let source = row.querySelector(`select[name="updowns[${index + 1}][source]"]`).value;
         let destination = row.querySelector(`select[name="updowns[${index + 1}][destination]"]`).value;
 
-        if (source) routeStations.push(source); // Add source to route
-        if (destination) routeStations.push(destination); // Add destination to route
+        if (source) routeStations.push(source);
+        if (destination) routeStations.push(destination);
     });
 
-    // Remove duplicate consecutive station entries
     let finalRoute = [];
     routeStations.forEach((station, i) => {
         if (i === 0 || station !== routeStations[i - 1]) {
@@ -483,51 +554,52 @@ function updateRouteDisplay() {
         }
     });
 
-    // Generate route boxes dynamically
-    for (let i = 0; i < 9; i++) {
-        let boxContent = finalRoute[i] || ''; // Show station or leave empty
-        let box = `<div class="route-box">${boxContent}</div>`;
-        routeDisplay.innerHTML += box;
+    for (let i = 0; i < 15; i++) {
+        if (i < finalRoute.length) {
+            let box = `<div class="route-box">${finalRoute[i]}</div>`;
+            routeDisplay.innerHTML += box;
+            if (i < finalRoute.length - 1) {
+                routeDisplay.innerHTML += `<div class="route-arrow">➔</div>`;
+            }
+        }
     }
 }
 
-// Attach event listeners to source and destination selects
 document.addEventListener('change', function (event) {
     if (event.target.matches("#updown-sections select")) {
-        updateRouteDisplay(); // Update instantly on selection change
+        updateRouteDisplay();
     }
 });
-
 </script>
 <script>
-    const routeDisplay = document.getElementById('route-display');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+const routeDisplay = document.getElementById('route-display');
+let isDown = false;
+let startX;
+let scrollLeft;
 
-    routeDisplay.addEventListener('mousedown', (e) => {
-        isDown = true;
-        routeDisplay.classList.add('active');
-        startX = e.pageX - routeDisplay.offsetLeft;
-        scrollLeft = routeDisplay.scrollLeft;
-    });
+routeDisplay.addEventListener('mousedown', (e) => {
+    isDown = true;
+    routeDisplay.classList.add('active');
+    startX = e.pageX - routeDisplay.offsetLeft;
+    scrollLeft = routeDisplay.scrollLeft;
+});
 
-    routeDisplay.addEventListener('mouseleave', () => {
-        isDown = false;
-        routeDisplay.classList.remove('active');
-    });
+routeDisplay.addEventListener('mouseleave', () => {
+    isDown = false;
+    routeDisplay.classList.remove('active');
+});
 
-    routeDisplay.addEventListener('mouseup', () => {
-        isDown = false;
-        routeDisplay.classList.remove('active');
-    });
+routeDisplay.addEventListener('mouseup', () => {
+    isDown = false;
+    routeDisplay.classList.remove('active');
+});
 
-    routeDisplay.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - routeDisplay.offsetLeft;
-        const walk = (x - startX) * 2; // Adjust speed
-        routeDisplay.scrollLeft = scrollLeft - walk;
-    });
+routeDisplay.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - routeDisplay.offsetLeft;
+    const walk = (x - startX) * 2;
+    routeDisplay.scrollLeft = scrollLeft - walk;
+});
 </script>
 @endsection
