@@ -32,7 +32,7 @@
         table.appendChild(headerRow);
 
         for (let i = 0; i < numCompartment; i++) {
-            let compartment = storedData[i] || existingCompartments[i] || { id: '', compartmentname: '', seatnumber: '' };
+            let compartment = storedData[i] || existingCompartments[i] || { id: '', compartmentname: '', seatnumber: '', compartmenttype: '' };
 
             const compartmentRow = document.createElement('tr');
             compartmentRow.classList.add('compartment-item');
@@ -52,136 +52,133 @@
         compartmentContainer.appendChild(table);
     }
 
-    function generateUpdowns(existingUpdowns = []) {
-    const numUpdown = parseInt(document.getElementById('updownnumber').value) || 0;
-    const updownContainer = document.getElementById('updown-sections');
+    let updownCount = 0; // Initialize a counter for updown sections
 
-    let storedData = [];
-    document.querySelectorAll('#updown-sections .updown-item').forEach((updownDiv, index) => {
-        storedData.push({
-            id: updownDiv.querySelector(`[name="updowns[${index}][id]"]`).value,
-            tarrtime: updownDiv.querySelector(`[name="updowns[${index}][tarrtime]"]`).value,
-            tdeptime: updownDiv.querySelector(`[name="updowns[${index}][tdeptime]"]`).value,
-            tarrdate: updownDiv.querySelector(`[name="updowns[${index}][tarrdate]"]`).value,
-            tdepdate: updownDiv.querySelector(`[name="updowns[${index}][tdepdate]"]`).value,
-            tsource: updownDiv.querySelector(`[name="updowns[${index}][tsource]"]`).value,
-            tdestination: updownDiv.querySelector(`[name="updowns[${index}][tdestination]"]`).value
-        });
-    });
+    function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '', tsource: '', tdestination: '' }, index) {
+    const stations = @json($stations->toArray()); 
 
-    updownContainer.innerHTML = '';
+    const updownRow = document.createElement('tr');
+    updownRow.classList.add('updown-item');
+    updownRow.dataset.index = index;
 
-    const table = document.createElement('table');
-    table.classList.add('table', 'table-bordered');
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = `
-        <th>Source</th>
-        <th>Destination</th>
-        <th>Arrival Time</th>
-        <th>Departure Time</th>
-        <th>Arrival Date</th>
-        <th>Departure Date</th> 
-        <th>Actions</th>
+    const rowStyle = new Date(`${updown.tdepdate}T${updown.tdeptime}`) > new Date() ? '' : 'background-color: #ffcccc;';
+
+    updownRow.innerHTML = `
+        <input type="hidden" name="updowns[${index}][id]" value="${updown.id}">
+        <td style="${rowStyle}">
+            <select id="tsource-${index}" name="updowns[${index}][tsource]" class="form-control" required>
+                <option value="">Select Source</option>
+                ${stations.map(station => `<option value="${station.stationname}" ${station.stationname === updown.tsource ? 'selected' : ''}>${station.stationname}</option>`).join('')}
+            </select>
+        </td>
+        <td style="${rowStyle}">
+            <select id="tdestination-${index}" name="updowns[${index}][tdestination]" class="form-control" required>
+                <option value="">Select Destination</option>
+                ${stations.map(station => `<option value="${station.stationname}" ${station.stationname === updown.tdestination ? 'selected' : ''}>${station.stationname}</option>`).join('')}
+            </select>
+        </td>
+        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
+        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
+        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
+        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
+        <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button></td>
     `;
-    table.appendChild(headerRow);
 
-    for (let i = 0; i < numUpdown; i++) {
-        let updown = storedData[i] || existingUpdowns[i] || { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '', tsource: '', tdestination: '' };
-
-        const updownRow = document.createElement('tr');
-        updownRow.classList.add('updown-item');
-        updownRow.dataset.index = i;
-
-        // Check if the current updown entry is available (future time)
-        const currentTime = new Date();
-        const departureTime = new Date(`${updown.tdepdate}T${updown.tdeptime}`);
-
-        // If the departure time is in the future, it's available; otherwise, it's unavailable
-        const isAvailable = departureTime > currentTime;
-        const rowStyle = isAvailable ? '' : 'background-color: #ffcccc;';  // Red color if unavailable
-
-        updownRow.innerHTML = `
-            <td style="${rowStyle}"><input type="text" name="updowns[${i}][tsource]" class="form-control" value="${updown.tsource}" required></td>
-            <td style="${rowStyle}"><input type="text" name="updowns[${i}][tdestination]" class="form-control" value="${updown.tdestination}" required></td>
-            <input type="hidden" name="updowns[${i}][id]" value="${updown.id}">
-            <td style="${rowStyle}"><input type="time" name="updowns[${i}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
-            <td style="${rowStyle}"><input type="time" name="updowns[${i}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
-            <td style="${rowStyle}"><input type="date" name="updowns[${i}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
-            <td style="${rowStyle}"><input type="date" name="updowns[${i}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
-            <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${i})">Delete</button></td>
-        `;
-
-        table.appendChild(updownRow);
-    }
-
-    updownContainer.appendChild(table);
+    return updownRow;
 }
 
-    function removeCompartment(index) {
-        let compartments = document.querySelectorAll('#compartment-sections .compartment-item');
-        if (compartments.length > 1) {
-            compartments[index].remove();
-        }
-    }
 
-    function removeUpdown(index) {
-        let updowns = document.querySelectorAll('#updown-sections .updown-item');
-        if (updowns.length > 1) {
-            updowns[index].remove();
-        }
-    }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        generateCompartments(@json($train->traincompartments));
-        generateUpdowns(@json($train->trainupdowns));
+function addUpdown() {
+    const updownContainer = document.getElementById('updown-sections');
+    const newUpdownRow = generateUpdownRow({}, updownCount);
+    updownContainer.appendChild(newUpdownRow);
+    updownCount++;
+
+    document.getElementById('updownnumber').value = updownCount; // Update the hidden field
+}
+
+
+function removeUpdown(index) {
+    const updowns = document.querySelectorAll('#updown-sections .updown-item');
+    if (updowns.length > 1) {
+        updowns[index].remove();
+        updownCount--;
+        document.getElementById('updownnumber').value = updownCount; // Update the hidden field
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const stations = @json($stations->toArray()); // Station list from the database
+    const existingUpdowns = @json($train->trainupdowns);
+    generateCompartments(@json($train->traincompartments));
+    existingUpdowns.forEach((updown) => {
+        const updownRow = generateUpdownRow(updown, updownCount);
+        document.getElementById('updown-sections').appendChild(updownRow);
+        updownCount++;
     });
+});
 </script>
 
+
 @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success">
+    {{ session('success') }}
+</div>
+@endif
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
 @endif
 
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <form action="{{ route('train.update', $train->trainid) }}" method="POST">
-                @csrf
-                @method('PUT')
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <form action="{{ route('train.update', $train->trainid) }}" method="POST">
+            @csrf
+            @method('PUT')
 
-                <div class="card text-center">
-                    <div class="card-header text-white" style="background-color: #005F56">
-                        Edit Train
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="form-label">Train Name:</label>
-                            <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
-                        </div>
-
-                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-
-                        <div class="mb-3">
-                            <label class="form-label" st yle="text-size: bold">Number of Compartments:</label>
-                            <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
-                        </div>
-                        <div id="compartment-sections"></div>
-
-                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-
-                        <div class="mb-3">
-                            <label class="form-label">Number of Schedules:</label>
-                            <input type="number" name="updownnumber" id="updownnumber" class="form-control" onchange="generateUpdowns()" value="{{ count($train->trainupdowns) }}">
-                        </div>
-                        <div id="updown-sections"></div>
-
-                        <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-
-                        <button type="submit" class="btn btn-success">Update Train</button>
-                    </div>
+            <div class="card text-center">
+                <div class="card-header text-white" style="background-color: #005F56">
+                    Edit Train
                 </div>
-            </form>
-        </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Train Name:</label>
+                        <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
+                    </div>
+
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+
+                    <div class="mb-3">
+                        <label class="form-label">Number of Compartments:</label>
+                        <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
+                    </div>
+                    <div id="compartment-sections"></div>
+
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+                    <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Schedules:</label>
+                        <button type="button" class="btn btn-primary" onclick="addUpdown()">Add Schedule</button>
+                    </div>
+                    <div id="updown-sections"></div>
+
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+
+                    <button type="submit" class="btn btn-success">Update Train</button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
+<script>
+    console.log("Train Updowns:", @json($train->trainupdowns));
+</script>
 
 @endsection
