@@ -22,19 +22,24 @@ class TrainSeeder extends Seeder
             'Moulvibazar Express', 'Comilla Express', 'Sundarbans Express', 'Bagerhat Express'
         ];
 
-        $stations = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
-                     'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong', 'Khulna'];
-
         $compartmentTypes = ['AC', 'Sleeper', 'First Class', 'Economy', 'Business', 'Women', 'Handicap'];
 
+        $stations = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
+        'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong', 'Khulna',
+        'Kamalpur','Airport','Sylhet','Rajshahi'];
+
         $routes = [
-            ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Dhaka'],
-            ['Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Chittagong'],
-            ['Dhaka', 'Gazipur', 'Madaripur', 'Manikganj', 'Dhaka'],
-            ['Faridpur', 'Gopalganj', 'Kishoreganj', 'Chittagong', 'Faridpur'],
-            ['Khulna', 'Sylhet', 'Rajshahi', 'Dhaka', 'Khulna'],
-            ['Jamalpur', 'Gazipur', 'Madaripur', 'Manikganj', 'Jamalpur'],
-            ['Chittagong', 'Sylhet', 'Rajshahi', 'Gopalganj', 'Chittagong'],
+        ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Dhaka'],
+        ['Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Chittagong'],
+        ['Dhaka', 'Gazipur', 'Madaripur', 'Manikganj', 'Dhaka'],
+        ['Faridpur', 'Gopalganj', 'Kishoreganj', 'Chittagong', 'Faridpur'],
+        ['Khulna', 'Sylhet', 'Rajshahi', 'Dhaka','Rajshahi','Sylhet', 'Khulna'],
+        ['Jamalpur', 'Gazipur', 'Madaripur', 'Manikganj', 'Madaripur','Gazipur','Jamalpur'],
+        ['Chittagong', 'Sylhet', 'Rajshahi', 'Gopalganj', 'Rajshahi', 'Sylhet', 'Chittagong'],
+        ['Faridpur', 'Madaripur', 'Manikganj', 'Kishoreganj','Manikganj','Madaripur', 'Faridpur'],
+        ['Rajshahi', 'Dhaka', 'Kamalpur', 'Dhaka', 'Rajshahi'],
+        ['Khulna', 'Jamalpur', 'Gopalganj', 'Jamalpur', 'Khulna'],
+        ['Airport', 'Kishoreganj', 'Faridpur', 'Kishoreganj', 'Airport']
         ];
 
         foreach ($trainNames as $trainName) {
@@ -49,6 +54,19 @@ class TrainSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            for ($j = 1; $j <= $compartmentNumber; $j++) {
+                $compartmentType = $compartmentTypes[array_rand($compartmentTypes)]; 
+
+                DB::table('traincompartments')->insert([
+                    'trainid' => $trainId,
+                    'seatnumber' => $j,
+                    'compartmentname' => 'Compartment ' . $j,
+                    'compartmenttype' => $compartmentType,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
 
             $baseDate = now()->addDays(rand(10, 15)); 
             $prevArrDate = $baseDate;
@@ -80,12 +98,12 @@ class TrainSeeder extends Seeder
 
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
-                    'tarrtime' => $tarrtime,
+                    'tarrtime' => $tarrtime, 
                     'tdeptime' => $tdeptime,
                     'tdepdate' => $tdepdate,
                     'tarrdate' => $tarrdate->format('Y-m-d'),
-                    'tsource' => $tsource,
-                    'tdestination' => $tdestination,
+                    'tsource' => $tsource . ' Railway Station',
+                    'tdestination' => $tdestination . ' Railway Station',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

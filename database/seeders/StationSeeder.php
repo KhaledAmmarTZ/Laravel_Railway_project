@@ -13,10 +13,9 @@ class StationSeeder extends Seeder
      */
     public function run(): void
     {
-        $cities = [
-            'Kamalapur', 'Airport', 'Chattogram', 'Sylhet', 'Rajshahi', 'Khulna',
-            'Barishal', 'Rangpur', 'Comilla', 'Mymensingh', 'Cox’s Bazar'
-        ];
+        $cities = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
+        'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong', 'Khulna',
+        'Kamalpur','Airport','Sylhet','Rajshahi'];
 
         foreach ($cities as $city) {
             $arrivalTime = Carbon::now()->addHours(rand(1, 6));
