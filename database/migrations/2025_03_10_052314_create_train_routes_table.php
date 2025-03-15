@@ -6,25 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('train_routes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('trainid');
             $table->unsignedBigInteger('station_id');
-            $table->integer('sequence'); // Defines the order of stations in the route
+            $table->integer('sequence');
             $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade');
             $table->foreign('station_id')->references('stid')->on('stations')->onDelete('cascade');
             $table->timestamps();
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('train_routes');

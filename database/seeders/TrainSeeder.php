@@ -29,17 +29,17 @@ class TrainSeeder extends Seeder
         'Kamalpur','Airport','Sylhet','Rajshahi'];
 
         $routes = [
-        ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Dhaka'],
-        ['Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Chittagong'],
-        ['Dhaka', 'Gazipur', 'Madaripur', 'Manikganj', 'Dhaka'],
-        ['Faridpur', 'Gopalganj', 'Kishoreganj', 'Chittagong', 'Faridpur'],
-        ['Khulna', 'Sylhet', 'Rajshahi', 'Dhaka','Rajshahi','Sylhet', 'Khulna'],
-        ['Jamalpur', 'Gazipur', 'Madaripur', 'Manikganj', 'Madaripur','Gazipur','Jamalpur'],
-        ['Chittagong', 'Sylhet', 'Rajshahi', 'Gopalganj', 'Rajshahi', 'Sylhet', 'Chittagong'],
-        ['Faridpur', 'Madaripur', 'Manikganj', 'Kishoreganj','Manikganj','Madaripur', 'Faridpur'],
-        ['Rajshahi', 'Dhaka', 'Kamalpur', 'Dhaka', 'Rajshahi'],
-        ['Khulna', 'Jamalpur', 'Gopalganj', 'Jamalpur', 'Khulna'],
-        ['Airport', 'Kishoreganj', 'Faridpur', 'Kishoreganj', 'Airport']
+            ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Dhaka'],
+            ['Chittagong', 'Khulna', 'Rajshahi', 'Sylhet', 'Chittagong'],
+            ['Dhaka', 'Gazipur', 'Madaripur', 'Manikganj', 'Dhaka'],
+            ['Faridpur', 'Gopalganj', 'Kishoreganj', 'Chittagong', 'Faridpur'],
+            ['Khulna', 'Sylhet', 'Rajshahi', 'Dhaka','Rajshahi','Sylhet', 'Khulna'],
+            ['Jamalpur', 'Gazipur', 'Madaripur', 'Manikganj', 'Madaripur','Gazipur','Jamalpur'],
+            ['Chittagong', 'Sylhet', 'Rajshahi', 'Gopalganj', 'Rajshahi', 'Sylhet', 'Chittagong'],
+            ['Faridpur', 'Madaripur', 'Manikganj', 'Kishoreganj','Manikganj','Madaripur', 'Faridpur'],
+            ['Rajshahi', 'Dhaka', 'Kamalpur', 'Dhaka', 'Rajshahi'],
+            ['Khulna', 'Jamalpur', 'Gopalganj', 'Jamalpur', 'Khulna'],
+            ['Airport', 'Kishoreganj', 'Faridpur', 'Kishoreganj', 'Airport']
         ];
 
         foreach ($trainNames as $trainName) {

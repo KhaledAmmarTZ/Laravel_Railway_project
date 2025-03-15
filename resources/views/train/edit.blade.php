@@ -277,7 +277,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     align-items: center;
                     justify-content: center;
                 }
-                /* Make the table borders bolder */
                     .updown-item td {
                         border: 2px solid #005F56;
                         padding: 12px;
@@ -325,7 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <!-- Dynamic rows will be added here -->
                                     </tbody>
                                 </table>
                             </div>

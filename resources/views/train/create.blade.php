@@ -11,7 +11,7 @@ Add Train
 
     #updown-sections th, 
     #updown-sections td {
-        border: 3px solid black; /* Increase border thickness */
+        border: 3px solid black;
         padding: 8px;
         text-align: center;
     }
@@ -27,7 +27,7 @@ Add Train
 
     #compartment-sections th, 
     #compartment-sections td {
-        border: 3px solid black; /* Increased border thickness */
+        border: 3px solid black;
         padding: 8px;
         text-align: center;
     }
@@ -117,10 +117,10 @@ function generateUpdowns() {
                                         <tr>
                                             <th>Source</th>
                                             <th>Destination</th>
+                                            <th>Departure Date</th>
+                                            <th>Arrival Date</th>
                                             <th>Departure Time</th>
                                             <th>Arrival Time</th>
-                                            <th>Arrival Date</th>
-                                            <th>Departure Date</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -145,24 +145,27 @@ function generateUpdowns() {
                     ${populateStationOptions(existingValues[`updowns[${i}][destination]`])}
                 </select>
             </td>
+
+            <td>
+                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" required>
+            </td>
+            <td>
+                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
+            </td>
+
             <td>
                 <input type="time" name="updowns[${i}][deptime]" id="deptime_${i}" class="form-control" value="${existingValues[`updowns[${i}][deptime]`] || ''}" required>
             </td>
             <td>
                 <input type="time" name="updowns[${i}][arrtime]" id="arrtime_${i}" class="form-control" value="${existingValues[`updowns[${i}][arrtime]`] || ''}" required>
             </td>
-            <td>
-                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
-            </td>
-            <td>
-                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" required>
-            </td>
+
+            
         </tr>                            
     `;
 
     tbody.insertAdjacentHTML('beforeend', rowHTML);
 
-    // Disable previous destination selects
     disablePreviousDestinations();
 
     document.querySelectorAll("#updown-sections input, #updown-sections select").forEach(input => {
@@ -173,7 +176,7 @@ function generateUpdowns() {
     });
 
     disableSourceOptions();
-    updateRouteDisplay(); // Update route display whenever new updown is added
+    updateRouteDisplay();
 
 }
 
@@ -181,20 +184,18 @@ function disablePreviousDestinations() {
     const updowns = document.querySelectorAll("#updown-sections table tbody tr");
 
     updowns.forEach((row, index) => {
-        if (index < updowns.length - 1) { // Apply only to all except the last row
+        if (index < updowns.length - 1) { 
             const destinationSelect = row.querySelector('select[name*="destination"]');
             
             destinationSelect.addEventListener('change', function(event) {
                 const userResponse = confirm("Don't change this. Do you want to continue?");
                 if (!userResponse) {
-                    event.preventDefault();  // Prevent the change
-                    this.value = this.dataset.previousValue || ""; // Reset to the previous value
+                    event.preventDefault(); 
+                    this.value = this.dataset.previousValue || "";
                 } else {
-                    this.dataset.previousValue = this.value; // Store the new value
+                    this.dataset.previousValue = this.value;
                 }
             });
-
-            // Store the initial value to reset if needed
             destinationSelect.dataset.previousValue = destinationSelect.value;
         }
     });
@@ -221,15 +222,11 @@ function disableSourceOptions() {
 function populateStationOptions(selectedValue = '', currentIndex = 0) {
     let options = '';
     stations.forEach(station => {
-        const depTime12Hr = convertTo12HourFormat(station.deeptime);
-        const arrTime12Hr = convertTo12HourFormat(station.artime);
 
         options += `
                                     <option value="${station.stationname}" 
-                                            data-deptime="${station.deeptime}" 
-                                            data-artime="${station.artime}" 
                                             ${station.stationname === selectedValue ? 'selected' : ''}>
-                                        ${station.stationname})
+                                        ${station.stationname}
                                     </option>`;
     });
     return options;
@@ -258,12 +255,10 @@ function updateDepTime(selectElement, index) {
     const sourceValue = selectElement.value;
     const destinationSelect = document.getElementById(`updowns[${index}][destination]`);
 
-    // Enable all destination options
     Array.from(destinationSelect.options).forEach(option => {
         option.disabled = false;
     });
 
-    // Disable the current source station in the destination options
     Array.from(destinationSelect.options).forEach(option => {
         if (option.value === sourceValue) {
             option.disabled = true;
@@ -278,18 +273,16 @@ function updateArrTime(selectElement, index) {
     const destinationValue = selectElement.value;
     const sourceSelect = document.getElementById(`updowns[${index}][source]`);
 
-    // Enable all source options
     Array.from(sourceSelect.options).forEach(option => {
         option.disabled = false;
     });
 
-    // Disable the current destination station in the source options
     Array.from(sourceSelect.options).forEach(option => {
         if (option.value === destinationValue) {
             option.disabled = true;
         }
     });
-    // Disable selected destinations in all dropdowns
+
     destinationSelects.forEach(select => {
         Array.from(select.options).forEach(option => {
             if (option.value === destinationValue) {
@@ -297,7 +290,7 @@ function updateArrTime(selectElement, index) {
             }
         });
 
-        // Ensure the selected value remains enabled in its own dropdown
+
         if (select === selectElement) {
             select.querySelector(`option[value="${destinationValue}"]`).disabled = false;
         }
@@ -312,8 +305,7 @@ function deleteUpdown() {
         rows[rows.length - 1].remove();
         disableSourceOptions();
 
-        // Re-enable the destination field of the new last row
-        const newLastRow = rows[rows.length - 2]; // Now the last row
+        const newLastRow = rows[rows.length - 2]; 
         if (newLastRow) {
             const lastDestinationSelect = newLastRow.querySelector('select[name*="destination"]');
             if (lastDestinationSelect) {
@@ -423,13 +415,47 @@ function deleteUpdown() {
                             </button>
                         </div>
                         <div id="updown-sections"></div>
-                        
-                        <input type="hidden" name="updownnumber" id="updownnumber" value="1">
+                    <input type="hidden" name="updownnumber" id="updownnumber" value="1">
 
-                        <div class="mb-3 d-flex align-items-center justify-content-center">
-                            <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
-                            <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
+                    <div class="mb-3 d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
+
+                        <!-- Button to dynamically select a route -->
+                        <button type="button" class="btn btn-info" onclick="showRouteOptions()">Select Route</button>
+                    </div>
+
+                    <!-- Button to show the route options -->
+                    <button type="button" class="btn btn-info" onclick="showRouteOptions()">Select Route</button>
+
+                    <!-- Route Selection Modal -->
+                    <div id="routeSelectionModal" class="modal" style="display:none;">
+                        <div class="modal-content">
+                            <span class="close-btn" onclick="closeRouteModal()">&times;</span>
+                            <h3>Select a Route</h3>
+
+                            <select id="route-select" class="form-control">
+                                <option value="">Select a Route</option>
+                                @foreach($groupedRoutes as $route_no => $routes)
+                                    <option value="{{ $route_no }}">
+                                        Route No: {{ $route_no }} - 
+                                        @foreach($routes as $route)
+                                            {{ $route->source }} → 
+                                        @endforeach
+                                        {{ $routes->last()->destination }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <button type="button" class="btn btn-success mt-3" onclick="selectRoute()">Select</button>
                         </div>
+                    </div>
+
+                    <!-- Selected route info -->
+                    <div id="selected-route-info">
+                        <p>No route selected.</p>
+                    </div>
+
 
                     </div>
                 </div>
@@ -447,8 +473,8 @@ function deleteUpdown() {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    min-height: 100vh; /* Center vertically */
-                    margin: 0 auto; /* Center horizontally */
+                    min-height: 100vh;
+                    margin: 0 auto;
                 }
 
                 .modal-content {
@@ -512,6 +538,60 @@ function deleteUpdown() {
 </form>
 
 <script>
+// Show the route selection modal
+function showRouteOptions() {
+    const modal = document.getElementById('routeSelectionModal');
+    modal.style.display = 'block';
+}
+
+// Close the route selection modal
+function closeRouteModal() {
+    const modal = document.getElementById('routeSelectionModal');
+    modal.style.display = 'none';
+}
+
+// Handle selecting a route
+function selectRoute() {
+    const routeSelect = document.getElementById('route-select');
+    const selectedRoute = routeSelect.value;
+
+    if (!selectedRoute) {
+        alert('Please select a route.');
+        return;
+    }
+
+    // Display the selected route information
+    const selectedRouteInfo = document.getElementById('selected-route-info');
+    selectedRouteInfo.innerHTML = `<p>Selected Route: Route No ${selectedRoute}</p>`;
+
+    // Close the modal
+    closeRouteModal();
+
+    // You can also store the selected route for further processing here
+    console.log('Selected Route:', selectedRoute);
+}
+
+// JavaScript to handle row selection and display selected routes
+let selectedRoutes = [];
+
+function updateSelectedRoutes() {
+    selectedRoutes = [];  // Reset selected routes
+
+    // Get all checked checkboxes and store their values (route_no)
+    document.querySelectorAll('.route-select:checked').forEach(checkbox => {
+        selectedRoutes.push(checkbox.value);
+    });
+
+    // Update the display with selected route numbers
+    const infoDiv = document.getElementById('selected-routes-info');
+    if (selectedRoutes.length > 0) {
+        infoDiv.innerHTML = '<p>Selected Routes: ' + selectedRoutes.join(', ') + '</p>';
+    } else {
+        infoDiv.innerHTML = '<p>No route selected.</p>';
+    }
+}
+
+
 function validateUpdownSections() {
     const updownContainer = document.getElementById('updown-sections');
     const rows = updownContainer.querySelectorAll('tbody tr');
@@ -570,8 +650,7 @@ document.addEventListener('change', function (event) {
         updateRouteDisplay();
     }
 });
-</script>
-<script>
+
 const routeDisplay = document.getElementById('route-display');
 let isDown = false;
 let startX;

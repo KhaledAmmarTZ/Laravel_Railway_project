@@ -3,13 +3,16 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+Route::resource('routes', RouteController::class);
+Route::get('/routes/{route}/edit', [RouteController::class, 'edit'])->name('routes.edit');
+Route::put('/routes/{route}', [RouteController::class, 'update'])->name('routes.update');
 
 Route::get('/stations', [TrainController::class, 'getStations']);
 Route::get('/train_route',function (){

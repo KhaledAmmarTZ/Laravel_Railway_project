@@ -6,7 +6,7 @@ use App\Models\Train;
 use App\Models\Compartment;
 use App\Models\Updown;
 use App\Models\Station;
-use App\Models\TrainRoute;
+use App\Models\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -16,9 +16,12 @@ class TrainController extends Controller
     public function create()
     {
         $stations = Station::all();
-        return view('train.create' , compact('stations'));
+        $routes = Route::all();
+        // Group routes by route_no
+        $groupedRoutes = $routes->groupBy('route_no');
+        return view('train.create', compact('stations', 'groupedRoutes'));
     }
-
+    
         // Define the convertTo24HourFormat function inside the TrainController
     private function convertTo24HourFormat($time) {
         // Convert time from 'HH:MM' to 'HH:MM:SS' 24-hour format
@@ -295,5 +298,10 @@ public function getTrains()
 {
     $trains = Train::all(); 
     return response()->json($trains);
+}
+public function getRoutes()
+{
+    $routes = Route::all(); 
+    return response()->json($routes);  
 }
 }

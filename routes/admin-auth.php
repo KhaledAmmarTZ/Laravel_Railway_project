@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\TrainController;
+use App\Http\Controllers\RouteController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -73,19 +74,17 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
     // Train Routes (Admin Only)
     Route::get('/stations', [TrainController::class, 'getStations']);
+    Route::get('/routes', [TrainController::class, 'getRoutes']);
 
     Route::get('/train/create', [TrainController::class, 'create'])->name('train.create');
     Route::post('/train', [TrainController::class, 'store'])->name('train.store');
     Route::get('/train/edit', [TrainController::class, 'showEditPage'])->name('train.edit.page');
     Route::post('/train/edit', [TrainController::class, 'loadTrainData'])->name('train.load');
     Route::get('/train/edit/{trainid}', [TrainController::class, 'edit'])->name('train.edit');
-Route::put('/train/update/{trainid}', [TrainController::class, 'update'])->name('train.update');
+    Route::put('/train/update/{trainid}', [TrainController::class, 'update'])->name('train.update');
 
     Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
     Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
 
     
-    Route::get('/train_route',function (){
-        return view('train.train_route');
-    });
 });
