@@ -176,29 +176,9 @@ function generateUpdowns() {
     });
 
     disableSourceOptions();
+    lockSourceSelection();
     updateRouteDisplay();
 
-}
-
-function disablePreviousDestinations() {
-    const updowns = document.querySelectorAll("#updown-sections table tbody tr");
-
-    updowns.forEach((row, index) => {
-        if (index < updowns.length - 1) { 
-            const destinationSelect = row.querySelector('select[name*="destination"]');
-            
-            destinationSelect.addEventListener('change', function(event) {
-                const userResponse = confirm("Don't change this. Do you want to continue?");
-                if (!userResponse) {
-                    event.preventDefault(); 
-                    this.value = this.dataset.previousValue || "";
-                } else {
-                    this.dataset.previousValue = this.value;
-                }
-            });
-            destinationSelect.dataset.previousValue = destinationSelect.value;
-        }
-    });
 }
 
 
@@ -298,6 +278,78 @@ function updateArrTime(selectElement, index) {
 
 }
 
+function lockSourceSelection() {
+    document.querySelectorAll("#updown-sections table tbody tr").forEach((row, index) => {
+        if (index > 0) { 
+            const sourceSelect = row.querySelector('select[name*="source"]');
+
+            sourceSelect.addEventListener('change', function (event) {
+                if (this.dataset.selected) {
+                    showCustomModal(this, event, 'source');
+                } else {
+                    this.dataset.selected = this.value;
+                }
+            });
+        }
+    });
+}
+
+function disablePreviousDestinations() {
+    const updowns = document.querySelectorAll("#updown-sections table tbody tr");
+
+    updowns.forEach((row, index) => {
+        if (index < updowns.length - 1) { 
+            const destinationSelect = row.querySelector('select[name*="destination"]');
+            
+            destinationSelect.addEventListener('change', function(event) {
+                showCustomModal(destinationSelect, event, 'destination');
+            });
+
+            destinationSelect.dataset.previousValue = destinationSelect.value;
+        }
+    });
+}
+
+function showCustomModal(selectElement, event, type) {
+    const modal = document.getElementById('custom-alert');
+    const alertMessage = document.getElementById('alert-message');
+    const alertYesButton = document.getElementById('alert-yes');
+    const alertCancelButton = document.getElementById('alert-cancel');
+
+    alertMessage.textContent = type === 'source' 
+        ? "Do you want to change the source?" 
+        : "Don't change this. Do you want to continue?";
+
+    modal.style.display = 'flex';
+
+    alertYesButton.onclick = function() {
+        if (type === 'source') {
+            selectElement.dataset.selected = selectElement.value;
+        } else {
+            selectElement.dataset.previousValue = selectElement.value;
+        }
+        modal.style.display = 'none';
+    };
+
+    alertCancelButton.onclick = function() {
+        if (type === 'source') {
+            selectElement.value = selectElement.dataset.selected;
+        } else {
+            selectElement.value = selectElement.dataset.previousValue;
+        }
+        modal.style.display = 'none';
+        event.preventDefault();
+    };
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById('custom-alert');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+};
+
+
 function deleteUpdown() {
     const updownContainer = document.getElementById('updown-sections');
     const rows = updownContainer.querySelectorAll('tbody tr');
@@ -351,8 +403,8 @@ function deleteUpdown() {
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
             <div class="row" style="justify-content: center; gap: 30px">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment">Set Train Compartment</button>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 550px">Set Train Compartment</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 550px">Set Train Route</button>
             </div>
 
             <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
@@ -415,47 +467,21 @@ function deleteUpdown() {
                             </button>
                         </div>
                         <div id="updown-sections"></div>
-                    <input type="hidden" name="updownnumber" id="updownnumber" value="1">
+                        <input type="hidden" name="updownnumber" id="updownnumber" value="1">
 
-                    <div class="mb-3 d-flex align-items-center justify-content-center">
-                        <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
-                        <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
-
-                        <!-- Button to dynamically select a route -->
-                        <button type="button" class="btn btn-info" onclick="showRouteOptions()">Select Route</button>
-                    </div>
-
-                    <!-- Button to show the route options -->
-                    <button type="button" class="btn btn-info" onclick="showRouteOptions()">Select Route</button>
-
-                    <!-- Route Selection Modal -->
-                    <div id="routeSelectionModal" class="modal" style="display:none;">
-                        <div class="modal-content">
-                            <span class="close-btn" onclick="closeRouteModal()">&times;</span>
-                            <h3>Select a Route</h3>
-
-                            <select id="route-select" class="form-control">
-                                <option value="">Select a Route</option>
-                                @foreach($groupedRoutes as $route_no => $routes)
-                                    <option value="{{ $route_no }}">
-                                        Route No: {{ $route_no }} - 
-                                        @foreach($routes as $route)
-                                            {{ $route->source }} → 
-                                        @endforeach
-                                        {{ $routes->last()->destination }}
-                                    </option>
-                                @endforeach
-                            </select>
-
-                            <button type="button" class="btn btn-success mt-3" onclick="selectRoute()">Select</button>
+                        <div class="mb-3 d-flex align-items-center justify-content-center">
+                            <button type="button" class="btn btn-success" onclick="generateUpdowns()">Add</button>
+                            <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
                         </div>
-                    </div>
 
-                    <!-- Selected route info -->
-                    <div id="selected-route-info">
-                        <p>No route selected.</p>
-                    </div>
-
+                        <!-- Custom Alert Modal -->
+<div id="custom-alert" class="custom-alert">
+    <div class="alert-content">
+        <p id="alert-message"></p>
+        <button id="alert-yes" class="alert-btn">Yes</button>
+        <button id="alert-cancel" class="alert-btn">Cancel</button>
+    </div>
+</div>
 
                     </div>
                 </div>
@@ -528,6 +554,47 @@ function deleteUpdown() {
                 align-items: center;
                 justify-content: center;
             }
+
+            .custom-alert {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.alert-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+}
+
+.alert-btn {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#alert-yes {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#alert-cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+
             </style>
 
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
@@ -538,60 +605,6 @@ function deleteUpdown() {
 </form>
 
 <script>
-// Show the route selection modal
-function showRouteOptions() {
-    const modal = document.getElementById('routeSelectionModal');
-    modal.style.display = 'block';
-}
-
-// Close the route selection modal
-function closeRouteModal() {
-    const modal = document.getElementById('routeSelectionModal');
-    modal.style.display = 'none';
-}
-
-// Handle selecting a route
-function selectRoute() {
-    const routeSelect = document.getElementById('route-select');
-    const selectedRoute = routeSelect.value;
-
-    if (!selectedRoute) {
-        alert('Please select a route.');
-        return;
-    }
-
-    // Display the selected route information
-    const selectedRouteInfo = document.getElementById('selected-route-info');
-    selectedRouteInfo.innerHTML = `<p>Selected Route: Route No ${selectedRoute}</p>`;
-
-    // Close the modal
-    closeRouteModal();
-
-    // You can also store the selected route for further processing here
-    console.log('Selected Route:', selectedRoute);
-}
-
-// JavaScript to handle row selection and display selected routes
-let selectedRoutes = [];
-
-function updateSelectedRoutes() {
-    selectedRoutes = [];  // Reset selected routes
-
-    // Get all checked checkboxes and store their values (route_no)
-    document.querySelectorAll('.route-select:checked').forEach(checkbox => {
-        selectedRoutes.push(checkbox.value);
-    });
-
-    // Update the display with selected route numbers
-    const infoDiv = document.getElementById('selected-routes-info');
-    if (selectedRoutes.length > 0) {
-        infoDiv.innerHTML = '<p>Selected Routes: ' + selectedRoutes.join(', ') + '</p>';
-    } else {
-        infoDiv.innerHTML = '<p>No route selected.</p>';
-    }
-}
-
-
 function validateUpdownSections() {
     const updownContainer = document.getElementById('updown-sections');
     const rows = updownContainer.querySelectorAll('tbody tr');
