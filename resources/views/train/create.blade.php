@@ -84,7 +84,41 @@ function generateCompartments() {
 
         tableHTML += `</tbody></table>`;
         compartmentContainer.innerHTML = tableHTML;
+        // Show the data below the button
+        showCompartmentData(numCompartment, existingData);
+
     }
+}
+function showCompartmentData(numCompartment, existingData) {
+    let displayHTML = `
+                        <h3>Entered Compartment Data:</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Compartment Name</th>
+                                    <th>Number of Seats</th>
+                                    <th>Compartment Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+    for (let i = 1; i <= numCompartment; i++) {
+        const nameValue = existingData[`compartments[${i}][name]`] || '';
+        const seatsValue = existingData[`compartments[${i}][seats]`] || '';
+        const typeValue = existingData[`compartments[${i}][type]`] || '';
+
+        displayHTML += `
+                            <tr>
+                                <td>${nameValue}</td>
+                                <td>${seatsValue}</td>
+                                <td>${typeValue}</td>
+                            </tr>
+                        `;
+    }
+
+    displayHTML += `</tbody></table>`;
+    document.getElementById('compartment-data-display').innerHTML = displayHTML;
 }
 document.addEventListener("DOMContentLoaded", function() {
     generateUpdowns();
@@ -178,9 +212,54 @@ function generateUpdowns() {
     disableSourceOptions();
     lockSourceSelection();
     updateRouteDisplay();
+    // Call the function to display entered data
+    showUpdownData();
 
 }
+function showUpdownData() {
+    const updownContainer = document.getElementById('updown-sections');
+    const tbody = updownContainer.querySelector('tbody');
+    const rows = tbody.querySelectorAll('tr');
 
+    let displayHTML = `
+        <h3>Entered Train Route Data:</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Destination</th>
+                    <th>Departure Date</th>
+                    <th>Arrival Date</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    rows.forEach(row => {
+        const source = row.querySelector('select[name*="source"]').value;
+        const destination = row.querySelector('select[name*="destination"]').value;
+        const depDate = row.querySelector('input[name*="tdepdate"]').value;
+        const arrDate = row.querySelector('input[name*="tarrdate"]').value;
+        const depTime = row.querySelector('input[name*="deptime"]').value;
+        const arrTime = row.querySelector('input[name*="arrtime"]').value;
+
+        displayHTML += `
+            <tr>
+                <td>${source}</td>
+                <td>${destination}</td>
+                <td>${depDate}</td>
+                <td>${arrDate}</td>
+                <td>${depTime}</td>
+                <td>${arrTime}</td>
+            </tr>
+        `;
+    });
+
+    displayHTML += `</tbody></table>`;
+    document.getElementById('updown-data-display').innerHTML = displayHTML;
+}
 
 function disableSourceOptions() {
     const updowns = document.querySelectorAll("#updown-sections table tbody tr");
@@ -402,10 +481,29 @@ function deleteUpdown() {
             </div>
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
-            <div class="row" style="justify-content: center; gap: 30px">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 550px">Set Train Compartment</button>
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 550px">Set Train Route</button>
-            </div>
+            <div class="row">
+    <!-- Train Compartment Section -->
+    <div class="col-md-6 col-12" style="text-align: center;">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 100%;">
+            Set Train Compartment
+        </button>
+
+        <!-- Div to show the generated compartments table below the button -->
+        <div id="compartment-data-display" class="mt-3"></div>
+    </div>
+
+    <!-- Train Route Section -->
+    <div class="col-md-6 col-12" style="text-align: center;">
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 100%;">
+            Set Train Route
+        </button>
+
+        <!-- Div to show the generated up-down table below the button -->
+        <div id="updown-data-display" class="mt-3"></div>
+    </div>
+</div>
+
+
 
             <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg fullscreen-modal">
@@ -474,130 +572,22 @@ function deleteUpdown() {
                             <button type="button" class="btn btn-danger" onclick="deleteUpdown()">Delete</button>
                         </div>
 
-                        <!-- Custom Alert Modal -->
-<div id="custom-alert" class="custom-alert">
-    <div class="alert-content">
-        <p id="alert-message"></p>
-        <button id="alert-yes" class="alert-btn">Yes</button>
-        <button id="alert-cancel" class="alert-btn">Cancel</button>
-    </div>
-</div>
+                        <div id="custom-alert" class="custom-alert">
+                            <div class="alert-content">
+                                <p id="alert-message"></p>
+                                <button id="alert-yes" class="alert-btn">Yes</button>
+                                <button id="alert-cancel" class="alert-btn">Cancel</button>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
             </div>
-
-            <style>
-                .fullscreen-modal {
-                    max-width: 1400px;
-                    width: 100%;
-                    height: 100%;
-                    margin: 0;
-                }
-
-                .modal-dialog {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    min-height: 100vh;
-                    margin: 0 auto;
-                }
-
-                .modal-content {
-                    height: 100%;
-                    margin: auto;
-                    padding: 20px;
-                    border: none;
-                }
-
-                .modal-header .close {
-                    font-size: 2rem;
-                    color: #000;
-                }
-
-                #route-display {
-                display: flex;
-                gap: 10px;
-                overflow-x: auto;
-                white-space: nowrap;
-                padding: 10px;
-                cursor: grab;
-                scroll-behavior: smooth;
-                border: 2px solid #ccc;
-                width: 100%;
-                max-width: 800px;
-                position: relative;
-                align-items: center;
-            }
-
-            .route-box {
-                width: 160px;
-                height: 40px;
-                border: 2px solid #005F56;
-                background-color: #f8f9fa;
-                text-align: center;
-                line-height: 35px;
-                font-weight: bold;
-                font-size: 12px;
-                border-radius: 5px;
-                user-select: none;
-                display: inline-flex;
-                justify-content: center;
-                align-items: center;
-            }
-
-            .route-arrow {
-                font-size: 20px;
-                font-weight: bold;
-                color: #005F56;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .custom-alert {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.alert-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    width: 300px;
-}
-
-.alert-btn {
-    padding: 10px 20px;
-    margin: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#alert-yes {
-    background-color: #4CAF50;
-    color: white;
-}
-
-#alert-cancel {
-    background-color: #f44336;
-    color: white;
-}
-
-
-            </style>
-
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+            <div id="warning-message" style="display:none; color: red; font-weight: bold; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; margin-top: 20px;">
+                <!-- Warning message will be inserted here -->
+            </div>
+
             <button type="submit" class="btn search-btn">Submit</button>
             <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
         </div>
@@ -609,22 +599,30 @@ function validateUpdownSections() {
     const updownContainer = document.getElementById('updown-sections');
     const rows = updownContainer.querySelectorAll('tbody tr');
 
+    let warningMessage = '';
+
     if (rows.length < 2) {
-        alert("Please add at least 2 updown sections before submitting.");
+        warningMessage += 'Please add at least 2 updown sections before submitting.\n';
+    } else {
+        const firstSource = rows[0].querySelector('select[name*="source"]').value;
+        const lastDestination = rows[rows.length - 1].querySelector('select[name*="destination"]').value;
+
+        if (firstSource !== lastDestination) {
+            warningMessage += "Train route is not set! The last updown section's destination must match the first updown section's source.\n";
+        }
+
+    }
+   if (warningMessage) {
+        document.getElementById('warning-message').innerText = warningMessage;
+        document.getElementById('warning-message').style.display = 'block';
         return false;
+    } else {
+        document.getElementById('warning-message').style.display = 'none';
     }
 
-    const firstSource = rows[0].querySelector('select[name*="source"]').value;
-    const lastDestination = rows[rows.length - 1].querySelector('select[name*="destination"]').value;
-
-    if (firstSource !== lastDestination) {
-        alert(
-            "Train route is note set!.The last updown section's destination must match the first updown section's source."
-        );
-        return false;
-    }
     return true;
 }
+
 function updateRouteDisplay() {
     const routeDisplay = document.getElementById('route-display');
     routeDisplay.innerHTML = ''; 
@@ -694,4 +692,111 @@ routeDisplay.addEventListener('mousemove', (e) => {
     routeDisplay.scrollLeft = scrollLeft - walk;
 });
 </script>
+<style>
+                .fullscreen-modal {
+                    max-width: 1400px;
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                }
+
+                .modal-dialog {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh;
+                    margin: 0 auto;
+                }
+
+                .modal-content {
+                    height: 100%;
+                    margin: auto;
+                    padding: 20px;
+                    border: none;
+                }
+
+                .modal-header .close {
+                    font-size: 2rem;
+                    color: #000;
+                }
+
+                #route-display {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 10px;
+                cursor: grab;
+                scroll-behavior: smooth;
+                border: 2px solid #ccc;
+                width: 100%;
+                max-width: 800px;
+                position: relative;
+                align-items: center;
+            }
+
+            .route-box {
+                width: 160px;
+                height: 40px;
+                border: 2px solid #005F56;
+                background-color: #f8f9fa;
+                text-align: center;
+                line-height: 35px;
+                font-weight: bold;
+                font-size: 12px;
+                border-radius: 5px;
+                user-select: none;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .route-arrow {
+                font-size: 20px;
+                font-weight: bold;
+                color: #005F56;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .custom-alert {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+
+            .alert-content {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                text-align: center;
+                width: 300px;
+            }
+
+            .alert-btn {
+                padding: 10px 20px;
+                margin: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            #alert-yes {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            #alert-cancel {
+                background-color: #f44336;
+                color: white;
+            }
+            </style>
 @endsection

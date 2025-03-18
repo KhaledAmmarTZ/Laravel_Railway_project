@@ -162,27 +162,28 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 @endif
 
-<div class="row justify-content-center">
-    <div class="col-md-12">
+
         <form action="{{ route('train.update', $train->trainid) }}" method="POST">
             @csrf
             @method('PUT')
 
-            <div class="card text-center">
+            <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
                 <div class="card-header text-white" style="background-color: #005F56">
                     Edit Train
                 </div>
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label class="form-label">Train Name:</label>
-                        <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
+                    <div class="mb-3 d-flex align-items-center">
+                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name: &nbsp; </label>
+                        <div class="flex-grow-1">
+                        <input type="text" name="trainname" class="form-control w-75" value="{{ $train->trainname }}" required>
+                        </div>
                     </div>
 
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
 
-                    <div class="mb-3">
-                        <label class="form-label">Number of Compartments:</label>
-                        <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
+                    <div class="mb-3 d-flex align-items-center">
+                        <label class="form-label me-3" style="width: 250px; text-align: right;">Number of Compartments:</label>
+                        <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control w-75" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
                     </div>
                     <div id="compartment-sections"></div>
 
@@ -190,7 +191,8 @@ document.addEventListener("DOMContentLoaded", function () {
             
                     <div class="card" style="background-color: transparent; border: none;" >
                         <div class="card-body" style="background-color: transparent; border: none;">
-                        <h5 class="card-title">Shown Train Routes</h5>
+                        <div class="mb-3 d-flex align-items-center">
+                            <h5 class="card-title">Shown Train Routes</h5>
                             <div id="route-display" style="background-color: transparent; border: none;">
                             <div class="route-box" id="route-box-1"></div>
                             <div class="route-box" id="route-box-2"></div>
@@ -207,8 +209,10 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="route-box" id="route-box-13"></div>
                             <div class="route-box" id="route-box-14"></div>
                             <div class="route-box" id="route-box-15"></div>
+                            </div>
                         </div>
                     </div>
+
                 </div>
                 <style>
                     .fullscreen-modal {
@@ -334,10 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                 </div>
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-                    
-
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
 
                     <button type="submit" class="btn search-btn">Update Train</button>
                     <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
