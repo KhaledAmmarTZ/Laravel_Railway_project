@@ -88,7 +88,6 @@
     return updownRow;
 }
 
-
 function addUpdown() {
     const updownContainer = document.getElementById('updown-sections');
     const newUpdownRow = generateUpdownRow({}, updownCount);
@@ -168,12 +167,14 @@ document.addEventListener("DOMContentLoaded", function () {
             @method('PUT')
 
             <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
+                
                 <div class="card-header text-white" style="background-color: #005F56">
                     Edit Train
                 </div>
                 <div class="card-body">
+                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
                     <div class="mb-3 d-flex align-items-center">
-                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name: &nbsp; </label>
+                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
                         <div class="flex-grow-1">
                         <input type="text" name="trainname" class="form-control w-75" value="{{ $train->trainname }}" required>
                         </div>
@@ -214,7 +215,55 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
 
                 </div>
-                <style>
+                
+
+<hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
+                <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg fullscreen-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Train Route</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
+                                                    
+                            <div id="updown-sections">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 265px;">Source</th>
+                                            <th style="width: 265px;">Destination</th>
+                                            <th style="width: 150px;">Arrival Time</th>
+                                            <th style="width: 180px;">Departure Time</th>
+                                            <th style="width: 180px;">Arrival Date</th>
+                                            <th>Departure Date</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                            <div class="mb-3">
+                                <button type="button" class="btn btn-success" onclick="addUpdown()">Add Schedule</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
+
+                    <button type="submit" class="btn search-btn">Update Train</button>
+                    <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
                     .fullscreen-modal {
                         max-width: 1400px;
                         width: 100%;
@@ -300,53 +349,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         background-color:rgb(157, 157, 157);
                     }
             </style>
-
-<hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
-                <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg fullscreen-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Train Route</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
-                                                    
-                            <div id="updown-sections">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 265px;">Source</th>
-                                            <th style="width: 265px;">Destination</th>
-                                            <th style="width: 150px;">Arrival Time</th>
-                                            <th style="width: 180px;">Departure Time</th>
-                                            <th style="width: 180px;">Arrival Date</th>
-                                            <th>Departure Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                            <div class="mb-3">
-                                <button type="button" class="btn btn-success" onclick="addUpdown()">Add Schedule</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
-
-                    <button type="submit" class="btn search-btn">Update Train</button>
-                    <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 <script>
     console.log("Train Updowns:", @json($train->trainupdowns));
 </script>

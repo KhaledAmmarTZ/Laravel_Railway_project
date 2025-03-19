@@ -41,7 +41,9 @@ Add Train
 const stations = @json($stations);
 
 function generateCompartments() {
-    const numCompartment = document.getElementById('numofcompartment').value;
+    let numCompartment = document.getElementById('numofcompartment').value || 1;
+    numCompartment = Math.max(1, numCompartment);
+
     const compartmentContainer = document.getElementById('compartment-sections');
 
     const existingData = {};
@@ -49,78 +51,93 @@ function generateCompartments() {
         existingData[input.name] = input.value;
     });
 
-    if (numCompartment > 0) {
-        let tableHTML = `
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Compartment Name</th>
-                                            <th>Number of Seats</th>
-                                            <th>Compartment Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                            `;
-
-        for (let i = 1; i <= numCompartment; i++) {
-            const nameValue = existingData[`compartments[${i}][name]`] || '';
-            const seatsValue = existingData[`compartments[${i}][seats]`] || '';
-            const typeValue = existingData[`compartments[${i}][type]`] || '';
-
-            tableHTML += `
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="compartments[${i}][name]" id="compartments[${i}][name]" class="form-control" value="${nameValue}" required>
-                                        </td>
-                                        <td>
-                                            <input type="number" name="compartments[${i}][seats]" id="compartments[${i}][seats]" class="form-control" value="${seatsValue}" required>
-                                        </td>
-                                        <td>
-                                            <input type="text" name="compartments[${i}][type]" id="compartments[${i}][type]" class="form-control" value="${typeValue}" required>
-                                        </td>
-                                    </tr>
-                                `;
-        }
-
-        tableHTML += `</tbody></table>`;
-        compartmentContainer.innerHTML = tableHTML;
-        // Show the data below the button
-        showCompartmentData(numCompartment, existingData);
-
-    }
-}
-function showCompartmentData(numCompartment, existingData) {
-    let displayHTML = `
-                        <h3>Entered Compartment Data:</h3>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Compartment Name</th>
-                                    <th>Number of Seats</th>
-                                    <th>Compartment Type</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
+    let tableHTML = `
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Compartment Name</th>
+                    <th>Number of Seats</th>
+                    <th>Compartment Type</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
 
     for (let i = 1; i <= numCompartment; i++) {
         const nameValue = existingData[`compartments[${i}][name]`] || '';
         const seatsValue = existingData[`compartments[${i}][seats]`] || '';
         const typeValue = existingData[`compartments[${i}][type]`] || '';
 
-        displayHTML += `
-                            <tr>
-                                <td>${nameValue}</td>
-                                <td>${seatsValue}</td>
-                                <td>${typeValue}</td>
-                            </tr>
-                        `;
+        tableHTML += `
+            <tr>
+                <td>
+                    <input type="text" name="compartments[${i}][name]" id="compartments[${i}][name]" class="form-control" value="${nameValue}" required>
+                </td>
+                <td>
+                    <input type="number" name="compartments[${i}][seats]" id="compartments[${i}][seats]" class="form-control" value="${seatsValue}" required>
+                </td>
+                <td>
+                    <input type="text" name="compartments[${i}][type]" id="compartments[${i}][type]" class="form-control" value="${typeValue}" required>
+                </td>
+            </tr>
+        `;
+    }
+
+    tableHTML += `</tbody></table>`;
+    compartmentContainer.innerHTML = tableHTML;
+
+    attachInputListeners(); 
+    showCompartmentData();  
+}
+
+function attachInputListeners() {
+    document.querySelectorAll('[id^="compartments"]').forEach(input => {
+        input.addEventListener('input', showCompartmentData); 
+    });
+}
+
+function showCompartmentData() {
+    let displayHTML = `
+        <h3>Entered Compartment Data:</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Compartment Name</th>
+                    <th>Number of Seats</th>
+                    <th>Compartment Type</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    let numCompartment = document.getElementById('numofcompartment').value || 1;
+    numCompartment = Math.max(1, numCompartment);
+
+    for (let i = 1; i <= numCompartment; i++) {
+        const name = document.getElementById(`compartments[${i}][name]`)?.value || '';
+        const seats = document.getElementById(`compartments[${i}][seats]`)?.value || '';
+        const type = document.getElementById(`compartments[${i}][type]`)?.value || '';
+
+        if (name || seats || type) {
+            displayHTML += `
+                <tr>
+                    <td>${name}</td>
+                    <td>${seats}</td>
+                    <td>${type}</td>
+                </tr>
+            `;
+        }
     }
 
     displayHTML += `</tbody></table>`;
     document.getElementById('compartment-data-display').innerHTML = displayHTML;
 }
-document.addEventListener("DOMContentLoaded", function() {
+
+window.onload = function () {
+    generateCompartments();
+};
+
+document.addEventListener("DOMContentLoaded", function () {
     generateUpdowns();
 });
 
@@ -146,20 +163,20 @@ function generateUpdowns() {
 
     if (!updownContainer.querySelector('table')) {
         updownContainer.innerHTML = `
-                 <table class="table table-bordered">
-                    <thead>
-                                        <tr>
-                                            <th>Source</th>
-                                            <th>Destination</th>
-                                            <th>Departure Date</th>
-                                            <th>Arrival Date</th>
-                                            <th>Departure Time</th>
-                                            <th>Arrival Time</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                            `;
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Departure Date</th>
+                        <th>Arrival Date</th>
+                        <th>Departure Time</th>
+                        <th>Arrival Time</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        `;
     }
 
     const tbody = updownContainer.querySelector('tbody');
@@ -168,33 +185,31 @@ function generateUpdowns() {
     const rowHTML = `
         <tr>
             <td>
-                <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control" onchange="updateDepTime(this, ${i})" required>
+                <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control updown-input" required>
                     <option value="">Select Source</option>
                     ${populateStationOptions(existingValues[`updowns[${i}][source]`], i)}
                 </select>
             </td>
             <td>
-                <select name="updowns[${i}][destination]" id="updowns[${i}][destination]" class="form-control" onchange="updateArrTime(this, ${i})" required>
+                <select name="updowns[${i}][destination]" id="updowns[${i}][destination]" class="form-control updown-input" required>
                     <option value="">Select Destination</option>
                     ${populateStationOptions(existingValues[`updowns[${i}][destination]`])}
                 </select>
             </td>
 
             <td>
-                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" required>
+                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" required>
             </td>
             <td>
-                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control" value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
+                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
             </td>
 
             <td>
-                <input type="time" name="updowns[${i}][deptime]" id="deptime_${i}" class="form-control" value="${existingValues[`updowns[${i}][deptime]`] || ''}" required>
+                <input type="time" name="updowns[${i}][deptime]" id="deptime_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][deptime]`] || ''}" required>
             </td>
             <td>
-                <input type="time" name="updowns[${i}][arrtime]" id="arrtime_${i}" class="form-control" value="${existingValues[`updowns[${i}][arrtime]`] || ''}" required>
+                <input type="time" name="updowns[${i}][arrtime]" id="arrtime_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][arrtime]`] || ''}" required>
             </td>
-
-            
         </tr>                            
     `;
 
@@ -209,13 +224,20 @@ function generateUpdowns() {
         }
     });
 
+    attachUpdownInputListeners();
     disableSourceOptions();
     lockSourceSelection();
     updateRouteDisplay();
-    // Call the function to display entered data
-    showUpdownData();
-
+    showUpdownData(); 
 }
+
+function attachUpdownInputListeners() {
+    document.querySelectorAll('.updown-input').forEach(input => {
+        input.addEventListener('input', showUpdownData);  
+        input.addEventListener('change', showUpdownData); 
+    });
+}
+
 function showUpdownData() {
     const updownContainer = document.getElementById('updown-sections');
     const tbody = updownContainer.querySelector('tbody');
@@ -245,16 +267,18 @@ function showUpdownData() {
         const depTime = row.querySelector('input[name*="deptime"]').value;
         const arrTime = row.querySelector('input[name*="arrtime"]').value;
 
-        displayHTML += `
-            <tr>
-                <td>${source}</td>
-                <td>${destination}</td>
-                <td>${depDate}</td>
-                <td>${arrDate}</td>
-                <td>${depTime}</td>
-                <td>${arrTime}</td>
-            </tr>
-        `;
+        if (source || destination || depDate || arrDate || depTime || arrTime) { 
+            displayHTML += `
+                <tr>
+                    <td>${source}</td>
+                    <td>${destination}</td>
+                    <td>${depDate}</td>
+                    <td>${arrDate}</td>
+                    <td>${depTime}</td>
+                    <td>${arrTime}</td>
+                </tr>
+            `;
+        }
     });
 
     displayHTML += `</tbody></table>`;
@@ -462,7 +486,6 @@ function deleteUpdown() {
 </div>
 @endif
 
-
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()">
     @csrf
     <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
@@ -482,28 +505,22 @@ function deleteUpdown() {
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
             <div class="row">
-    <!-- Train Compartment Section -->
-    <div class="col-md-6 col-12" style="text-align: center;">
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 100%;">
-            Set Train Compartment
-        </button>
+                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width:100%;">
+                        Set Train Compartment
+                    </button>
 
-        <!-- Div to show the generated compartments table below the button -->
-        <div id="compartment-data-display" class="mt-3"></div>
-    </div>
+                    <div id="compartment-data-display" class="mt-3"></div>
+                </div>
 
-    <!-- Train Route Section -->
-    <div class="col-md-6 col-12" style="text-align: center;">
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 100%;">
-            Set Train Route
-        </button>
+                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-left: 1px solid #000; padding-right: 14px; padding-left: 14px;">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 100%;">
+                        Set Train Route
+                    </button>
 
-        <!-- Div to show the generated up-down table below the button -->
-        <div id="updown-data-display" class="mt-3"></div>
-    </div>
-</div>
-
-
+                    <div id="updown-data-display" class="mt-3"></div>
+                </div>
+            </div>
 
             <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg fullscreen-modal">
