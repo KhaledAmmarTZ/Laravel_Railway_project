@@ -264,34 +264,34 @@ document.addEventListener("DOMContentLoaded", function () {
     </div>
 </div>
 <style>
-                    .fullscreen-modal {
-                        max-width: 1400px;
-                        width: 100%;
-                        height: 100%;
-                        margin: 0;
-                    }
+                .fullscreen-modal {
+                    max-width: 1400px;
+                    width: 100%;
+                    height: 100%;
+                    margin: 0;
+                }
 
-                    .modal-dialog {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        min-height: 100vh; 
-                        margin: 0 auto; 
-                    }
+                .modal-dialog {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh; 
+                    margin: 0 auto; 
+                }
 
-                    .modal-content {
-                        height: 100%;
-                        margin: auto;
-                        padding: 20px;
-                        border: none;
-                    }
+                .modal-content {
+                    height: 100%;
+                    margin: auto;
+                    padding: 20px;
+                    border: none;
+                }
 
-                    .modal-header .close {
-                        font-size: 2rem;
-                        color: #000;
-                    }
+                .modal-header .close {
+                    font-size: 2rem;
+                    color: #000;
+                }
 
-                    #route-display {
+                #route-display {
                     display: flex;
                     gap: 10px;
                     overflow-x: auto;

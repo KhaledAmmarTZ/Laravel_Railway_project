@@ -150,10 +150,13 @@ function generateUpdowns() {
     });
 
     const existingRows = updownContainer.querySelectorAll('tbody tr');
+    let lastArrivalTime = "";
+
     if (existingRows.length > 0) {
         const lastRow = existingRows[existingRows.length - 1];
         const lastSource = lastRow.querySelector('select[name*="source"]').value;
         const lastDestination = lastRow.querySelector('select[name*="destination"]').value;
+        lastArrivalTime = lastRow.querySelector('input[name*="arrtime"]').value; 
 
         if (!lastSource || !lastDestination) {
             alert("Please select both source and destination before adding a new section.");
@@ -181,27 +184,34 @@ function generateUpdowns() {
 
     const tbody = updownContainer.querySelector('tbody');
     const i = tbody.querySelectorAll('tr').length + 1;
+    let minDepDate = "";
+
+    if (existingRows.length > 0) {
+        minDepDate = existingRows[existingRows.length - 1].querySelector('input[name*="tarrdate"]').value;
+    }
 
     const rowHTML = `
         <tr>
             <td>
-                <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control updown-input" required>
+                <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control updown-input source-select" data-index="${i}" required>
                     <option value="">Select Source</option>
                     ${populateStationOptions(existingValues[`updowns[${i}][source]`], i)}
                 </select>
             </td>
             <td>
-                <select name="updowns[${i}][destination]" id="updowns[${i}][destination]" class="form-control updown-input" required>
+                <select name="updowns[${i}][destination]" id="updowns[${i}][destination]" class="form-control updown-input destination-select" data-index="${i}" required>
                     <option value="">Select Destination</option>
                     ${populateStationOptions(existingValues[`updowns[${i}][destination]`])}
                 </select>
             </td>
 
             <td>
-                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" required>
+                <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control updown-input depdate" 
+                    value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" min="${minDepDate}" required>
             </td>
             <td>
-                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
+                <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control updown-input arrdate" 
+                    value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
             </td>
 
             <td>
@@ -214,8 +224,8 @@ function generateUpdowns() {
     `;
 
     tbody.insertAdjacentHTML('beforeend', rowHTML);
-
     disablePreviousDestinations();
+    validateDates();
 
     document.querySelectorAll("#updown-sections input, #updown-sections select").forEach(input => {
         const name = input.name;
@@ -228,8 +238,113 @@ function generateUpdowns() {
     disableSourceOptions();
     lockSourceSelection();
     updateRouteDisplay();
-    showUpdownData(); 
+    showUpdownData();
+
+    if (lastArrivalTime) {
+        setMinDepartureTime(i, lastArrivalTime);
+    }
+
+    preventSameSourceDestination(i);
 }
+
+function preventSameSourceDestination(index) {
+    const sourceSelect = document.getElementById(`updowns[${index}][source]`);
+    const destinationSelect = document.getElementById(`updowns[${index}][destination]`);
+
+    if (!sourceSelect || !destinationSelect) return;
+
+    function updateDestinationOptions() {
+        const selectedSource = sourceSelect.value;
+
+        destinationSelect.querySelectorAll("option").forEach(option => {
+            option.disabled = false;
+        });
+
+        if (selectedSource) {
+            destinationSelect.querySelector(`option[value="${selectedSource}"]`).disabled = true;
+        }
+    }
+
+    function updateSourceOptions() {
+        const selectedDestination = destinationSelect.value;
+
+        sourceSelect.querySelectorAll("option").forEach(option => {
+            option.disabled = false;
+        });
+
+        if (selectedDestination) {
+            sourceSelect.querySelector(`option[value="${selectedDestination}"]`).disabled = true;
+        }
+    }
+
+    sourceSelect.addEventListener("change", updateDestinationOptions);
+    destinationSelect.addEventListener("change", updateSourceOptions);
+}
+
+function setMinDepartureTime(index, lastArrivalTime) {
+    const deptimeInput = document.getElementById(`deptime_${index}`);
+
+    if (!deptimeInput || !lastArrivalTime) return;
+
+    let [hours, minutes] = lastArrivalTime.split(":").map(Number);
+    
+    // Add 20 minutes for min time
+    let minMinutes = minutes + 20;
+    let minHours = hours;
+    if (minMinutes >= 60) {
+        minMinutes -= 60;
+        minHours += 1;
+    }
+
+    // Add 30 minutes for max time
+    let maxMinutes = minutes + 30;
+    let maxHours = hours;
+    if (maxMinutes >= 60) {
+        maxMinutes -= 60;
+        maxHours += 1;
+    }
+
+    const minTime = `${String(minHours).padStart(2, '0')}:${String(minMinutes).padStart(2, '0')}`;
+    const maxTime = `${String(maxHours).padStart(2, '0')}:${String(maxMinutes).padStart(2, '0')}`;
+
+    deptimeInput.setAttribute("min", minTime);
+    deptimeInput.setAttribute("max", maxTime);
+
+    deptimeInput.addEventListener("input", function () {
+        const selectedTime = this.value;
+        if (selectedTime < minTime || selectedTime > maxTime) {
+            alert(`Departure time must be between ${minTime} and ${maxTime}`);
+            this.value = minTime; 
+        }
+    });
+}
+
+function validateDates() {
+    document.querySelectorAll(".depdate, .arrdate").forEach(input => {
+        input.addEventListener("change", function () {
+            const row = this.closest("tr");
+            const depDateInput = row.querySelector(".depdate");
+            const arrDateInput = row.querySelector(".arrdate");
+
+            const depDate = new Date(depDateInput.value);
+            const arrDate = new Date(arrDateInput.value);
+
+            if (arrDate < depDate) {
+                alert("Arrival date must be the same or after the departure date.");
+                arrDateInput.value = "";
+            }
+
+            const nextRow = row.nextElementSibling;
+            if (nextRow) {
+                const nextDepDateInput = nextRow.querySelector(".depdate");
+                if (nextDepDateInput) {
+                    nextDepDateInput.setAttribute("min", arrDateInput.value);
+                }
+            }
+        });
+    });
+}
+
 
 function attachUpdownInputListeners() {
     document.querySelectorAll('.updown-input').forEach(input => {
@@ -325,60 +440,6 @@ function convertTo12HourFormat(time) {
         hours = 12;
     }
     return `${hours}:${minutes} ${period}`;
-}
-
-function updateDepTime(selectElement, index) {
-    const selectedOption = selectElement.selectedOptions[0];
-    let depTime = selectedOption.getAttribute('data-deptime');
-
-    if (depTime) {
-        depTime = depTime.substring(0, 5);
-    }
-
-    const sourceValue = selectElement.value;
-    const destinationSelect = document.getElementById(`updowns[${index}][destination]`);
-
-    Array.from(destinationSelect.options).forEach(option => {
-        option.disabled = false;
-    });
-
-    Array.from(destinationSelect.options).forEach(option => {
-        if (option.value === sourceValue) {
-            option.disabled = true;
-        }
-    });
-}
-
-function updateArrTime(selectElement, index) {
-    const selectedOption = selectElement.selectedOptions[0];
-    const arrTime = selectedOption.getAttribute('data-artime');
-
-    const destinationValue = selectElement.value;
-    const sourceSelect = document.getElementById(`updowns[${index}][source]`);
-
-    Array.from(sourceSelect.options).forEach(option => {
-        option.disabled = false;
-    });
-
-    Array.from(sourceSelect.options).forEach(option => {
-        if (option.value === destinationValue) {
-            option.disabled = true;
-        }
-    });
-
-    destinationSelects.forEach(select => {
-        Array.from(select.options).forEach(option => {
-            if (option.value === destinationValue) {
-                option.disabled = true;
-            }
-        });
-
-
-        if (select === selectElement) {
-            select.querySelector(`option[value="${destinationValue}"]`).disabled = false;
-        }
-    });
-
 }
 
 function lockSourceSelection() {
