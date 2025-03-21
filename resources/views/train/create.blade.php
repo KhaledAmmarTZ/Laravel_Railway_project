@@ -549,7 +549,7 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()">
     @csrf
-    <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
+    <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
         <div class="card-header text-white" style="background-color: #005F56">
             Add Train
         </div>
@@ -597,7 +597,7 @@ function deleteUpdown() {
                             <label for="numofcompartment" class="form-label me-3" style="width: 250px; text-align: right;">Number of
                                 Compartments : &nbsp; </label>
                             <div class="flex-grow-1">
-                                <input type="number" name="numofcompartment" id="numofcompartment" class="form-control w-75" min="1"
+                                <input type="number" name="numofcompartment" id="numofcompartment" class="form-control w-75" min="1" value="1"
                                     onchange="generateCompartments()" required>
                             </div>
                         </div>
