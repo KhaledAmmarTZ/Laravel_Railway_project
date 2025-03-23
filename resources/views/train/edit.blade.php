@@ -51,7 +51,50 @@
         }
 
         compartmentContainer.appendChild(table);
+        attachInputListeners(); 
+        showCompartmentData(); 
     }
+    
+function attachInputListeners() {
+    document.querySelectorAll('[id^="compartments"]').forEach(input => {
+        input.addEventListener('input', showCompartmentData); 
+    });
+}
+
+function showCompartmentData() {
+    let displayHTML = `
+        <h3>Entered Compartment Data:</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Compartment Name</th>
+                    <th>Number of Seats</th>
+                    <th>Compartment Type</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    document.querySelectorAll('#compartment-sections .compartment-item').forEach((compartmentRow) => {
+        const name = compartmentRow.querySelector(`[name*="[compartmentname]"]`)?.value || '';
+        const seats = compartmentRow.querySelector(`[name*="[seatnumber]"]`)?.value || '';
+        const type = compartmentRow.querySelector(`[name*="[compartmenttype]"]`)?.value || '';
+
+        if (name || seats || type) {
+            displayHTML += `
+                <tr>
+                    <td>${name}</td>
+                    <td>${seats}</td>
+                    <td>${type}</td>
+                </tr>
+            `;
+        }
+    });
+
+    displayHTML += `</tbody></table>`;
+    document.getElementById('compartment-data-display').innerHTML = displayHTML;
+}
+
 
     let updownCount = 0; 
 
@@ -67,26 +110,67 @@
     updownRow.innerHTML = `
         <input type="hidden" name="updowns[${index}][id]" value="${updown.id}">
         <td style="${rowStyle}">
-            <select id="tsource-${index}" name="updowns[${index}][tsource]" class="form-control" required>
+            <select name="updowns[${index}][tsource]" class="form-control updown-input" required>
                 <option value="">Select Source</option>
                 ${stations.map(station => `<option value="${station.stationname}" ${station.stationname === updown.tsource ? 'selected' : ''}>${station.stationname}</option>`).join('')}
             </select>
         </td>
         <td style="${rowStyle}">
-            <select id="tdestination-${index}" name="updowns[${index}][tdestination]" class="form-control" required>
+            <select name="updowns[${index}][tdestination]" class="form-control updown-input" required>
                 <option value="">Select Destination</option>
                 ${stations.map(station => `<option value="${station.stationname}" ${station.stationname === updown.tdestination ? 'selected' : ''}>${station.stationname}</option>`).join('')}
             </select>
         </td>
-        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tarrtime]" class="form-control" value="${updown.tarrtime}" required></td>
-        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tdeptime]" class="form-control" value="${updown.tdeptime}" required></td>
-        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tarrdate]" class="form-control" value="${updown.tarrdate}" required></td>
-        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tdepdate]" class="form-control" value="${updown.tdepdate}" required></td>
+        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tarrtime]" class="form-control updown-input" value="${updown.tarrtime}" required></td>
+        <td style="${rowStyle}"><input type="time" name="updowns[${index}][tdeptime]" class="form-control updown-input" value="${updown.tdeptime}" required></td>
+        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tarrdate]" class="form-control updown-input" value="${updown.tarrdate}" required></td>
+        <td style="${rowStyle}"><input type="date" name="updowns[${index}][tdepdate]" class="form-control updown-input" value="${updown.tdepdate}" required></td>
         <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button></td>
     `;
 
+    // **Creating table structure inside the display div**
+    const displayDiv = document.getElementById('updown-data-display');
+    let table = document.getElementById('updown-data-table');
+
+    // If table doesn't exist, create it
+    if (!table) {
+        table = document.createElement('table');
+        table.id = 'updown-data-table';
+        table.classList.add('table', 'table-bordered', 'mt-2');
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Destination</th>
+                    <th>Arrival Time</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Date</th>
+                    <th>Departure Date</th>
+                </tr>
+            </thead>
+            <tbody id="updown-data-body"></tbody>
+        `;
+        displayDiv.appendChild(table);
+    }
+
+    // **Appending the updown data as a row**
+    const tbody = document.getElementById('updown-data-body');
+    const updownDataRow = document.createElement('tr');
+    
+    updownDataRow.innerHTML = `
+        <td>${updown.tsource || 'N/A'}</td>
+        <td>${updown.tdestination || 'N/A'}</td>
+        <td>${updown.tarrtime || 'N/A'}</td>
+        <td>${updown.tdeptime || 'N/A'}</td>
+        <td>${updown.tarrdate || 'N/A'}</td>
+        <td>${updown.tdepdate || 'N/A'}</td>
+    `;
+
+    tbody.appendChild(updownDataRow);
+
     return updownRow;
 }
+
 
 function addUpdown() {
     const updownContainer = document.getElementById('updown-sections');
@@ -166,7 +250,7 @@ document.addEventListener("DOMContentLoaded", function () {
             @csrf
             @method('PUT')
 
-            <div class="card text-center" style="width: 1200px; background-color: #f8f9fa; border: 1px solid #ccc;">
+            <div class="card text-center" style="width: 100%; min-width: 1400px; background-color: #f8f9fa; border: 1px solid #ccc;">
                 
                 <div class="card-header text-white" style="background-color: #005F56">
                     Edit Train
@@ -180,13 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
 
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-
-                    <div class="mb-3 d-flex align-items-center">
-                        <label class="form-label me-3" style="width: 250px; text-align: right;">Number of Compartments:</label>
-                        <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control w-75" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
-                    </div>
-                    <div id="compartment-sections"></div>
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
 
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
@@ -213,12 +291,40 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         </div>
                     </div>
-
                 </div>
                 
-
-<hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <div class="row">
+                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
+                <div id="updown-data-display" class="mt-3"></div>
+                </div>
+                <div class="col-md-6 col-12" style="text-align: center; width: 100%; padding-right: 14px; padding-left: 14px;">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" >
+                    Set Train Compartment
+                </button>
+                <div id="compartment-data-display" class="mt-3"></div>
+                </div>
+                </div>
+
+                <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg fullscreen-modal">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Train Compartment</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+
+                            </div>
+                            <div class="mb-3 d-flex align-items-center">
+                                <label class="form-label me-3" style="width: 250px; text-align: right;">Number of Compartments:</label>
+                                <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control w-75" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
+                            </div>
+                            <div id="compartment-sections"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg fullscreen-modal">
                         <div class="modal-content">
