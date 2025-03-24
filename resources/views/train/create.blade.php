@@ -58,6 +58,7 @@ function generateCompartments() {
                     <th>Compartment Name</th>
                     <th>Number of Seats</th>
                     <th>Compartment Type</th>
+                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -67,6 +68,7 @@ function generateCompartments() {
         const nameValue = existingData[`compartments[${i}][name]`] || '';
         const seatsValue = existingData[`compartments[${i}][seats]`] || '';
         const typeValue = existingData[`compartments[${i}][type]`] || '';
+        const priceValue = existingData[`compartments[${i}][price]`] || '';
 
         tableHTML += `
             <tr>
@@ -78,6 +80,9 @@ function generateCompartments() {
                 </td>
                 <td>
                     <input type="text" name="compartments[${i}][type]" id="compartments[${i}][type]" class="form-control" value="${typeValue}" required>
+                </td>
+                <td>
+                    <input type="number" name="compartments[${i}][price]" id="compartments[${i}][price]" class="form-control" value="${priceValue}" step="0.01">
                 </td>
             </tr>
         `;
@@ -105,6 +110,7 @@ function showCompartmentData() {
                     <th>Compartment Name</th>
                     <th>Number of Seats</th>
                     <th>Compartment Type</th>
+                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -117,13 +123,15 @@ function showCompartmentData() {
         const name = document.getElementById(`compartments[${i}][name]`)?.value || '';
         const seats = document.getElementById(`compartments[${i}][seats]`)?.value || '';
         const type = document.getElementById(`compartments[${i}][type]`)?.value || '';
+        const price = document.getElementById(`compartments[${i}][price]`)?.value || '';
 
-        if (name || seats || type) {
+        if (name || seats || type || price) {
             displayHTML += `
                 <tr>
                     <td>${name}</td>
                     <td>${seats}</td>
                     <td>${type}</td>
+                    <td>${price}</td>
                 </tr>
             `;
         }
@@ -547,7 +555,7 @@ function deleteUpdown() {
 </div>
 @endif
 
-<form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()">
+<form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
     <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
         <div class="card-header text-white" style="background-color: #005F56">
@@ -563,8 +571,17 @@ function deleteUpdown() {
                     <input type="text" name="tname" id="tname" class="form-control w-75" required>
                 </div>
             </div>
+            <div class="mb-3 d-flex align-items-center">
+                <label for="train_image" class="form-label me-3" style="width: 250px; text-align: right;">
+                    Train Image : &nbsp;
+                </label>
+                <div class="flex-grow-1">
+                    <input type="file" name="train_image" id="train_image" class="form-control w-75" >
+                </div>
+            </div>
+
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-            
+            <img id="previewImage" src="#" alt="Selected Image" style="display: none; max-width: 200px; margin-top: 10px;">
             <div class="row">
                 <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width:100%;">
@@ -877,4 +894,16 @@ routeDisplay.addEventListener('mousemove', (e) => {
                 color: white;
             }
             </style>
+
+<script>
+document.getElementById('train_image').addEventListener('change', function(event) {
+    let reader = new FileReader();
+    reader.onload = function(){
+        let output = document.getElementById('previewImage');
+        output.src = reader.result;
+        output.style.display = 'block';
+    };
+    reader.readAsDataURL(event.target.files[0]);
+});
+</script>
 @endsection

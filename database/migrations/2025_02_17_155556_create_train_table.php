@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('trainname');
             $table->integer('compartmentnumber');
             $table->integer('updownnumber');
+            $table->string('train_image')->nullable(); // Added train_image column
             $table->timestamps();
         });
     }

@@ -13,6 +13,8 @@ class CreateTraincompartmentsTable extends Migration
             $table->unsignedBigInteger('trainid');
             $table->integer('seatnumber');
             $table->string('compartmentname');
+            $table->string('compartmenttype')->nullable();  // Corrected line
+            $table->double('price')->nullable();  // Corrected line
             $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade');  // Corrected line
             $table->timestamps();
         });

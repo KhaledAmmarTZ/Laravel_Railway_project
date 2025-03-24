@@ -6,6 +6,7 @@ use App\Models\Train;
 use App\Models\Compartment;
 use App\Models\Updown;
 use App\Models\Station;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -23,12 +24,14 @@ class TrainController extends Controller
 
     public function store(Request $request)
     {
+        // Validation for incoming request
         $validatedData = $request->validate([
             'tname' => 'required|string',
             'numofcompartment' => 'required|integer|min:1',
             'compartments.*.name' => 'required|string',
             'compartments.*.seats' => 'required|integer|min:1',
-            'compartments.*.type' => 'required|string',
+            'compartments.*.type' => 'nullable|string', // compartment type is optional
+            'compartments.*.price' => 'nullable|numeric|min:0', // Validate price field (optional and numeric)
             'updownnumber' => 'required|integer|min:1',
             'updowns.*.source' => 'required|string',
             'updowns.*.destination' => 'required|string',
@@ -36,37 +39,51 @@ class TrainController extends Controller
             'updowns.*.arrtime' => 'required|date_format:H:i',
             'updowns.*.tarrdate' => 'required|date_format:Y-m-d',
             'updowns.*.tdepdate' => 'required|date_format:Y-m-d',
+            'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
         ]);
-
+    
+        // Handle train image upload
+        $trainImage = null;
+        if ($request->hasFile('train_image')) {
+            $trainImage = $request->file('train_image')->store('train_images', 'public');
+        }
+    
+        // Create the train record
         $train = Train::create([
             'trainname' => $validatedData['tname'],
             'compartmentnumber' => $validatedData['numofcompartment'],
             'updownnumber' => $validatedData['updownnumber'],
+            'train_image' => $trainImage,  // Save the image path in the database
         ]);
-
+    
+        // Create compartments for the train
         foreach ($validatedData['compartments'] as $compartment) {
-            Compartment::create([
-                'trainid' => $train->trainid,
+            Compartment::create([  // Fixed: TrainCompartment model
+                'trainid' => $train->trainid,  // Fixed: Using `id` instead of `trainid`
                 'compartmentname' => $compartment['name'],
                 'seatnumber' => $compartment['seats'],
-                'compartmenttype' => $compartment['type'],
+                'compartmenttype' => $compartment['type'],  // Correct column
+                'price' => $compartment['price'] ?? null,  // Price field (optional)
             ]);
         }
-
+    
+        // Create up-down route records for the train
         foreach ($validatedData['updowns'] as $updown) {
             Updown::create([
-                'trainid' => $train->trainid,
+                'trainid' => $train->trainid,  // Fixed: Using `id` instead of `trainid`
                 'tsource' => $updown['source'],
                 'tdestination' => $updown['destination'],
-                'tdeptime' => $this->convertTo24HourFormat($updown['deptime']),  
-                'tarrtime' => $this->convertTo24HourFormat($updown['arrtime']), 
+                'tdeptime' => $this->convertTo24HourFormat($updown['deptime']),
+                'tarrtime' => $this->convertTo24HourFormat($updown['arrtime']),
                 'tarrdate' => $updown['tarrdate'],
                 'tdepdate' => $updown['tdepdate'],
             ]);
         }
-
+    
+        // Redirect to the train show page with success message
         return redirect()->route('train.show')->with('success', 'Train created successfully');
     }
+    
 
     public function index(Request $request)
     {
@@ -204,9 +221,21 @@ class TrainController extends Controller
             'updownnumber' => 'required|integer|min:1',
             'compartments' => 'array',
             'updowns' => 'array',
+            'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $train = Train::findOrFail($trainId);
+        // Handle image upload if a new file is provided
+    if ($request->hasFile('train_image')) {
+        // Delete the old image from storage if it exists
+        if ($train->train_image && Storage::exists('public/' . $train->train_image)) {
+            Storage::delete('public/' . $train->train_image);
+        }
+
+        // Store the new image and get the path
+        $trainImage = $request->file('train_image')->store('train_images', 'public');
+        $train->train_image = $trainImage;
+    }
         $train->trainname = $request->trainname;
         $train->compartmentnumber = $request->compartmentnumber;
         $train->updownnumber = $request->updownnumber;
@@ -219,6 +248,7 @@ class TrainController extends Controller
                     'compartmentname' => $compartmentData['compartmentname'],
                     'seatnumber' => $compartmentData['seatnumber'],
                     'compartmenttype' => $compartmentData['compartmenttype'],
+                    'price' => $compartmentData['price'],
                 ]);
             }
         }

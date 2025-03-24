@@ -15,7 +15,8 @@
                 id: compartmentDiv.querySelector(`[name="compartments[${index}][id]"]`).value,
                 compartmentname: compartmentDiv.querySelector(`[name="compartments[${index}][compartmentname]"]`).value,
                 seatnumber: compartmentDiv.querySelector(`[name="compartments[${index}][seatnumber]"]`).value,
-                compartmenttype: compartmentDiv.querySelector(`[name="compartments[${index}][compartmenttype]"]`).value
+                compartmenttype: compartmentDiv.querySelector(`[name="compartments[${index}][compartmenttype]"]`).value,
+                price: compartmentDiv.querySelector(`[name="compartments[${index}][price]"]`).value
             });
         });
 
@@ -28,12 +29,13 @@
             <th>Compartment Name</th>
             <th>Number of Seats</th>
             <th>Type</th>
+            <th>Price</th>
             <th>Actions</th>
         `;
         table.appendChild(headerRow);
 
         for (let i = 0; i < numCompartment; i++) {
-            let compartment = storedData[i] || existingCompartments[i] || { id: '', compartmentname: '', seatnumber: '', compartmenttype: '' };
+            let compartment = storedData[i] || existingCompartments[i] || { id: '', compartmentname: '', seatnumber: '', compartmenttype: '', price: '' };
 
             const compartmentRow = document.createElement('tr');
             compartmentRow.classList.add('compartment-item');
@@ -44,6 +46,7 @@
                 <td><input type="text" name="compartments[${i}][compartmentname]" class="form-control" value="${compartment.compartmentname}" required></td>
                 <td><input type="number" name="compartments[${i}][seatnumber]" class="form-control" value="${compartment.seatnumber}" required></td>
                 <td><input type="text" name="compartments[${i}][compartmenttype]" class="form-control" value="${compartment.compartmenttype}" required></td>
+                <td><input type="number" name="compartments[${i}][price]" class="form-control" value="${compartment.price}" required></td>
                 <td><button type="button" class="btn btn-danger" onclick="removeCompartment(${i})">Delete</button></td>
             `;
 
@@ -70,6 +73,7 @@ function showCompartmentData() {
                     <th>Compartment Name</th>
                     <th>Number of Seats</th>
                     <th>Compartment Type</th>
+                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,13 +83,15 @@ function showCompartmentData() {
         const name = compartmentRow.querySelector(`[name*="[compartmentname]"]`)?.value || '';
         const seats = compartmentRow.querySelector(`[name*="[seatnumber]"]`)?.value || '';
         const type = compartmentRow.querySelector(`[name*="[compartmenttype]"]`)?.value || '';
+        const price = compartmentRow.querySelector(`[name*="[price]"]`)?.value || '';
 
-        if (name || seats || type) {
+        if (name || seats || type || price) {
             displayHTML += `
                 <tr>
                     <td>${name}</td>
                     <td>${seats}</td>
                     <td>${type}</td>
+                    <td>${price}</td>
                 </tr>
             `;
         }
@@ -246,7 +252,7 @@ document.addEventListener("DOMContentLoaded", function () {
 @endif
 
 
-        <form action="{{ route('train.update', $train->trainid) }}" method="POST">
+        <form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -256,15 +262,92 @@ document.addEventListener("DOMContentLoaded", function () {
                     Edit Train
                 </div>
                 <div class="card-body">
-                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                    <div class="mb-3 d-flex align-items-center">
-                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
-                        <div class="flex-grow-1">
-                        <input type="text" name="trainname" class="form-control w-75" value="{{ $train->trainname }}" required>
+                <div class="mb-3 d-flex align-items-center">
+                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name: {{ $train->trainname }} </label>
+               
+            </div>
+                    <!-- Button to trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#trainModal">
+    Image and Name
+</button>
+<!-- Preview of current image (if exists) -->
+                    @if ($train->train_image)
+                        <div class="mt-2">
+                            <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" id="train_image_preview">
                         </div>
-                    </div>
+                    @endif
+                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+<!-- Modal -->
+<div class="modal fade" id="trainModal" tabindex="-1" role="dialog" aria-labelledby="trainModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="trainModalLabel">Train Image and Name</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
 
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
+            <!-- Train Name -->
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
+                <div class="flex-grow-1">
+                    <input type="text" name="trainname" class="form-control w-75" value="{{ $train->trainname }}" required>
+                </div>
+            </div>
+
+            <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
+
+            <!-- Train Image -->
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Image: </label>
+                <div class="flex-grow-1">
+                    <input type="file" name="train_image" class="form-control w-75" id="train_image_input" onchange="previewImage(event)">
+                    
+                    
+
+                    <!-- Placeholder for the new image preview -->
+                    <div class="mt-2" id="new_image_preview_container" style="display: none;">
+                        <img id="new_image_preview" class="img-fluid" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            const imagePreview = document.getElementById('new_image_preview');
+            const previewContainer = document.getElementById('new_image_preview_container');
+            
+            // Show the preview of the chosen image
+            imagePreview.src = e.target.result;
+            previewContainer.style.display = 'block';
+        };
+
+        if (file) {
+            reader.readAsDataURL(file); // Read the selected image file
+        }
+    }
+</script>
+
 
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
             
@@ -458,4 +541,5 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
     console.log("Train Updowns:", @json($train->trainupdowns));
 </script>
+
 @endsection

@@ -57,12 +57,16 @@ class TrainSeeder extends Seeder
 
             for ($j = 1; $j <= $compartmentNumber; $j++) {
                 $compartmentType = $compartmentTypes[array_rand($compartmentTypes)]; 
+                
+                // Generate a random price between 80 and 105.76 taka, rounded to 2 decimal places
+                $price = round(rand(8000, 10576) / 100, 2);
 
                 DB::table('traincompartments')->insert([
                     'trainid' => $trainId,
                     'seatnumber' => $j,
                     'compartmentname' => 'Compartment ' . $j,
                     'compartmenttype' => $compartmentType,
+                    'price' => $price,  // Insert random price
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

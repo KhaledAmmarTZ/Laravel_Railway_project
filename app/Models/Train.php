@@ -10,7 +10,7 @@ class Train extends Model
     use HasFactory;
     protected $table = 'train';
     protected $primaryKey = 'trainid';
-    protected $fillable = ['trainname', 'compartmentnumber', 'updownnumber'];
+    protected $fillable = ['trainname', 'compartmentnumber', 'updownnumber', 'train_image'];
 
     public function traincompartments()
     {
