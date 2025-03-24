@@ -15,10 +15,7 @@
     <div class="card-body">
         <div id="train-table">
             @include('train.partials.train_table')
-        </div>
-    </div>
-
-    <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
+           <div class="card-footer text-center d-flex justify-content-center align-items-center" style="background-color: #005F56">
         <form method="GET" action="{{ route('train.show') }}" id="search-form">
             <div class="mx-auto d-flex align-items-center">
                 <select name="search_by" class="form-control mx-2" aria-label="Search by" id="search-by">
@@ -30,7 +27,12 @@
                 <button class="search-btn" type="submit">Search</button>  
             </div>
         </form>
+    </div> 
+        </div>
+        
     </div>
+
+    
 </div>
 
 <script>

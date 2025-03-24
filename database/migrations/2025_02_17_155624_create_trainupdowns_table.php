@@ -17,7 +17,7 @@ class CreateTrainupdownsTable extends Migration
             $table->date('tdepdate');
             $table->string('tsource');
             $table->string('tdestination');
-            $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade');  // Corrected line
+            $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade');  
             $table->timestamps();
         });
     }

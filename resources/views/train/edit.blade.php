@@ -134,11 +134,9 @@ function showCompartmentData() {
         <td><button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button></td>
     `;
 
-    // **Creating table structure inside the display div**
     const displayDiv = document.getElementById('updown-data-display');
     let table = document.getElementById('updown-data-table');
 
-    // If table doesn't exist, create it
     if (!table) {
         table = document.createElement('table');
         table.id = 'updown-data-table';
@@ -159,7 +157,6 @@ function showCompartmentData() {
         displayDiv.appendChild(table);
     }
 
-    // **Appending the updown data as a row**
     const tbody = document.getElementById('updown-data-body');
     const updownDataRow = document.createElement('tr');
     
