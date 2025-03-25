@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" href="{{ asset('images/Trainlogo.png') }}" type="image/png">
     <title>Admin Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/calendar.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Sansation&display=swap" rel="stylesheet">
@@ -34,10 +34,6 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                     </ul>
-                    <form class="form-inline my-2 my-lg-0">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
 
                     <!-- Profile Section -->
                     <form class="form-inline my-2 my-lg-0 mx-3">
@@ -47,7 +43,7 @@
                     </form>
 
                     <!-- Vertical Line -->
-                    <div class="mx-2" style="border-left: 1px solid white; height: 25px;"></div>
+                    <!-- <div class="mx-2" style="border-left: 1px solid white; height: 25px;"></div> -->
 
                     <!-- Profile Icon (Thin) -->
                     <a href="{{ route('admin.profiles') }}" class="mx-2 d-flex align-items-center">
@@ -79,58 +75,58 @@
                             <!-- Navigation Buttons -->
                             <nav class="bd-links">
                             <div class="d-grid gap-2">
-                                <a href="{{ url('/admin/dashboard') }}" class="btn btn-success btn-block">Dashboard</a>
-                                <a href="{{ url('/admin/profiles') }}" class="btn btn-success btn-block">Profile</a>
+                                <a href="{{ url('/admin/dashboard') }}" class="btn btn-success btn-block"><i class="fas fa-tachometer-alt"></i> &nbsp;Dashboard</a>
+                                <a href="{{ url('/admin/profiles') }}" class="btn btn-success btn-block"><i class="fas fa-user"></i>&nbsp;Profile</a>
                                 <!-- Train Section -->
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#trainOptions">
-                                    Train
+                                <i class="fas fa-train"></i>&nbsp;Train
                                 </button>
-                                <div class="collapse mb-3 " id="trainOptions">
-                                    <!-- <a href="{{ url('/admin/train/edit') }}" class="btn sidebar-btn btn-block ml-3">Edit Train</a> -->
-                                    <a href="{{ url('/admin/train/create') }}" class="btn sidebar-btn btn-block ml-3">Add Train</a>
-                                    <a href="{{ url('/admin/train/show') }}" class="btn sidebar-btn btn-block ml-3">View Trains</a>
+                                <div class="collapse pl-3 " id="trainOptions">
+                                    <!-- <a href="{{ url('/admin/train/edit') }}" class="btn sidebar-btn btn-block mb-2">Edit Train</a> -->
+                                    <a href="{{ url('/admin/train/create') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Train</a>
+                                    <a href="{{ url('/admin/train/show') }}" class="btn sidebar-btn btn-block mb-2">➤ View Trains</a>
                                 </div>
 
                                 <!-- Station Section -->
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#StationOptions">
-                                    Station
+                                <i class="fas fa-subway"></i>&nbsp;Station
                                 </button>
-                                <div class="collapse mb-3" id="StationOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Edit Station</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Add Station</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">View Stations</a>
+                                <div class="collapse pl-3" id="StationOptions">
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit Station</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Station</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View Stations</a>
                                 </div>
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#StuffOptions">
-                                    Stuffs
+                                <i class="fas fa-user-tie"></i>&nbsp;Stuffs
                                 </button>
-                                <div class="collapse mb-3" id="StuffOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Edit Stuff</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Add Stuff</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">View Stuffs</a>
+                                <div class="collapse pl-3" id="StuffOptions">
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit Stuff</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Stuff</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View Stuffs</a>
                                 </div>
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#UserOptions">
-                                    User
+                                <i class="fas fa-users"></i>&nbsp;User
                                 </button>
-                                <div class="collapse mb-3" id="UserOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Edit User</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Add User</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">View User</a>
+                                <div class="collapse pl-3" id="UserOptions">
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit User</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add User</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View User</a>
                                 </div>
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#PassengerOptions">
-                                    Passengers
+                                <i class="fas fa-user-friends"></i>&nbsp;Passengers
                                 </button>
-                                <div class="collapse mb-3" id="PassengerOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Edit Passenger</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Add Passanger</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">View Passanger</a>
+                                <div class="collapse pl-3" id="PassengerOptions">
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit Passenger</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Passanger</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View Passanger</a>
                                 </div>
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#TicketOptions">
-                                    Ticket
+                                <i class="fas fa-ticket-alt"></i>&nbsp;Ticket
                                 </button>
-                                <div class="collapse mb-3" id="TicketOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Edit Ticket</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">Add Ticket</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block ml-3">View Ticket</a>
+                                <div class="collapse pl-3" id="TicketOptions">
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit Ticket</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Ticket</a>
+                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View Ticket</a>
                                 </div>
                             </div>
                         </nav>
@@ -147,18 +143,16 @@
 
                 <!-- Main Content Section -->
                 <div class="col p-3 main-content">
-                    <div class="d-flex justify-content-center align-items-start  p-3 mb-5 rounded" style=" padding-top: 50px; background-color: #F0FFFC; border: 1px solid #005F56;">
                         @yield('content')
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/calendar.js') }}"></script>
     <script>

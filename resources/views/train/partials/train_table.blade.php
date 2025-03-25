@@ -90,7 +90,7 @@
                     <!-- Train Image Column -->
                     <td rowspan="{{ count($train->trainupdowns) }}">
                         @if ($train->train_image)
-                        <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid">
+                        <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" style="max-width: 100px;">
                         @else
                             <p>No Image</p>
                         @endif

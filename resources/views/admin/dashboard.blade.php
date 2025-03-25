@@ -5,10 +5,9 @@
 @endsection
 
 @section('content')
-<div class="w-100 p-4">
+
     <div class="container-fluid">
         <div class="d-flex" style="gap: 20px;">
-
             <!-- Left Column (Stacked Cards) -->
             <div class="d-flex flex-column" style="flex: 1.5; gap: 20px;">
                 <div class="card p-3" style="border: none; !important; background-color:rgb(255, 255, 255);">
@@ -195,7 +194,7 @@
             </div>
         </div>
     </div>
-</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Get current month and year

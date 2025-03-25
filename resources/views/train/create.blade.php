@@ -558,11 +558,13 @@ function deleteUpdown() {
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
     <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
-        <div class="card-header text-white" style="background-color: #005F56">
+        
+        <div class="card-header text-black" style="background-color: #f8f9fa;  font-weight: bold;">
             Add Train
         </div>
 
         <div class="card-body" >
+
             <hr style="width: 100%; height: 2px; background-color: transparent; border: none;">
             <div class="mb-3 d-flex align-items-center">
                 <label for="tname" class="form-label me-3" style="width: 250px; text-align: right;">Train Name :
@@ -571,28 +573,39 @@ function deleteUpdown() {
                     <input type="text" name="tname" id="tname" class="form-control w-75" required>
                 </div>
             </div>
+
             <div class="mb-3 d-flex align-items-center">
                 <label for="train_image" class="form-label me-3" style="width: 250px; text-align: right;">
                     Train Image : &nbsp;
                 </label>
-                <div class="flex-grow-1">
-                    <input type="file" name="train_image" id="train_image" class="form-control w-75" >
+                <div class="d-flex align-items-center flex-grow-1">
+                    <input type="file" name="train_image" id="train_image" class="d-none">
+                    <label for="train_image" class="btn btn-add w-75">Upload Image</label>
                 </div>
             </div>
+            <span id="file-name" class="ms-2 text-muted">No file chosen</span>
+            <img id="previewImage" src="#" alt="Selected Image" style="display: none; max-width: 500px; margin-top: 10px; margin-left: auto; margin-right: auto; display: block;">
+
+            <script>
+                document.getElementById('train_image').addEventListener('change', function() {
+                    let fileName = this.files.length > 0 ? this.files[0].name : "No file chosen";
+                    document.getElementById('file-name').textContent = fileName;
+                });
+            </script>
 
             <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-            <img id="previewImage" src="#" alt="Selected Image" style="display: none; max-width: 200px; margin-top: 10px;">
+           
             <div class="row">
-                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width:100%;">
+                <div class="col-md-6 col-12" style="text-align: center; width: 95%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
+                    <button type="button" class="btn btn-add" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 95%;">
                         Set Train Compartment
                     </button>
 
                     <div id="compartment-data-display" class="mt-3"></div>
                 </div>
 
-                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-left: 1px solid #000; padding-right: 14px; padding-left: 14px;">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 100%;">
+                <div class="col-md-6 col-12" style="text-align: center; width: 95%; border-left: 1px solid #000; padding-right: 14px; padding-left: 14px;">
+                    <button type="button" class="btn btn-add" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 95%;">
                         Set Train Route
                     </button>
 
