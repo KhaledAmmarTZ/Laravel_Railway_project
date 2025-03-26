@@ -58,10 +58,12 @@ class TrainController extends Controller
     
         // Create compartments for the train
         foreach ($validatedData['compartments'] as $compartment) {
-            Compartment::create([  // Fixed: TrainCompartment model
+            compartment::create([  // Fixed: TrainCompartment model
                 'trainid' => $train->trainid,  // Fixed: Using `id` instead of `trainid`
                 'compartmentname' => $compartment['name'],
-                'seatnumber' => $compartment['seats'],
+                'total_seats' => $compartment['seats'],
+                'available_seats' => $compartment['seats'],  // Fixed: Assigning the same value for available_seats
+                'booked_seats' => 0,
                 'compartmenttype' => $compartment['type'],  // Correct column
                 'price' => $compartment['price'] ?? null,  // Price field (optional)
             ]);
@@ -223,38 +225,52 @@ class TrainController extends Controller
             'updowns' => 'array',
             'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-
+    
+        // Retrieve the train by its ID
         $train = Train::findOrFail($trainId);
+    
         // Handle image upload if a new file is provided
-    if ($request->hasFile('train_image')) {
-        // Delete the old image from storage if it exists
-        if ($train->train_image && Storage::exists('public/' . $train->train_image)) {
-            Storage::delete('public/' . $train->train_image);
+        if ($request->hasFile('train_image')) {
+            // Delete the old image from storage if it exists
+            if ($train->train_image && Storage::exists('public/' . $train->train_image)) {
+                Storage::delete('public/' . $train->train_image);
+            }
+    
+            // Store the new image and get the path
+            $trainImage = $request->file('train_image')->store('train_images', 'public');
+            $train->train_image = $trainImage;
         }
-
-        // Store the new image and get the path
-        $trainImage = $request->file('train_image')->store('train_images', 'public');
-        $train->train_image = $trainImage;
-    }
+    
+        // Update train details
         $train->trainname = $request->trainname;
         $train->compartmentnumber = $request->compartmentnumber;
         $train->updownnumber = $request->updownnumber;
         $train->save();
-
-        $train->traincompartments()->delete(); 
+    
+        // Update compartments
         if ($request->has('compartments')) {
+            // Delete existing compartments associated with the train
+            $train->traincompartments()->delete();
+    
+            // Insert new compartment records
             foreach ($request->compartments as $compartmentData) {
                 $train->traincompartments()->create([
                     'compartmentname' => $compartmentData['compartmentname'],
-                    'seatnumber' => $compartmentData['seatnumber'],
+                    'total_seats' => $compartmentData['total_seats'],
+                    'available_seats' => $compartmentData['total_seats'],
+                    'booked_seats' => $compartmentData['booked_seats'] ?? 0,
                     'compartmenttype' => $compartmentData['compartmenttype'],
                     'price' => $compartmentData['price'],
                 ]);
             }
         }
-
-        $train->trainupdowns()->delete();
+    
+        // Update updowns
         if ($request->has('updowns')) {
+            // Delete existing updowns associated with the train
+            $train->trainupdowns()->delete();
+    
+            // Insert new updown records
             foreach ($request->updowns as $updownData) {
                 $train->trainupdowns()->create([
                     'tarrtime' => $updownData['tarrtime'],
@@ -266,10 +282,10 @@ class TrainController extends Controller
                 ]);
             }
         }
-
+    
         return redirect()->route('train.show')->with('success', 'Train updated successfully!');
     }
-
+    
     public function destroy($trainid)
     {
         $train = Train::findOrFail($trainid);

@@ -56,20 +56,26 @@ class TrainSeeder extends Seeder
             ]);
 
             for ($j = 1; $j <= $compartmentNumber; $j++) {
-                $compartmentType = $compartmentTypes[array_rand($compartmentTypes)]; 
-
+                $compartmentType = $compartmentTypes[array_rand($compartmentTypes)];
+            
+                // Generate a random value between 30 and 40 for both total_seats and available_seats
+                $seats = rand(30, 40); 
+            
                 $price = round(rand(8000, 10576) / 100, 2);
-
+            
                 DB::table('traincompartments')->insert([
                     'trainid' => $trainId,
-                    'seatnumber' => $j,
+                    'total_seats' => $seats, // Assigning the same value for total_seats
+                    'available_seats' => $seats, // Assigning the same value for available_seats
+                    'booked_seats' => 0,
                     'compartmentname' => 'Compartment ' . $j,
                     'compartmenttype' => $compartmentType,
-                    'price' => $price,  
+                    'price' => $price,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             }
+
 
             $baseDate = now()->addDays(rand(10, 15)); 
             $prevArrDate = $baseDate;

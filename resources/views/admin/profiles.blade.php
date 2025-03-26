@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="w-100 p-4">
+    <div class="w-100 p-4 blurry-card" style="border-radius: 5px;">
         <!-- Top Section: Profile Pic & User Info -->
         <div class="d-flex align-items-center justify-content-between flex-wrap mb-3">
             <div class="d-flex align-items-center">
@@ -48,6 +48,12 @@
         </div>
 
         <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-
+<style>
+        .blurry-card {
+    position: relative;
+    background-color: rgba(248, 249, 250, 0.5); /* Add a semi-transparent background */
+    backdrop-filter: blur(10px); /* Apply the blur effect */
+    }
+    </style>
        
 @endsection

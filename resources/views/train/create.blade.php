@@ -4,6 +4,11 @@ Add Train
 @endsection
 @section('content')
 <style>
+    .blurry-card {
+        position: relative;
+        background-color: rgba(248, 249, 250, 0.5); /* Add a semi-transparent background */
+        backdrop-filter: blur(10px); /* Apply the blur effect */
+    }
     #updown-sections table {
         border-collapse: collapse;
         width: 100%;
@@ -76,7 +81,7 @@ function generateCompartments() {
                     <input type="text" name="compartments[${i}][name]" id="compartments[${i}][name]" class="form-control" value="${nameValue}" required>
                 </td>
                 <td>
-                    <input type="number" name="compartments[${i}][seats]" id="compartments[${i}][seats]" class="form-control" value="${seatsValue}" required>
+                    <input type="number" name="compartments[${i}][seats]" id="compartments[${i}][seats]" class="form-control" value="${seatsValue}" oninput="syncAvailableSeats(${i})" required>
                 </td>
                 <td>
                     <input type="text" name="compartments[${i}][type]" id="compartments[${i}][type]" class="form-control" value="${typeValue}" required>
@@ -94,7 +99,20 @@ function generateCompartments() {
     attachInputListeners(); 
     showCompartmentData();  
 }
+function syncAvailableSeats(compartmentIndex) {
+    const seatsField = document.getElementById(`compartments[${compartmentIndex}][seats]`);
+    const availableSeatsField = document.getElementById(`compartments[${compartmentIndex}][available_seats]`);
+    const bookedSeatsField = document.getElementById(`compartments[${compartmentIndex}][booked_seats]`);
 
+    const totalSeats = seatsField ? parseInt(seatsField.value, 10) : 0;
+    
+    if (availableSeatsField) {
+        availableSeatsField.value = totalSeats;  // Available seats = total seats
+    }
+    if (bookedSeatsField) {
+        bookedSeatsField.value = 0;  // Booked seats = 0
+    }
+}
 function attachInputListeners() {
     document.querySelectorAll('[id^="compartments"]').forEach(input => {
         input.addEventListener('input', showCompartmentData); 
@@ -118,23 +136,43 @@ function showCompartmentData() {
 
     let numCompartment = document.getElementById('numofcompartment').value || 1;
     numCompartment = Math.max(1, numCompartment);
+    let hasEmptyFields = false;
 
     for (let i = 1; i <= numCompartment; i++) {
-        const name = document.getElementById(`compartments[${i}][name]`)?.value || '';
-        const seats = document.getElementById(`compartments[${i}][seats]`)?.value || '';
-        const type = document.getElementById(`compartments[${i}][type]`)?.value || '';
-        const price = document.getElementById(`compartments[${i}][price]`)?.value || '';
+        const nameField = document.getElementById(`compartments[${i}][name]`);
+        const seatsField = document.getElementById(`compartments[${i}][seats]`);
+        const typeField = document.getElementById(`compartments[${i}][type]`);
+        const priceField = document.getElementById(`compartments[${i}][price]`);
 
-        if (name || seats || type || price) {
-            displayHTML += `
-                <tr>
-                    <td>${name}</td>
-                    <td>${seats}</td>
-                    <td>${type}</td>
-                    <td>${price}</td>
-                </tr>
-            `;
+        const name = nameField?.value.trim() || '';
+        const seats = seatsField?.value.trim() || '';
+        const type = typeField?.value.trim() || '';
+        const price = priceField?.value.trim() || '';
+
+        function validateField(field, value) {
+            if (field) {
+                if (!value) {
+                    field.style.border = "2px solid red";
+                    hasEmptyFields = true;
+                } else {
+                    field.style.border = ""; 
+                }
+            }
         }
+
+        validateField(nameField, name);
+        validateField(seatsField, seats);
+        validateField(typeField, type);
+        validateField(priceField, price);
+
+        displayHTML += `
+            <tr>
+                <td style="background-color: ${name ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${name}</td>
+                <td style="background-color: ${seats ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${seats}</td>
+                <td style="background-color: ${type ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${type}</td>
+                <td style="background-color: ${price ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${price}</td>
+            </tr>
+        `;
     }
 
     displayHTML += `</tbody></table>`;
@@ -390,18 +428,34 @@ function showUpdownData() {
         const depTime = row.querySelector('input[name*="deptime"]').value;
         const arrTime = row.querySelector('input[name*="arrtime"]').value;
 
-        if (source || destination || depDate || arrDate || depTime || arrTime) { 
-            displayHTML += `
-                <tr>
-                    <td>${source}</td>
-                    <td>${destination}</td>
-                    <td>${depDate}</td>
-                    <td>${arrDate}</td>
-                    <td>${depTime}</td>
-                    <td>${arrTime}</td>
-                </tr>
-            `;
+        function validateField(field, value) {
+            if (field) {
+                if (!value) {
+                    field.style.border = "2px solid red";
+                    hasEmptyFields = true;
+                } else {
+                    field.style.border = ""; 
+                }
+            }
         }
+
+        validateField(row.querySelector('select[name*="source"]'), source);
+        validateField(row.querySelector('select[name*="destination"]'), destination);
+        validateField(row.querySelector('input[name*="tdepdate"]'), depDate);
+        validateField(row.querySelector('input[name*="tarrdate"]'), arrDate);
+        validateField(row.querySelector('input[name*="deptime"]'), depTime);
+        validateField(row.querySelector('input[name*="arrtime"]'), arrTime);
+
+        displayHTML += `
+            <tr>
+                <td style="background-color: ${source ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${source}</td>
+                <td style="background-color: ${destination ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${destination}</td>
+                <td style="background-color: ${depDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${depDate}</td>
+                <td style="background-color: ${arrDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${arrDate}</td>
+                <td style="background-color: ${depTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${depTime}</td>
+                <td style="background-color: ${arrTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${arrTime}</td>
+            </tr>
+        `;
     });
 
     displayHTML += `</tbody></table>`;
@@ -557,13 +611,13 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
-    <div class="card text-center" style="width: 100%; background-color: #f8f9fa; border: 1px solid #ccc;">
+    <div class="card text-center " style="width: 100%;  border: 1px solid #ccc;">
         
         <div class="card-header text-black" style="background-color: #f8f9fa;  font-weight: bold;">
             Add Train
         </div>
 
-        <div class="card-body" >
+        <div class="card-body">
 
             <hr style="width: 100%; height: 2px; background-color: transparent; border: none;">
             <div class="mb-3 d-flex align-items-center">

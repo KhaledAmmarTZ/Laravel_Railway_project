@@ -5,105 +5,115 @@
 @endsection
 
 @section('content')
-
-    <div class="container-fluid">
-        <div class="d-flex" style="gap: 20px;">
-            <!-- Left Column (Stacked Cards) -->
-            <div class="d-flex flex-column" style="flex: 1.5; gap: 20px;">
-                <div class="card p-3" style="border: none; !important; background-color:rgb(255, 255, 255);">
-                    <div class="card-body">
-                        <h5 class="card-title text-center">Unavailable Trains</h5>
-                        <div style="width: 200px; height: 200px; margin: auto;">
-                            <canvas id="unavailableTrainsPieChart"></canvas>
-                        </div>
-
-                        <!-- Indicators for Available and Unavailable Trains -->
-                        <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-                            <div>
-                                <span style="display: inline-block; width: 20px; height: 20px; border-radius: 25%; background-color: #36A2EB;"></span>
-                                Available Trains: <span id="availableTrainsValue">{{ $availableTrains }}</span>
-                            </div>
-                            <div>
-                                <span style="display: inline-block; width: 20px; height: 20px; border-radius: 25%; background-color: #FF6384;"></span>
-                                Unavailable Trains: <span id="unavailableTrainsValue">{{ $unavailableTrains->count() }}</span>
-                            </div>
-                        </div>
-                        
-                        <p class="card-text">
-                            Total {{ count($unavailableTrains) }} train(s) are not scheduled, reschedule them 
-                            <a href="#" data-toggle="modal" data-target=".bd-example-modal-xl">now!</a>
-                        </p>
+<style>
+    .blurry-card {
+    position: relative;
+    background-color: rgba(248, 249, 250, 0.5); /* Add a semi-transparent background */
+    backdrop-filter: blur(2px); /* Apply the blur effect */
+    }
+    .card-text{
+        font-size: 0.8rem;
+        color:rgb(255, 255, 255);
+    }
+    .card-title{
+        color:rgb(255, 255, 255);
+    }
+</style>
+<div class="container-fluid">
+    <div class="row g-3">
+        <!-- Left Column (Stacked Cards) -->
+        <div class="col-lg-4 col-md-6" style="display: flex; flex-direction: column; gap: 1rem;">
+            <div class="card p-3 blurry-card" style="border: none;">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Unavailable Trains</h5>
+                    <div style="width: 200px; height: 200px; margin: auto;">
+                        <canvas id="unavailableTrainsPieChart"></canvas>
                     </div>
-                </div>
-
-                <div class="card p-3 flex-grow-1" style="border: none; !important;">
-                    <div class="card-body">
-                        <h5 class="card-title">User Count</h5>
-                        <p class="card-text">The number of users currently in the system:</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span id="userCount" class="h4 text-primary">0</span> <!-- Placeholder for user count -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <div>
+                            <span class="indicator" style="background-color: #36A2EB;"></span>
+                            Available Trains: <span id="availableTrainsValue">{{ $availableTrains }}</span>
+                        </div>
+                        <div>
+                            <span class="indicator" style="background-color: #FF6384;"></span>
+                            Unavailable Trains: <span id="unavailableTrainsValue">{{ $unavailableTrains->count() }}</span>
                         </div>
                     </div>
+                    <p class="card-text">
+                        Total {{ count($unavailableTrains) }} train(s) are not scheduled, reschedule them 
+                        <a href="#" data-toggle="modal" data-target=".bd-example-modal-xl">now!</a>
+                    </p>
                 </div>
-
             </div>
 
-            <!-- Middle Column (Main Content) -->
-            <div class="card p-3" style="border: none; !important;">
+            <div class="card p-3 blurry-card" style="border: none;">
+                <div class="card-body">
+                    <h5 class="card-title">User  Count</h5>
+                    <p class="card-text">The number of users currently in the system:</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span id="userCount" class="h4 text-primary">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Column (Main Content) -->
+        <div class="col-lg-6 col-md-12">
+            <div class="card p-3 blurry-card" style="border: none;">
                 <div class="card-body">
                     <h5 class="card-title text-center">Monthly Data Chart</h5>
-                    <div style="display: flex; justify-content: center; overflow-x: auto;">
-                        <div style="width: 700px; height: 400px;">
+                    <div class="d-flex justify-content-center overflow-auto">
+                        <div style="width: 100%; max-width: 700px; height: 400px;">
                             <canvas id="monthlyChart"></canvas>
                         </div>
                     </div>
                     <p class="card-text text-center"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
             </div>
-            
-            <!-- Right Column (Single Full-Row Card) -->
-            <div class="card p-3" style="flex: 1.5; max-width: 250px; width: 100%; border: none; !important;"> <!-- Adjust flex and added max-width -->
-              <div class="card-body">
-                  <div class="calendar">
-                      <div class="calendar-header">
-                          <span class="month-picker" id="month-picker">February</span>
-                          <div class="year-picker">
-                              <span class="year-change" id="prev-year">
-                                  <pre><</pre>
-                              </span>
-                              <span id="year">2021</span>
-                              <span class="year-change" id="next-year">
-                                  <pre>></pre>
-                              </span>
-                          </div>
-                      </div>
-                      <div class="calendar-body">
-                          <div class="calendar-week-day">
-                              <div>Sun</div>
-                              <div>Mon</div>
-                              <div>Tue</div>
-                              <div>Wed</div>
-                              <div>Thu</div>
-                              <div>Fri</div>
-                              <div>Sat</div>
-                          </div>
-                          <div class="calendar-days"></div>
-                      </div>
-                      <div class="month-list"></div>
-                  </div>
-              </div>
-              <p class="card-text"><strong>John Doe:</strong> "Great service, very satisfied!"</p>
-                            <p class="card-text"><small class="text-muted">Last updated 2 mins ago</small></p>
-          </div>
         </div>
 
-        <!-- Card Deck Section (Cards in Rows) -->
-        <div class="d-flex mt-4" style="gap: 20px;">
-            <div class="card col-8" style="border: none;">
+        <!-- Right Column (Single Full-Row Card) -->
+        <div class="col-lg-2 col-md-12">
+            <div class="card p-3 blurry-card" style="border: none; height: 100%; max-height: 100%;">
                 <div class="card-body">
-                    <h5 class="card-title">Customer Feedback</h5>
+                    <div class="calendar">
+                        <div class="calendar-header">
+                            <span class="month-picker" id="month-picker">February</span>
+                            <div class="year-picker">
+                                <span class="year-change" id="prev-year"><pre><</pre></span>
+                                <span id="year">2021</span>
+                                <span class="year-change" id="next-year"><pre>></pre></span>
+                            </div>
+                        </div>
+                        <div class="calendar-body">
+                            <div class="calendar-week-day">
+                                <div>Sun</div>
+                                <div>Mon</div>
+                                <div>Tue</div>
+                                <div>Wed</div>
+                                <div>Thu</div>
+                                <div>Fri</div>
+                                <div>Sat</div>
+                            </div>
+                            <div class="calendar-days"></div>
+                        </div>
+                        <div class="month-list"></div>
+                    </div>
+                </div>
+                <p class="card-text"><strong>John Doe:</strong> "Great service, very satisfied!"</p>
+                <p class="card-text"><small class="text-muted">Last updated 2 mins ago</small></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Deck Section (Cards in Rows) -->
+    <div class="row g-3 mt-4">
+        <div class="col-lg-8 col-md-12">
+            <div class="card blurry-card" style="border: none; height: 100%; max-height: 100%;">
+                <div class="card-body">
+                    <h5 class="card-title" style="margin-top: 15px; margin-left: 20px; text-align:center;">Customer Feedback</h5>
                     <!-- Recent Feedback List -->
-                    <div id="feedbackList">
+                    <div id="feedbackList" style="margin-top: 15px; margin-left: 20px;">
                         <div class="feedback-item mb-3">
                             <p class="card-text"><strong>John Doe:</strong> "Great service, very satisfied!"</p>
                             <p class="card-text"><small class="text-muted">Last updated 2 mins ago</small></p>
@@ -115,12 +125,13 @@
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="card p-3 flex-grow-1" style="border: none;">
+        <div class="col-lg-4 col-md-12">
+            <div class="card blurry-card" style="border: none; height: 100%; max-height: 100%;">
                 <div class="card-body">
-                    <h5 class="card-title">Customer Reports</h5>
-                    <!-- Recent Reports List -->
-                    <div id="reportList">
+                    <h5 class="card-title" style="margin-top: 15px; margin-left: 20px; text-align: center;">Customer Reports</h5>
+                    <div id="reportList" style="margin-top: 15px; margin-left: 20px;">
                         <div class="report-item mb-3">
                             <p class="card-text" style="font-size: 0.7rem;"><strong>Report by John Doe:</strong> "The product quality is excellent, but delivery took longer than expected."</p>
                             <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 10 mins ago</small></p>
@@ -129,22 +140,26 @@
                             <p class="card-text" style="font-size: 0.7rem;"><strong>Report by Jane Smith:</strong> "The support team was helpful in resolving my issue quickly."</p>
                             <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 15 mins ago</small></p>
                         </div>
+                        <div class="report-item mb-3">
+                            <p class="card-text" style="font-size: 0.7rem;"><strong>Report by John Doe:</strong> "The product quality is excellent, but delivery took longer than expected."</p>
+                            <p class="card-text" style="font-size: 0.6rem;"><small class="text-muted">Last updated 10 mins ago</small></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-            </div>
-
-            <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-xl">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Unavailable Trains</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+    <!-- Modal for Unavailable Trains -->
+    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Unavailable Trains</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
                 <div class="col-12">
                     @if($unavailableTrains->isEmpty())
                         <p>No unavailable trains found.</p>
@@ -194,6 +209,7 @@
             </div>
         </div>
     </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>

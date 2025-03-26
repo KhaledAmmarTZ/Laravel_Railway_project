@@ -11,7 +11,9 @@ class CreateTraincompartmentsTable extends Migration
         Schema::create('traincompartments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('trainid');
-            $table->integer('seatnumber');
+            $table->integer('total_seats');
+            $table->integer('available_seats');
+            $table->integer('booked_seats');
             $table->string('compartmentname');
             $table->string('compartmenttype')->nullable();  // Corrected line
             $table->double('price')->nullable();  // Corrected line

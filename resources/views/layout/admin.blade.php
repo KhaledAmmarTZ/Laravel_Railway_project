@@ -15,10 +15,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <style>
+    .background-image {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('{{ asset('images/train (2).jpg') }}') no-repeat center center;
+        background-size: cover;
+        filter: blur(50px); /* Apply blur effect */
+        z-index: -1; /* Keep it behind the content */
+    }
 
+    .content {
+        position: relative;
+        z-index: 1; /* Ensure content is above the blurred background */
+        /* Add any other styling for your content */
+    }
+</style>
 
 </head>
-  <body style="background-color: #F0FFFC;">
+<body>
+<div class="background-image"></div>
     <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-light" style=" margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
                 <a class="navbar-brand text-white" href="#">
@@ -67,7 +86,7 @@
             <div class="row flex-xl-nowrap" style="min-height: 90vh; max-height: 91vh;">
                 <!-- Sidebar with Border-Right for Vertical Line -->
                 <div class="col-12 col-md-3 col-xl-2 p-3 sidebar" >
-                    <div class="card  h-100" style="background-color: #F0FFFC; border: none !important;">
+                    <div class="card  h-100" style="background-color: transparent ; border: none !important;">
                         <!-- Sidebar Header <div class="card-header bg-primary text-white text-center">
                             Sidebar Menu
                         </div> -->
