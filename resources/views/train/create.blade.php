@@ -611,7 +611,7 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
-    <div class="card text-center " style="width: 100%;  border: 1px solid #ccc;">
+    <div class="card text-center " style="width: 100%;  border: 1px solid #ccc; background: transparent;">
         
         <div class="card-header text-black" style="background-color: #f8f9fa;  font-weight: bold;">
             Add Train
