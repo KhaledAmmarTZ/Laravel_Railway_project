@@ -611,9 +611,9 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
-    <div class="card text-center " style="width: 100%;  border: 1px solid #ccc; background: transparent;">
-        
-        <div class="card-header text-black" style="background-color: #f8f9fa;  font-weight: bold;">
+    <div class="card text-center" style="width: 100%; border: 2px solid #ccc; background: rgba(255, 255, 255, 0.5);">
+      
+        <div class="card-header text-black" style="background-color:rgb(255, 255, 255);  font-weight: bold;">
             Add Train
         </div>
 
@@ -621,7 +621,7 @@ function deleteUpdown() {
 
             <hr style="width: 100%; height: 2px; background-color: transparent; border: none;">
             <div class="mb-3 d-flex align-items-center">
-                <label for="tname" class="form-label me-3" style="width: 250px; text-align: right;">Train Name :
+                <label for="tname" class="form-label me-3 " style="width: 350px; text-align: right; font-weight: bold; color: white;">Train Name :
                     &nbsp;</label>
                 <div class="flex-grow-1">
                     <input type="text" name="tname" id="tname" class="form-control w-75" required>
@@ -629,7 +629,7 @@ function deleteUpdown() {
             </div>
 
             <div class="mb-3 d-flex align-items-center">
-                <label for="train_image" class="form-label me-3" style="width: 250px; text-align: right;">
+                <label for="train_image" class="form-label me-3" style="width: 350px; text-align: right; font-weight: bold;">
                     Train Image : &nbsp;
                 </label>
                 <div class="d-flex align-items-center flex-grow-1">
@@ -647,23 +647,21 @@ function deleteUpdown() {
                 });
             </script>
 
-            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+            <hr style="width: 100%; height: 2px; background-color: rgba(255, 255, 255, 0.5);; border: none;">
            
             <div class="row">
-                <div class="col-md-6 col-12" style="text-align: center; width: 95%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
-                    <button type="button" class="btn btn-add" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 95%;">
+                <div class="col-md-6 col-12 d-flex flex-column align-items-center" style="border-right: 1px solid #fff; padding: 14px;">
+                    <button type="button" class="btn btn-add mb-3" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="width: 100%;">
                         Set Train Compartment
                     </button>
-
-                    <div id="compartment-data-display" class="mt-3"></div>
+                    <div id="compartment-data-display" class="mt-3 table-responsive"></div>
                 </div>
 
-                <div class="col-md-6 col-12" style="text-align: center; width: 95%; border-left: 1px solid #000; padding-right: 14px; padding-left: 14px;">
-                    <button type="button" class="btn btn-add" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 95%;">
+                <div class="col-md-6 col-12 d-flex flex-column align-items-center" style="border-left: 1px solid #fff; padding: 14px;">
+                    <button type="button" class="btn btn-add mb-3" data-toggle="modal" data-target=".bd-example-modal-xl" style="width: 100%;">
                         Set Train Route
                     </button>
-
-                    <div id="updown-data-display" class="mt-3"></div>
+                    <div id="updown-data-display" class="mt-3 table-responsive"></div>
                 </div>
             </div>
 
@@ -690,7 +688,7 @@ function deleteUpdown() {
                     </div>
                 </div>
             </div>
-            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+            <hr style="width: 100%; height: 2px; background-color:  rgba(255, 255, 255, 0.5);; border: none;">
             
             <div class="card" style="background-color: transparent; border: none;" >
                 <div class="card-body" style="background-color: transparent; border: none;">
@@ -745,7 +743,7 @@ function deleteUpdown() {
                     </div>
                 </div>
             </div>
-            <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+            <hr style="width: 100%; height: 2px; background-color:  rgba(255, 255, 255, 0.5); border: none;">
             <div id="warning-message" style="display:none; color: red; font-weight: bold; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; margin-top: 20px;">
                 <!-- Warning message will be inserted here -->
             </div>

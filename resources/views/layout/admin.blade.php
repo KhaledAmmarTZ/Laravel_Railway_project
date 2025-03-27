@@ -16,24 +16,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <style>
-    .background-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: url('{{ asset('images/train (2).jpg') }}') no-repeat center center;
-        background-size: cover;
-        filter: blur(50px); /* Apply blur effect */
-        z-index: -1; /* Keep it behind the content */
-    }
+        .background-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('{{ asset('images/train (2).jpg') }}') no-repeat center center;
+            background-size: cover;
+            filter: blur(50px); /* Apply blur effect */
+            z-index: -1; /* Keep it behind the content */
+        }
 
-    .content {
-        position: relative;
-        z-index: 1; /* Ensure content is above the blurred background */
-        /* Add any other styling for your content */
-    }
-</style>
+        /* Dark overlay */
+        .background-image::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Adjust the opacity (0.5 = 50% darker) */
+            z-index: -1;
+        }
+    </style>
 
 </head>
 <body>
