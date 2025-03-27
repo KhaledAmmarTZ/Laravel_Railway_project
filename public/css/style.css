@@ -11,18 +11,23 @@
     border-radius: 5px;
     text-decoration: none !important;
     transition: all 0.3s ease-in-out;
+
 }
-
-
 .custom-btn:hover {
-    background-color:  #2A9D8F;
+    background-color: #2A9D8F;
     color: #ffffff;
     text-decoration: none !important;
+    align-items: end;
+    transform: translateY(-10px) scaleY(1.6); /* Moves button further up and increases height */
+    border-top: none; /* Removes the border from the top */
+    border-top-left-radius: 0; /* Removes border radius from top-left */
+    border-top-right-radius: 0; /* Removes border radius from top-right */
+
 }
 
 .custom-btn:active {
-    background-color: #000000;
-    color: #ffffff;
+    background-color: #F0FFFC;
+    color: #000000;
     text-decoration: none !important;
 }
 
@@ -133,7 +138,7 @@
     right: -4px;
     bottom: -4px;
     background: rgba(0, 95, 86, 0.6); /* Color of the blurry border */
-    filter: blur(8px); /* Blur effect */
+    filter: blur(2px); /* Blur effect */
     border-radius: 7px; /* Match border radius to create a smooth border */
     z-index: -1; /* Place it behind the button */
 }

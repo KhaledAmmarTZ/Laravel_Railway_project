@@ -6,8 +6,8 @@ Add Train
 <style>
     .blurry-card {
         position: relative;
-        background-color: rgba(248, 249, 250, 0.5); /* Add a semi-transparent background */
-        backdrop-filter: blur(10px); /* Apply the blur effect */
+        background-color: rgba(248, 249, 250, 0.5);
+        backdrop-filter: blur(10px);
     }
     #updown-sections table {
         border-collapse: collapse;
@@ -121,14 +121,14 @@ function attachInputListeners() {
 
 function showCompartmentData() {
     let displayHTML = `
-        <h3>Entered Compartment Data:</h3>
+        <h3 style="font-weight: bold; color: white;">Entered Compartment Data:</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Compartment Name</th>
-                    <th>Number of Seats</th>
-                    <th>Compartment Type</th>
-                    <th>Price</th>
+                    <th style="font-weight: bold; color: white;">Compartment Name</th>
+                    <th style="font-weight: bold; color: white;">Number of Seats</th>
+                    <th style="font-weight: bold; color: white;">Compartment Type</th>
+                    <th style="font-weight: bold; color: white;">Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -405,16 +405,16 @@ function showUpdownData() {
     const rows = tbody.querySelectorAll('tr');
 
     let displayHTML = `
-        <h3>Entered Train Route Data:</h3>
+        <h3 style="font-weight: bold; color: white;">Entered Train Route Data:</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Source</th>
-                    <th>Destination</th>
-                    <th>Departure Date</th>
-                    <th>Arrival Date</th>
-                    <th>Departure Time</th>
-                    <th>Arrival Time</th>
+                    <th style="font-weight: bold; color: white;">Source</th>
+                    <th style="font-weight: bold; color: white;">Destination</th>
+                    <th style="font-weight: bold; color: white;">Departure Date</th>
+                    <th style="font-weight: bold; color: white;">Arrival Date</th>
+                    <th style="font-weight: bold; color: white;">Departure Time</th>
+                    <th style="font-weight: bold; color: white;">Arrival Time</th>
                 </tr>
             </thead>
             <tbody>
@@ -611,7 +611,7 @@ function deleteUpdown() {
 
 <form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
-    <div class="card text-center" style="width: 100%; border: 2px solid #ccc; background: rgba(255, 255, 255, 0.5);">
+    <div class="card text-center" style="width: 100%; border: 2px solid #ccc; background: rgba(255, 255, 255, 0.3);">
       
         <div class="card-header text-black" style="background-color:rgb(255, 255, 255);  font-weight: bold;">
             Add Train
@@ -629,7 +629,7 @@ function deleteUpdown() {
             </div>
 
             <div class="mb-3 d-flex align-items-center">
-                <label for="train_image" class="form-label me-3" style="width: 350px; text-align: right; font-weight: bold;">
+                <label for="train_image" class="form-label me-3" style="width: 350px; text-align: right; font-weight: bold; color: white;">
                     Train Image : &nbsp;
                 </label>
                 <div class="d-flex align-items-center flex-grow-1">
@@ -692,7 +692,7 @@ function deleteUpdown() {
             
             <div class="card" style="background-color: transparent; border: none;" >
                 <div class="card-body" style="background-color: transparent; border: none;">
-                <h5 class="card-title">Shown Train Routes</h5>
+                <h5 class="card-title" style="font-weight: bold; color: white;">Shown Train Routes</h5>
                     <div id="route-display" style="background-color: transparent; border: none;">
                     <div class="route-box" id="route-box-1"></div>
                     <div class="route-box" id="route-box-2"></div>
@@ -971,4 +971,10 @@ document.getElementById('train_image').addEventListener('change', function(event
     reader.readAsDataURL(event.target.files[0]);
 });
 </script>
+<style>
+    #file-name {
+        color: white !important; 
+        font-weight: bold;
+    }
+</style>
 @endsection

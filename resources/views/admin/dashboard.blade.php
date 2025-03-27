@@ -244,24 +244,39 @@
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Days of the Month'
-                    }
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Days of the Month',
+                    color: 'white' // Set the x-axis title text color to white
                 },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Total Number'
-                    }
+                ticks: {
+                    color: 'white' // Set x-axis ticks text color to white
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Total Number',
+                    color: 'white' // Set the y-axis title text color to white
+                },
+                ticks: {
+                    color: 'white' // Set y-axis ticks text color to white
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white' // Set legend text color to white
                 }
             }
         }
-    });
+    }
+});
 
 // Get the number of available and unavailable trains from the Blade variables
 const availableTrains = {{ $availableTrains }};

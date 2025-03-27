@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", function () {
             @csrf
             @method('PUT')
 
-            <div class="card text-center" style="width: 100%; min-width: 1400px; background-color: #f8f9fa; border: 1px solid #ccc;">
+            <div class="card text-center" style="width: 100%; min-width: 1400px; background: rgba(255, 255, 255, 0.3); border: 1px solid #ccc;">
                 
                 <div class="card-header text-white" style="background-color: #005F56">
                     Edit Train

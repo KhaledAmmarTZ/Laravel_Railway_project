@@ -68,7 +68,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="custom-btn mx-2 {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">Home</a>
+                    <a class="custom-btn mx-2 {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}"><span>Home</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="custom-btn mx-2 {{ Request::is('train') ? 'active' : '' }}" href="{{ url('/train') }}">Train</a>
@@ -82,8 +82,8 @@
             </ul>
             <div class="ml-auto d-flex align-items-center">
                 <div id="datetime" class="text-white text-center mr-3" style="font-size: 18px; font-weight: bold;"></div>
-                <a href="#" class="login-btn mx-2">Login</a>
-                <a href="#" class="register-btn mx-2">Register</a>
+                <a href="#" class="custom-btn mx-2">Login</a>
+                <a href="#" class="custom-btn mx-2">Register</a>
             </div>
         </div>
     </nav>

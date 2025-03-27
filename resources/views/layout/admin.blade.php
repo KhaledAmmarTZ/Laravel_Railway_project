@@ -24,7 +24,7 @@
             height: 100%;
             background: url('{{ asset('images/train (2).jpg') }}') no-repeat center center;
             background-size: cover;
-            filter: blur(50px); /* Apply blur effect */
+            filter: blur(5px); /* Apply blur effect */
             z-index: -1; /* Keep it behind the content */
         }
 
