@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Auth\RegisteredUserController;
 use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\TrainController;
+use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -80,6 +81,9 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
     Route::post('/train/edit', [TrainController::class, 'loadTrainData'])->name('train.load');
     Route::get('/train/edit/{trainid}', [TrainController::class, 'edit'])->name('train.edit');
     Route::put('/train/update/{trainid}', [TrainController::class, 'update'])->name('train.update');
+    Route::get('/train/{id}/download-pdf', [PdfController::class, 'downloadTrainPdf'])->name('train.pdf');
+
+Route::get('/pdf/train/{id}', [PdfController::class, 'generatePdf'])->name('pdf.generate');
 
     Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
     Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');

@@ -373,7 +373,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="height: 50px;">
                         Set Train Compartment
                     </button>
-                   
+                    <a href="{{ route('train.pdf', $train->trainid) }}" class="btn btn-danger">Download PDF</a>
+
+
                     <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg fullscreen-modal">
                             <div class="modal-content">

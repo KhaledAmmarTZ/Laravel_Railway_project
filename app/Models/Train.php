@@ -22,9 +22,9 @@ class Train extends Model
         return $this->hasMany(UpDown::class, 'trainid', 'trainid');
     }
 
-    public function trainRoutes()
-    {
-        return $this->hasMany(TrainRoute::class, 'trainid', 'trainid');
-    }
+    // public function trainRoutes()
+    // {
+    //     return $this->hasMany(TrainRoute::class, 'trainid', 'trainid');
+    // }
 
 }

@@ -9,6 +9,7 @@ use App\Models\Station;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class TrainController extends Controller
 {
@@ -82,8 +83,11 @@ class TrainController extends Controller
             ]);
         }
     
-        // Redirect to the train show page with success message
-        return redirect()->route('train.show')->with('success', 'Train created successfully');
+            // Flash a success message
+        session()->flash('success', 'Train data uploaded successfully!');
+
+        // After storing, redirect to the PDF generation route
+        return redirect()->route('pdf.generate', ['id' => $train->trainid]);
     }
     
 

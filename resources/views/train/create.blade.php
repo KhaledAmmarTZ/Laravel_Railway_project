@@ -609,7 +609,7 @@ function deleteUpdown() {
 </div>
 @endif
 
-<form action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
+<form  action="{{ route('train.store') }}" method="POST" onsubmit="return validateUpdownSections()" enctype="multipart/form-data">
     @csrf
     <div class="card text-center" style="width: 100%; border: 2px solid #ccc; background: rgba(255, 255, 255, 0.3);">
       
@@ -753,6 +753,8 @@ function deleteUpdown() {
         </div>
     </div>
 </form>
+
+
 
 <script>
 function validateUpdownSections() {
