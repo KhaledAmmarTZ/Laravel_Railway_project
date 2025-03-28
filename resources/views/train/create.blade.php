@@ -167,10 +167,10 @@ function showCompartmentData() {
 
         displayHTML += `
             <tr>
-                <td style="background-color: ${name ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${name}</td>
-                <td style="background-color: ${seats ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${seats}</td>
-                <td style="background-color: ${type ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${type}</td>
-                <td style="background-color: ${price ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${price}</td>
+                <td style="background-color: ${name ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${name}</td>
+                <td style="background-color: ${seats ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${seats}</td>
+                <td style="background-color: ${type ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${type}</td>
+                <td style="background-color: ${price ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${price}</td>
             </tr>
         `;
     }
@@ -448,12 +448,12 @@ function showUpdownData() {
 
         displayHTML += `
             <tr>
-                <td style="background-color: ${source ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${source}</td>
-                <td style="background-color: ${destination ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${destination}</td>
-                <td style="background-color: ${depDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${depDate}</td>
-                <td style="background-color: ${arrDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${arrDate}</td>
-                <td style="background-color: ${depTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${depTime}</td>
-                <td style="background-color: ${arrTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'};">${arrTime}</td>
+                <td style="background-color: ${source ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${source}</td>
+                <td style="background-color: ${destination ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${destination}</td>
+                <td style="background-color: ${depDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${depDate}</td>
+                <td style="background-color: ${arrDate ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${arrDate}</td>
+                <td style="background-color: ${depTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${depTime}</td>
+                <td style="background-color: ${arrTime ? 'transparent' : 'rgba(255, 0, 0, 0.2)'}; color: white;">${arrTime}</td>
             </tr>
         `;
     });

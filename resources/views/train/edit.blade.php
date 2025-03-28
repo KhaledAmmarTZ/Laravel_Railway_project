@@ -72,14 +72,14 @@ function attachInputListeners() {
 
 function showCompartmentData() {
     let displayHTML = `
-        <h3>Compartment Data:</h3>
+        <h3 style="font-weight:bold; color:white">Compartment Data:</h3>
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Compartment Name</th>
-                    <th>Number of Seats</th>
-                    <th>Compartment Type</th>
-                    <th>Price</th>
+                    <th style="font-weight:bold; color:white">Compartment Name</th>
+                    <th style="font-weight:bold; color:white">Number of Seats</th>
+                    <th style="font-weight:bold; color:white">Compartment Type</th>
+                    <th style="font-weight:bold; color:white">Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -94,10 +94,10 @@ function showCompartmentData() {
         if (name || seats || type || price) {
             displayHTML += `
                 <tr>
-                    <td>${name}</td>
-                    <td>${seats}</td>
-                    <td>${type}</td>
-                    <td>${price}</td>
+                    <td style="font-weight:bold; color:white">${name}</td>
+                    <td style="font-weight:bold; color:white">${seats}</td>
+                    <td style="font-weight:bold; color:white">${type}</td>
+                    <td style="font-weight:bold; color:white">${price}</td>
                 </tr>
             `;
         }
@@ -158,12 +158,12 @@ function showCompartmentData() {
         table.innerHTML = `
             <thead>
                 <tr>
-                    <th>Source</th>
-                    <th>Destination</th>
-                    <th>Arrival Time</th>
-                    <th>Departure Time</th>
-                    <th>Arrival Date</th>
-                    <th>Departure Date</th>
+                    <th style="font-weight:bold; color:white">Source</th>
+                    <th style="font-weight:bold; color:white">Destination</th>
+                    <th style="font-weight:bold; color:white">Arrival Time</th>
+                    <th style="font-weight:bold; color:white">Departure Time</th>
+                    <th style="font-weight:bold; color:white">Arrival Date</th>
+                    <th style="font-weight:bold; color:white">Departure Date</th>
                 </tr>
             </thead>
             <tbody id="updown-data-body"></tbody>
@@ -175,12 +175,12 @@ function showCompartmentData() {
     const updownDataRow = document.createElement('tr');
     
     updownDataRow.innerHTML = `
-        <td>${updown.tsource || 'N/A'}</td>
-        <td>${updown.tdestination || 'N/A'}</td>
-        <td>${updown.tarrtime || 'N/A'}</td>
-        <td>${updown.tdeptime || 'N/A'}</td>
-        <td>${updown.tarrdate || 'N/A'}</td>
-        <td>${updown.tdepdate || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tsource || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tdestination || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tarrtime || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tdeptime || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tarrdate || 'N/A'}</td>
+        <td style="font-weight:bold; color:white">${updown.tdepdate || 'N/A'}</td>
     `;
 
     tbody.appendChild(updownDataRow);
@@ -262,207 +262,179 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 @endif
 
-
 <form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+    @csrf
+    @method('PUT')
 
-            <div class="card text-center" style="width: 100%; min-width: 1400px; background: rgba(255, 255, 255, 0.3); border: 1px solid #ccc;">
-                
-                <div class="card-header text-white" style="background-color: #005F56">
-                    Edit Train
-                </div>
-                <div class="card-body">
-                <div class="mb-3 d-flex align-items-center">
-                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name: {{ $train->trainname }} </label>
-               
-            </div>
-                    <!-- Button to trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#trainModal">
-    Image and Name
-</button>
-<!-- Preview of current image (if exists) -->
-                    @if ($train->train_image)
-                        <div class="mt-2">
-                            <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" id="train_image_preview">
-                        </div>
-                    @endif
-                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-<!-- Modal -->
-<div class="modal fade" id="trainModal" tabindex="-1" role="dialog" aria-labelledby="trainModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="trainModalLabel">Train Image and Name</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
-
-            <!-- Train Name -->
-            <div class="mb-3 d-flex align-items-center">
-                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
-                <div class="flex-grow-1">
-                    <input type="text" name="trainname" class="form-control w-75" value="{{ $train->trainname }}" required>
-                </div>
-            </div>
-
-            <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
-
-            <!-- Train Image -->
-            <div class="mb-3 d-flex align-items-center">
-                <label class="form-label me-3" style="width: 250px; text-align: right;">Train Image: </label>
-                <div class="flex-grow-1">
-                    <input type="file" name="train_image" class="form-control w-75" id="train_image_input" onchange="previewImage(event)">
-                    
-                    
-
-                    <!-- Placeholder for the new image preview -->
-                    <div class="mt-2" id="new_image_preview_container" style="display: none;">
-                        <img id="new_image_preview" class="img-fluid" />
+    <div class="card text-center" style="width: 100%; min-width: 320px; background: rgba(255, 255, 255, 0.3); border: 1px solid #ccc;">
+        <div class="card-header text-white" style="background-color: #005F56">
+            {{ $train->trainname }} Train
+        </div>
+        <div class="row">
+            <div class="col-md-9 col-12">
+                <div class="d-flex flex-column">
+                    <div class="mb-3 d-flex align-items-center">
+                        <label class="form-label me-3" style="width: 350px; text-align: right; font-weight:bold; color:white">
+                            Train Name: {{ $train->trainname }} 
+                        </label>
                     </div>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-    function previewImage(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            const imagePreview = document.getElementById('new_image_preview');
-            const previewContainer = document.getElementById('new_image_preview_container');
-            
-            // Show the preview of the chosen image
-            imagePreview.src = e.target.result;
-            previewContainer.style.display = 'block';
-        };
-
-        if (file) {
-            reader.readAsDataURL(file); // Read the selected image file
-        }
-    }
-</script>
-
-
-                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
-            
-                    <div class="card" style="background-color: transparent; border: none;" >
-                        <div class="card-body" style="background-color: transparent; border: none;">
-                        <div class="mb-3 d-flex align-items-center">
-                            <h5 class="card-title">Shown Train Routes</h5>
-                            <div id="route-display" style="background-color: transparent; border: none;">
-                            <div class="route-box" id="route-box-1"></div>
-                            <div class="route-box" id="route-box-2"></div>
-                            <div class="route-box" id="route-box-3"></div>
-                            <div class="route-box" id="route-box-4"></div>
-                            <div class="route-box" id="route-box-5"></div>
-                            <div class="route-box" id="route-box-6"></div>
-                            <div class="route-box" id="route-box-7"></div>
-                            <div class="route-box" id="route-box-8"></div>
-                            <div class="route-box" id="route-box-9"></div>
-                            <div class="route-box" id="route-box-10"></div>
-                            <div class="route-box" id="route-box-11"></div>
-                            <div class="route-box" id="route-box-12"></div>
-                            <div class="route-box" id="route-box-13"></div>
-                            <div class="route-box" id="route-box-14"></div>
-                            <div class="route-box" id="route-box-15"></div>
+                    <div class="mb-3 d-flex align-items-center">
+                        <!-- Train Image Label -->
+                        <label for="train_image" class="form-label me-3" style="width: 250px; text-align: right; font-weight: bold; color: white;">
+                            Train Image : &nbsp;
+                        </label>
+                        @if ($train->train_image)
+                            <div style="flex-shrink: 0;">
+                                <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid ms-2" id="train_image_preview" style="max-width: 500px; height: auto;">
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
-                
                 <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                <div class="row">
-                <div class="col-md-6 col-12" style="text-align: center; width: 100%; border-right: 1px solid #000; padding-right: 14px; padding-left: 14px;">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl">Set Train Route</button>
+                <h3 style="font-weight:bold; color:white">Train Route:</h3>
                 <div id="updown-data-display" class="mt-3"></div>
-                </div>
-                <div class="col-md-6 col-12" style="text-align: center; width: 100%; padding-right: 14px; padding-left: 14px;">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" >
-                    Set Train Compartment
-                </button>
                 <div id="compartment-data-display" class="mt-3"></div>
-                </div>
-                </div>
+                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <div class="card-body" style="background-color: transparent; border: none;">
+                    <div class="mb-3 d-flex align-items-center">
+                        <h5 class="card-title" style="font-weight:bold; color:white ;width: 250px; text-align: right;">Shown Train Routes :</h5>
+                        <div id="route-display" style="background-color: transparent; border: none;">
+                            @for ($i = 1; $i <= 15; $i++)
+                                <div class="route-box" id="route-box-{{ $i }}"></div>
+                            @endfor
+                        </div>
+                    </div>
+                </div>        
+            </div>
+                
+            <div class="col-md-3 col-12">
+                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <!-- Button to trigger modal -->
+                <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#trainModal" style="height: 50px;">
+                    Image and Name
+                </button>
 
-                <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg fullscreen-modal">
+                <!-- Modal -->
+                <div class="modal fade" id="trainModal" tabindex="-1" role="dialog" aria-labelledby="trainModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Train Compartment</h5>
+                                <h5 class="modal-title" id="trainModalLabel">Train Image and Name</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
 
-                            </div>
-                            <div class="mb-3 d-flex align-items-center">
-                                <label class="form-label me-3" style="width: 250px; text-align: right;">Number of Compartments:</label>
-                                <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control w-75" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
-                            </div>
-                            <div id="compartment-sections"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg fullscreen-modal">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">Train Route</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
-                                                    
-                            <div id="updown-sections">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 265px;">Source</th>
-                                            <th style="width: 265px;">Destination</th>
-                                            <th style="width: 150px;">Arrival Time</th>
-                                            <th style="width: 180px;">Departure Time</th>
-                                            <th style="width: 180px;">Arrival Date</th>
-                                            <th>Departure Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                            <div class="mb-3">
-                                <button type="button" class="btn btn-success" onclick="addUpdown()">Add Schedule</button>
+                                    <!-- Train Name -->
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
+                                        <div class="flex-grow-1">
+                                            <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
+                                        </div>
+                                    </div>
+                   
+                                    <!-- Train Image -->
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label class="form-label me-3" style="width: 250px; text-align: right;">Train Image: </label>
+                                        <div class="flex-grow-1">
+                                            <input type="file" name="train_image" class="form-control" id="train_image_input" onchange="previewImage(event)">
+                                            
+                                            <!-- Placeholder for the new image preview -->
+                                            <div class="mt-2" id="new_image_preview_container" style="display: none;">
+                                                <img id="new_image_preview" class="img-fluid" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Submit Button -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <div class="card" style="background-color: transparent; border: none;">
+                    <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+
+                    <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target=".bd-example-modal-xl" style="height: 50px;">
+                        Set Train Route
+                    </button>
+
+                    <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+
+                    <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="height: 50px;">
+                        Set Train Compartment
+                    </button>
+                   
+                    <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg fullscreen-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Train Compartment</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="mb-3 d-flex align-items-center">
+                                    <label class="form-label me-3" style="width: 250px; text-align: right;">Number of Compartments:</label>
+                                    <input type="number" name="compartmentnumber" id="numofcompartment" class="form-control" onchange="generateCompartments()" value="{{ count($train->traincompartments) }}">
+                                </div>
+                                <div id="compartment-sections"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg fullscreen-modal">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Train Route</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
+                                                        
+                                <div id="updown-sections">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 265px;">Source</th>
+                                                <th style="width: 265px;">Destination</th>
+                                                <th style="width: 150px;">Arrival Time</th>
+                                                <th style="width: 180px;">Departure Time</th>
+                                                <th style="width: 180px;">Arrival Date</th>
+                                                <th>Departure Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                                <div class="mb-3">
+                                    <button type="button" class="btn btn-success" onclick="addUpdown()">Add Schedule</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
 
-                    <button type="submit" class="btn search-btn">Update Train</button>
+                    <button type="submit" class="btn search-btn btn-block">Update Train</button>
                     <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 <style>
                 .fullscreen-modal {
                     max-width: 1400px;
