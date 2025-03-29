@@ -87,6 +87,7 @@ Route::get('/pdf/train/{id}', [PdfController::class, 'generatePdf'])->name('pdf.
 
     Route::delete('/train/{train}', [TrainController::class, 'destroy'])->name('train.destroy');
     Route::get('/train/show', [TrainController::class, 'show'])->name('train.show');
+    Route::get('/train/data/{id}', [TrainController::class, 'viewTrainData'])->name('train.data');
 
     
 });

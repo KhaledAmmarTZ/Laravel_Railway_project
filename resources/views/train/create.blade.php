@@ -754,8 +754,6 @@ function deleteUpdown() {
     </div>
 </form>
 
-
-
 <script>
 function validateUpdownSections() {
     const updownContainer = document.getElementById('updown-sections');

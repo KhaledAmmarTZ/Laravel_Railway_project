@@ -82,15 +82,13 @@ class TrainController extends Controller
                 'tdepdate' => $updown['tdepdate'],
             ]);
         }
-    
-            // Flash a success message
-        session()->flash('success', 'Train data uploaded successfully!');
 
         // After storing, redirect to the PDF generation route
-        return redirect()->route('pdf.generate', ['id' => $train->trainid]);
+        return redirect()->route('train.data', ['id' => $train->trainid])
+                     ->with('success', 'Train created successfully!');
     }
+ 
     
-
     public function index(Request $request)
     {
         $query = Updown::query();  
@@ -156,7 +154,13 @@ class TrainController extends Controller
 
         return view('train.show', compact('trains'));
     }
-
+   public function viewTrainData($id)
+    {
+        // Retrieve the train with its related updowns and compartments
+        $train = Train::with(['traincompartments', 'trainupdowns'])->findOrFail($id);
+    
+        return view('train.data', compact('train'));
+    }
 
     public function showtrain(Request $request)
     {
