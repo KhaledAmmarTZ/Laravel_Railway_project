@@ -1,4 +1,3 @@
-
 <style>
     /* Make the table and column borders bolder */
     .custom-table {
@@ -58,82 +57,81 @@
     }
 </style>
 
-        <table class="table custom-table">
+<div class="table-responsive">
+    <table class="table custom-table">
         <thead>
-    <tr>
-        <th>S</th>
-        <th>Train Image</th> <!-- New Column -->
-        <th>Train Name</th>
-        <th>Departure Time</th>
-        <th>Arrival Time</th>
-        <th>Source</th>
-        <th>Destination</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-</thead>
-<tbody>
-    @php $serial = ($trains->currentPage() - 1) * $trains->perPage() + 1; @endphp
-    @foreach ($trains as $train)
-        @foreach ($train->trainupdowns as $index => $updown)
-            @php
-                $currentTime = \Carbon\Carbon::now();
-                $departureTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime);
-                $isAvailable = $departureTime->isFuture();
-                $status = $isAvailable ? 'Available' : 'Unavailable';
-                $statusClass = $isAvailable ? 'status-available' : 'status-unavailable';
-            @endphp
             <tr>
-                @if ($index == 0)
-                    <td rowspan="{{ count($train->trainupdowns) }}">{{ $serial }}</td>
-                    
-                    <!-- Train Image Column -->
-                    <td rowspan="{{ count($train->trainupdowns) }}">
-                        @if ($train->train_image)
-                        <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" style="max-width: 100px;">
-                        @else
-                            <p>No Image</p>
-                        @endif
-                    </td>
-                    
-                    <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
-                @endif
-                <td>
-                    {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
-                    {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
-                </td>
-                <td>
-                    {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
-                    {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
-                </td>                            
-                <td>{{ $updown->tsource }}</td>
-                <td>{{ $updown->tdestination }}</td>
-                <td class="{{ $statusClass }}">
-                    <strong>{{ $status }}</strong>
-                </td>
-                @if ($index == 0)
-                    <td rowspan="{{ count($train->trainupdowns) }}">
-                        <a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary btn-sm">Edit</a>
-                        <form action="{{ route('train.destroy', $train->trainid) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this train?')">Delete</button>
-                        </form>
-                    </td>
-                @endif
+                <th>S</th>
+                <th>Train Image</th> <!-- New Column -->
+                <th>Train Name</th>
+                <th>Departure Time</th>
+                <th>Arrival Time</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Status</th>
+                <th>Action</th>
             </tr>
-        @endforeach
-        @php $serial++; @endphp
-    @endforeach
-</tbody>
+        </thead>
+        <tbody>
+            @php $serial = ($trains->currentPage() - 1) * $trains->perPage() + 1; @endphp
+            @foreach ($trains as $train)
+                @foreach ($train->trainupdowns as $index => $updown)
+                    @php
+                        $currentTime = \Carbon\Carbon::now();
+                        $departureTime = \Carbon\Carbon::parse($updown->tdepdate . ' ' . $updown->tdeptime);
+                        $isAvailable = $departureTime->isFuture();
+                        $status = $isAvailable ? 'Available' : 'Unavailable';
+                        $statusClass = $isAvailable ? 'status-available' : 'status-unavailable';
+                    @endphp
+                    <tr>
+                        @if ($index == 0)
+                            <td rowspan="{{ count($train->trainupdowns) }}">{{ $serial }}</td>
+                            
+                            <!-- Train Image Column -->
+                            <td rowspan="{{ count($train->trainupdowns) }}">
+                                @if ($train->train_image)
+                                    <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" style="max-width: 100px;">
+                                @else
+                                    <p>No Image</p>
+                                @endif
+                            </td>
+                            
+                            <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
+                        @endif
+                        <td>
+                            {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
+                            {{ \Carbon\Carbon::parse($updown->tdeptime)->format('h:i A') }}
+                        </td>
+                        <td>
+                            {{ \Carbon\Carbon::parse($updown->tarrdate)->format('d-m-Y') }} 
+                            {{ \Carbon\Carbon::parse($updown->tarrtime)->format('h:i A') }}
+                        </td>                            
+                        <td>{{ $updown->tsource }}</td>
+                        <td>{{ $updown->tdestination }}</td>
+                        <td class="{{ $statusClass }}">
+                            <strong>{{ $status }}</strong>
+                        </td>
+                        @if ($index == 0)
+                            <td rowspan="{{ count($train->trainupdowns) }}">
+                                <a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary btn-sm" >View</a>
+                                <form action="{{ route('train.destroy', $train->trainid) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this train?')">Delete</button>
+                                </form>
+                            </td>
+                        @endif
+                    </tr>
+                @endforeach
+                @php $serial++; @endphp
+            @endforeach
+        </tbody>
+    </table>
+</div>
 
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="d-flex justify-content-center mt-3">
-        {!! $trains->onEachSide(1)->links('vendor.pagination.custom') !!}
-    </div>
+<!-- Pagination -->
+<div class="d-flex justify-content-center mt-3">
+    {!! $trains->onEachSide(1)->links('vendor.pagination.custom') !!}
 </div>
 
 <script>
@@ -153,4 +151,3 @@
         });
     });
 </script>
-

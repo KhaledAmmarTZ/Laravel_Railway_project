@@ -613,7 +613,7 @@ function deleteUpdown() {
     @csrf
     <div class="card text-center" style="width: 100%; border: 2px solid #ccc; background: rgba(255, 255, 255, 0.3);">
       
-        <div class="card-header text-black" style="background-color:rgb(255, 255, 255);  font-weight: bold;">
+        <div class="card-header text-black" style="background-color:rgb(255, 255, 255);  font-weight: bold; border-radius: 1px; padding: 1px;">
             Add Train
         </div>
 

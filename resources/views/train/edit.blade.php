@@ -9,7 +9,6 @@ function generateCompartments(existingCompartments = []) {
     const numCompartment = parseInt(document.getElementById('numofcompartment').value) || 0;
     const compartmentContainer = document.getElementById('compartment-sections');
 
-    // Add hidden field for compartment number
     const compartmentNumberField = document.getElementById('compartmentnumber');
     if (compartmentNumberField) {
         compartmentNumberField.value = numCompartment;
@@ -72,17 +71,18 @@ function attachInputListeners() {
 
 function showCompartmentData() {
     let displayHTML = `
-        <h3 style="font-weight:bold; color:white">Compartment Data:</h3>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th style="font-weight:bold; color:white">Compartment Name</th>
-                    <th style="font-weight:bold; color:white">Number of Seats</th>
-                    <th style="font-weight:bold; color:white">Compartment Type</th>
-                    <th style="font-weight:bold; color:white">Price</th>
-                </tr>
-            </thead>
-            <tbody>
+        <h3 class="font-weight-bold text-white">Compartment Data:</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th class="font-weight-bold text-white">Compartment Name</th>
+                        <th class="font-weight-bold text-white">Number of Seats</th>
+                        <th class="font-weight-bold text-white">Compartment Type</th>
+                        <th class="font-weight-bold text-white">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
     `;
 
     document.querySelectorAll('#compartment-sections .compartment-item').forEach((compartmentRow) => {
@@ -94,20 +94,18 @@ function showCompartmentData() {
         if (name || seats || type || price) {
             displayHTML += `
                 <tr>
-                    <td style="font-weight:bold; color:white">${name}</td>
-                    <td style="font-weight:bold; color:white">${seats}</td>
-                    <td style="font-weight:bold; color:white">${type}</td>
-                    <td style="font-weight:bold; color:white">${price}</td>
+                    <td class="font-weight-bold text-white">${name}</td>
+                    <td class="font-weight-bold text-white">${seats}</td>
+                    <td class="font-weight-bold text-white">${type}</td>
+                    <td class="font-weight-bold text-white">${price}</td>
                 </tr>
             `;
         }
     });
 
-    displayHTML += `</tbody></table>`;
+    displayHTML += `</tbody></table></div>`;
     document.getElementById('compartment-data-display').innerHTML = displayHTML;
 }
-
-
 
     let updownCount = 0; 
 
@@ -119,10 +117,9 @@ function showCompartmentData() {
     updownRow.dataset.index = index;
 
 
-        // Add hidden field for updown number
         const updownNumberField = document.getElementById('updownnumber');
     if (updownNumberField) {
-        updownNumberField.value = index + 1; // Number of updowns
+        updownNumberField.value = index + 1; 
     }
 
     const rowStyle = new Date(`${updown.tdepdate}T${updown.tdeptime}`) > new Date() ? '' : 'background-color: #ffcccc;';
@@ -152,35 +149,41 @@ function showCompartmentData() {
     let table = document.getElementById('updown-data-table');
 
     if (!table) {
-        table = document.createElement('table');
-        table.id = 'updown-data-table';
-        table.classList.add('table', 'table-bordered', 'mt-2');
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th style="font-weight:bold; color:white">Source</th>
-                    <th style="font-weight:bold; color:white">Destination</th>
-                    <th style="font-weight:bold; color:white">Arrival Time</th>
-                    <th style="font-weight:bold; color:white">Departure Time</th>
-                    <th style="font-weight:bold; color:white">Arrival Date</th>
-                    <th style="font-weight:bold; color:white">Departure Date</th>
-                </tr>
-            </thead>
-            <tbody id="updown-data-body"></tbody>
-        `;
-        displayDiv.appendChild(table);
+    table = document.createElement('table');
+    table.id = 'updown-data-table';
+    table.classList.add('table', 'table-bordered', 'mt-2');
+
+    const responsiveDiv = document.createElement('div');
+    responsiveDiv.classList.add('table-responsive');
+    responsiveDiv.appendChild(table);
+
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th class="font-weight-bold text-white">Source</th>
+                <th class="font-weight-bold text-white">Destination</th>
+                <th class="font-weight-bold text-white">Arrival Time</th>
+                <th class="font-weight-bold text-white">Departure Time</th>
+                <th class="font-weight-bold text-white">Arrival Date</th>
+                <th class="font-weight-bold text-white">Departure Date</th>
+            </tr>
+        </thead>
+        <tbody id="updown-data-body"></tbody>
+    `;
+
+    displayDiv.appendChild(responsiveDiv);
     }
 
     const tbody = document.getElementById('updown-data-body');
     const updownDataRow = document.createElement('tr');
-    
+
     updownDataRow.innerHTML = `
-        <td style="font-weight:bold; color:white">${updown.tsource || 'N/A'}</td>
-        <td style="font-weight:bold; color:white">${updown.tdestination || 'N/A'}</td>
-        <td style="font-weight:bold; color:white">${updown.tarrtime || 'N/A'}</td>
-        <td style="font-weight:bold; color:white">${updown.tdeptime || 'N/A'}</td>
-        <td style="font-weight:bold; color:white">${updown.tarrdate || 'N/A'}</td>
-        <td style="font-weight:bold; color:white">${updown.tdepdate || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tsource || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tdestination || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tarrtime || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tdeptime || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tarrdate || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${updown.tdepdate || 'N/A'}</td>
     `;
 
     tbody.appendChild(updownDataRow);
@@ -267,10 +270,13 @@ document.addEventListener("DOMContentLoaded", function () {
     @method('PUT')
 
     <div class="card text-center" style="width: 100%; min-width: 320px; background: rgba(255, 255, 255, 0.3); border: 1px solid #ccc;">
-        <div class="card-header text-white" style="background-color: #005F56">
-            {{ $train->trainname }} Train
+        <div class="card-header d-flex justify-content-between" style="background-color: #005F56; color: white;">
+            <strong>{{ $train->trainname }}</strong>
+            <a href="{{ route('train.pdf', $train->trainid) }}" class="ml-2">
+                <i class="fas fa-download" style="color: white;"></i>
+            </a>
         </div>
-        <div class="row">
+        <div class="row p-3" style="padding-top: 10px; padding-left: 10px; padding-right: 10px;">
             <div class="col-md-9 col-12">
                 <div class="d-flex flex-column">
                     <div class="mb-3 d-flex align-items-center">
@@ -373,7 +379,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target=".bd-example-modal-xl-compartment" style="height: 50px;">
                         Set Train Compartment
                     </button>
-                    <a href="{{ route('train.pdf', $train->trainid) }}" class="btn btn-danger">Download PDF</a>
+                    <!-- <a href="{{ route('train.pdf', $train->trainid) }}" class="btn btn-danger">Download PDF</a> -->
 
 
                     <div class="modal fade bd-example-modal-xl-compartment" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
