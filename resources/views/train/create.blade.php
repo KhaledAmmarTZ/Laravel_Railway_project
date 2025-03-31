@@ -202,10 +202,14 @@ function generateUpdowns() {
         const lastRow = existingRows[existingRows.length - 1];
         const lastSource = lastRow.querySelector('select[name*="source"]').value;
         const lastDestination = lastRow.querySelector('select[name*="destination"]').value;
+        const lastDepDate = lastRow.querySelector('input[name*="tdepdate"]').value;
+        const lastArrDate = lastRow.querySelector('input[name*="tarrdate"]').value;
+        const lastDepTime = lastRow.querySelector('input[name*="deptime"]').value;
+        const lastArrTime = lastRow.querySelector('input[name*="arrtime"]').value;
         lastArrivalTime = lastRow.querySelector('input[name*="arrtime"]').value; 
 
-        if (!lastSource || !lastDestination) {
-            alert("Please select both source and destination before adding a new section.");
+        if (!lastSource || !lastDestination || !lastDepDate || !lastArrDate || !lastDepTime || !lastArrTime) {
+            alert(`Please fill all the fields in row ${existingRows.length} before adding a new section.`);
             return;
         }
     }
@@ -215,6 +219,7 @@ function generateUpdowns() {
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>S</th>
                         <th>Source</th>
                         <th>Destination</th>
                         <th>Departure Date</th>
@@ -238,6 +243,7 @@ function generateUpdowns() {
 
     const rowHTML = `
         <tr>
+            <td>${i}</td>
             <td>
                 <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control updown-input source-select" data-index="${i}" required>
                     <option value="">Select Source</option>
@@ -253,11 +259,11 @@ function generateUpdowns() {
 
             <td>
                 <input type="date" name="updowns[${i}][tdepdate]" id="tdepdate_${i}" class="form-control updown-input depdate" 
-                    value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" min="${minDepDate}" required>
+                    value="${existingValues[`updowns[${i}][tdepdate]`] || ''}" min="${i === 1 ? new Date().toISOString().split('T')[0] : ''}" required>
             </td>
             <td>
                 <input type="date" name="updowns[${i}][tarrdate]" id="tarrdate_${i}" class="form-control updown-input arrdate" 
-                    value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" required>
+                    value="${existingValues[`updowns[${i}][tarrdate]`] || ''}" min="${i === 1 ? new Date().toISOString().split('T')[0] : ''}" required>
             </td>
 
             <td>
@@ -270,6 +276,36 @@ function generateUpdowns() {
     `;
 
     tbody.insertAdjacentHTML('beforeend', rowHTML);
+
+        if (existingRows.length > 0) {
+        const prevRow = existingRows[existingRows.length - 1];
+        const arrDate = prevRow.querySelector('input[name*="tarrdate"]').value;
+        const arrTime = prevRow.querySelector('input[name*="arrtime"]').value;
+
+        const nextRow = tbody.querySelectorAll('tr')[i - 1];
+        const depDateInput = nextRow.querySelector('input[name*="tdepdate"]');
+        const depTimeInput = nextRow.querySelector('input[name*="deptime"]');
+
+        depDateInput.value = arrDate;
+
+        if (arrTime) {
+            let [hours, minutes] = arrTime.split(':').map(num => parseInt(num));
+            minutes += 20;
+
+            if (minutes >= 60) {
+                minutes -= 60;
+                hours += 1;
+            }
+
+            if (hours === 24) {
+                hours = 0;
+                depDateInput.value = new Date(new Date(depDateInput.value).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+            }
+
+            depTimeInput.value = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+        }
+    }
+
     disablePreviousDestinations();
     validateDates();
 
@@ -291,6 +327,37 @@ function generateUpdowns() {
     }
 
     preventSameSourceDestination(i);
+
+    const depDateInput = document.getElementById(`tdepdate_${i}`);
+    const arrDateInput = document.getElementById(`tarrdate_${i}`);
+    const depTimeInput = document.getElementById(`deptime_${i}`);
+    const arrTimeInput = document.getElementById(`arrtime_${i}`);
+
+    depDateInput.addEventListener('change', () => {
+        validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput);
+    });
+
+    arrDateInput.addEventListener('change', () => {
+        validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput);
+    });
+
+    depTimeInput.addEventListener('change', () => {
+        validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput);
+    });
+
+    arrTimeInput.addEventListener('change', () => {
+        validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput);
+    });
+}
+
+function validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput) {
+    const depDate = new Date(depDateInput.value + 'T' + depTimeInput.value);
+    const arrDate = new Date(arrDateInput.value + 'T' + arrTimeInput.value);
+
+    if (arrDate <= depDate) {
+        arrDate.setDate(depDate.getDate() + 1);
+        arrDateInput.value = arrDate.toISOString().split('T')[0];
+    }
 }
 
 function preventSameSourceDestination(index) {
