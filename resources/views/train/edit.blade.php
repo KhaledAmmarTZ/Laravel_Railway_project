@@ -235,19 +235,117 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
     return updownRow;
 }
 
-
 function addUpdown() {
     const updownContainer = document.getElementById('updown-sections');
     const newUpdownRow = generateUpdownRow({}, updownCount);
+
+    // Check if there is a previous row to get the destination and time from
+    if (updownCount > 0) {
+        const previousRow = document.querySelectorAll('.updown-item')[updownCount - 1];
+        const previousDestination = previousRow.querySelector('[name*="tdestination"]').value;
+        const previousArrDate = previousRow.querySelector('[name*="tarrdate"]').value;
+        const previousArrTime = previousRow.querySelector('[name*="tarrtime"]').value;
+
+        // Set the source of the new row to the previous destination
+        const sourceSelect = newUpdownRow.querySelector('[name*="tsource"]');
+        if (sourceSelect) {
+            sourceSelect.value = previousDestination;
+        }
+
+        // Calculate new departure time and date
+        if (previousArrTime && previousArrDate) {
+            const newDepTime = calculateNewDepTime(previousArrTime);
+            const newDepDate = adjustDate(previousArrDate, previousArrTime, newDepTime);
+
+            newUpdownRow.querySelector('[name*="tdepdate"]').value = newDepDate;
+            newUpdownRow.querySelector('[name*="tdeptime"]').value = newDepTime;
+        }
+    }
+
     updownContainer.appendChild(newUpdownRow);
     updownCount++;
 
-    document.getElementById('updownnumber').value = updownCount; 
+    document.getElementById('updownnumber').value = updownCount;
 
-    showUpdownData(); 
+    showUpdownData();
 
-    // Apply the validation to the new row's source and destination dropdowns after creation
+    // Apply validation to the new row's source and destination dropdowns after creation
     applySourceDestinationValidation();
+    applyDateValidation(); // Apply date validation on new row
+}
+function applyDateValidation() {
+    document.querySelectorAll('.updown-item').forEach(row => {
+        const depDateInput = row.querySelector('[name*="tdepdate"]');
+        const arrDateInput = row.querySelector('[name*="tarrdate"]');
+
+        if (depDateInput && arrDateInput) {
+            depDateInput.addEventListener('change', () => {
+                // Ensure tarrdate cannot be before tdepdate
+                arrDateInput.min = depDateInput.value;
+                if (arrDateInput.value < depDateInput.value) {
+                    arrDateInput.value = depDateInput.value; // Auto-correct if invalid
+                }
+            });
+
+            arrDateInput.addEventListener('change', () => {
+                if (arrDateInput.value < depDateInput.value) {
+                    alert("Arrival date cannot be before departure date.");
+                    arrDateInput.value = depDateInput.value; // Reset to valid date
+                }
+            });
+
+            // Initialize validation on load
+            arrDateInput.min = depDateInput.value;
+        }
+    });
+}
+// Function to calculate new departure time (20 minutes after arrival time)
+function calculateNewDepTime(arrTime) {
+    let [hours, minutes] = arrTime.split(':').map(Number);
+    let suffix = hours >= 12 ? 'PM' : 'AM';
+
+    minutes += 20; // Adding 20-minute break
+
+    if (minutes >= 60) {
+        minutes -= 60;
+        hours += 1;
+    }
+
+    if (hours >= 24) {
+        hours = 0;
+    }
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
+// Function to adjust departure date if crossing midnight
+function adjustDate(arrDate, arrTime, depTime) {
+    let [arrHours, arrMinutes] = arrTime.split(':').map(Number);
+    let [depHours, depMinutes] = depTime.split(':').map(Number);
+
+    let arrivalDate = new Date(arrDate);
+    if (depHours < arrHours || (depHours === 0 && arrHours === 23)) {
+        // If the departure time moves past midnight, move to the next day
+        arrivalDate.setDate(arrivalDate.getDate() + 1);
+    }
+
+    return arrivalDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+}
+
+
+function validateRouteBeforeSubmit(event) {
+    const updownRows = document.querySelectorAll('.updown-item');
+    if (updownRows.length > 1) {
+        const firstSource = updownRows[0].querySelector('[name*="[tsource]"]').value;
+        const lastDestination = updownRows[updownRows.length - 1].querySelector('[name*="[tdestination]"]').value;
+
+        if (firstSource !== lastDestination) {
+            event.preventDefault(); // Prevent form submission
+            alert("Route is not set correctly. The first source and last destination must match.");
+            return false;
+        }
+    }
+    return true;
 }
 
 function applySourceDestinationValidation() {
@@ -378,7 +476,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </div>
 @endif
 
-<form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('train.update', $train->trainid) }}" method="POST" onsubmit="return validateRouteBeforeSubmit(event)" enctype="multipart/form-data">
     @csrf
     @method('PUT')
 
