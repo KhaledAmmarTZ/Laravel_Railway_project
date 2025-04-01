@@ -148,8 +148,8 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
     const rowStyle = new Date(`${updown.tdepdate}T${updown.tdeptime}`) > new Date() ? '' : 'background-color: #ffcccc;';
 
     if (!updown.id) {
-            updownRow.classList.add('new-compartment'); 
-        }
+        updownRow.classList.add('new-compartment'); 
+    }
 
     updownRow.innerHTML = `
         <input type="hidden" name="updowns[${index}][id]" value="${updown.id}">
@@ -163,7 +163,6 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
             <select name="updowns[${index}][tdestination]" class="form-control updown-input" required>
                 <option value="">Select Destination</option>
                 ${stations.map(station => {
-                    // Check if the station is the same as the source and disable it
                     return `<option value="${station.stationname}" ${station.stationname === updown.tdestination ? 'selected' : ''} ${station.stationname === updown.tsource ? 'disabled' : ''}>${station.stationname}</option>`;
                 }).join('')}
             </select>
@@ -182,6 +181,7 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
         </td>
         <td class="align-middle">
             <button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button>
+            <button type="button" class="btn btn-warning" onclick="autoUpdateNextRow(${index})">Auto Update Next Row</button>
         </td>
     `;
 
@@ -239,20 +239,17 @@ function addUpdown() {
     const updownContainer = document.getElementById('updown-sections');
     const newUpdownRow = generateUpdownRow({}, updownCount);
 
-    // Check if there is a previous row to get the destination and time from
     if (updownCount > 0) {
         const previousRow = document.querySelectorAll('.updown-item')[updownCount - 1];
         const previousDestination = previousRow.querySelector('[name*="tdestination"]').value;
         const previousArrDate = previousRow.querySelector('[name*="tarrdate"]').value;
         const previousArrTime = previousRow.querySelector('[name*="tarrtime"]').value;
 
-        // Set the source of the new row to the previous destination
         const sourceSelect = newUpdownRow.querySelector('[name*="tsource"]');
         if (sourceSelect) {
             sourceSelect.value = previousDestination;
         }
 
-        // Calculate new departure time and date
         if (previousArrTime && previousArrDate) {
             const newDepTime = calculateNewDepTime(previousArrTime);
             const newDepDate = adjustDate(previousArrDate, previousArrTime, newDepTime);
@@ -269,10 +266,61 @@ function addUpdown() {
 
     showUpdownData();
 
-    // Apply validation to the new row's source and destination dropdowns after creation
     applySourceDestinationValidation();
-    applyDateValidation(); // Apply date validation on new row
+    applyDateValidation(); 
+
+    updateDestinationOptionsForNewRow(newUpdownRow);
 }
+function autoUpdateNextRow(firstRowIndex) {
+    const firstRow = document.querySelectorAll('.updown-item')[firstRowIndex];
+    const secondRow = document.querySelectorAll('.updown-item')[firstRowIndex + 1];
+
+    const firstDepDate = firstRow.querySelector('[name*="tdepdate"]').value;
+    const firstArrDate = firstRow.querySelector('[name*="tarrdate"]').value;
+    const firstDepTime = firstRow.querySelector('[name*="tdeptime"]').value;
+    const firstArrTime = firstRow.querySelector('[name*="tarrtime"]').value;
+
+    if (firstDepDate && firstArrDate && firstDepTime && firstArrTime) {
+        const secondDepDateInput = secondRow.querySelector('[name*="tdepdate"]');
+        const secondArrDateInput = secondRow.querySelector('[name*="tarrdate"]');
+        const secondDepTimeInput = secondRow.querySelector('[name*="tdeptime"]');
+        const secondArrTimeInput = secondRow.querySelector('[name*="tarrtime"]');
+        secondDepDateInput.value = firstArrDate; 
+        secondArrDateInput.value = firstArrDate;  
+
+        const newDepTime = calculateNewDepTime(firstArrTime);
+        const newDepDate = adjustDate(firstArrDate, firstArrTime, newDepTime);
+
+        secondDepTimeInput.value = newDepTime;
+        secondArrTimeInput.value = newDepTime;
+        secondDepDateInput.value = newDepDate;
+    }
+}
+function updateDestinationOptionsForNewRow(row) {
+    const sourceSelect = row.querySelector('[name*="tsource"]');
+    const destinationSelect = row.querySelector('[name*="tdestination"]');
+
+    if (sourceSelect && destinationSelect) {
+        destinationSelect.querySelectorAll('option').forEach(option => {
+            if (option.value === sourceSelect.value) {
+                option.disabled = true; 
+            } else {
+                option.disabled = false; 
+            }
+        });
+
+        sourceSelect.addEventListener('change', () => {
+            destinationSelect.querySelectorAll('option').forEach(option => {
+                if (option.value === sourceSelect.value) {
+                    option.disabled = true; 
+                } else {
+                    option.disabled = false; 
+                }
+            });
+        });
+    }
+}
+
 function applyDateValidation() {
     document.querySelectorAll('.updown-item').forEach(row => {
         const depDateInput = row.querySelector('[name*="tdepdate"]');
@@ -280,26 +328,24 @@ function applyDateValidation() {
 
         if (depDateInput && arrDateInput) {
             depDateInput.addEventListener('change', () => {
-                // Ensure tarrdate cannot be before tdepdate
                 arrDateInput.min = depDateInput.value;
                 if (arrDateInput.value < depDateInput.value) {
-                    arrDateInput.value = depDateInput.value; // Auto-correct if invalid
+                    arrDateInput.value = depDateInput.value; 
                 }
             });
 
             arrDateInput.addEventListener('change', () => {
                 if (arrDateInput.value < depDateInput.value) {
                     alert("Arrival date cannot be before departure date.");
-                    arrDateInput.value = depDateInput.value; // Reset to valid date
+                    arrDateInput.value = depDateInput.value; 
                 }
             });
 
-            // Initialize validation on load
             arrDateInput.min = depDateInput.value;
         }
     });
 }
-// Function to calculate new departure time (20 minutes after arrival time)
+
 function calculateNewDepTime(arrTime) {
     let [hours, minutes] = arrTime.split(':').map(Number);
     let suffix = hours >= 12 ? 'PM' : 'AM';
@@ -318,18 +364,16 @@ function calculateNewDepTime(arrTime) {
     return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 }
 
-// Function to adjust departure date if crossing midnight
 function adjustDate(arrDate, arrTime, depTime) {
     let [arrHours, arrMinutes] = arrTime.split(':').map(Number);
     let [depHours, depMinutes] = depTime.split(':').map(Number);
 
     let arrivalDate = new Date(arrDate);
     if (depHours < arrHours || (depHours === 0 && arrHours === 23)) {
-        // If the departure time moves past midnight, move to the next day
         arrivalDate.setDate(arrivalDate.getDate() + 1);
     }
 
-    return arrivalDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    return arrivalDate.toISOString().split('T')[0]; 
 }
 
 
@@ -355,9 +399,7 @@ function applySourceDestinationValidation() {
         const destinationSelect = row.querySelector('[name*="tdestination"]');
         
         if (sourceSelect && destinationSelect) {
-            // Initial validation when source is selected
             sourceSelect.addEventListener('change', () => {
-                // Disable the selected source station in the destination dropdown
                 destinationSelect.querySelectorAll('option').forEach(option => {
                     if (option.value === sourceSelect.value) {
                         option.disabled = true;
@@ -369,7 +411,6 @@ function applySourceDestinationValidation() {
         }
     });
 }
-
 
 function removeUpdown(index) {
     const updowns = document.querySelectorAll('#updown-sections .updown-item');

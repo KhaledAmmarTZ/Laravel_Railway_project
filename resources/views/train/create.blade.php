@@ -107,10 +107,10 @@ function syncAvailableSeats(compartmentIndex) {
     const totalSeats = seatsField ? parseInt(seatsField.value, 10) : 0;
     
     if (availableSeatsField) {
-        availableSeatsField.value = totalSeats;  // Available seats = total seats
+        availableSeatsField.value = totalSeats;  
     }
     if (bookedSeatsField) {
-        bookedSeatsField.value = 0;  // Booked seats = 0
+        bookedSeatsField.value = 0;  
     }
 }
 function attachInputListeners() {
@@ -187,6 +187,24 @@ document.addEventListener("DOMContentLoaded", function () {
     generateUpdowns();
 });
 
+function validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput) {
+    const depDate = new Date(depDateInput.value + 'T' + depTimeInput.value);
+    let arrDate = new Date(arrDateInput.value + 'T' + arrTimeInput.value);
+
+    const [depHours] = depTimeInput.value.split(':').map(Number);
+    const [arrHours] = arrTimeInput.value.split(':').map(Number);
+
+    if (arrDate < depDate) {
+        arrDate.setDate(arrDate.getDate() + 1);
+        arrDateInput.value = arrDate.toISOString().split('T')[0];
+    }
+
+    if (depHours >= 12 && arrHours < 12 && depDateInput.value === arrDateInput.value) {
+        arrDate.setDate(arrDate.getDate() + 1);
+        arrDateInput.value = arrDate.toISOString().split('T')[0];
+    }
+}
+
 function generateUpdowns() {
     const updownContainer = document.getElementById('updown-sections');
 
@@ -205,7 +223,7 @@ function generateUpdowns() {
         const lastDepDate = lastRow.querySelector('input[name*="tdepdate"]').value;
         const lastArrDate = lastRow.querySelector('input[name*="tarrdate"]').value;
         const lastDepTime = lastRow.querySelector('input[name*="deptime"]').value;
-        const lastArrTime = lastRow.querySelector('input[name*="arrtime"]').value;
+        const lastArrTime = lastRow.querySelector('input[name*="arrtime"]').value; 
         lastArrivalTime = lastRow.querySelector('input[name*="arrtime"]').value; 
 
         if (!lastSource || !lastDestination || !lastDepDate || !lastArrDate || !lastDepTime || !lastArrTime) {
@@ -241,13 +259,19 @@ function generateUpdowns() {
         minDepDate = existingRows[existingRows.length - 1].querySelector('input[name*="tarrdate"]').value;
     }
 
+    let newSourceValue = "";
+    if (existingRows.length > 0) {
+        const lastRow = existingRows[existingRows.length - 1];
+        newSourceValue = lastRow.querySelector('select[name*="destination"]').value;
+    }
+
     const rowHTML = `
         <tr>
             <td>${i}</td>
             <td>
                 <select name="updowns[${i}][source]" id="updowns[${i}][source]" class="form-control updown-input source-select" data-index="${i}" required>
                     <option value="">Select Source</option>
-                    ${populateStationOptions(existingValues[`updowns[${i}][source]`], i)}
+                    ${populateStationOptions(newSourceValue, i)} <!-- Set the source to the last row's destination -->
                 </select>
             </td>
             <td>
@@ -277,7 +301,7 @@ function generateUpdowns() {
 
     tbody.insertAdjacentHTML('beforeend', rowHTML);
 
-        if (existingRows.length > 0) {
+    if (existingRows.length > 0) {
         const prevRow = existingRows[existingRows.length - 1];
         const arrDate = prevRow.querySelector('input[name*="tarrdate"]').value;
         const arrTime = prevRow.querySelector('input[name*="arrtime"]').value;
@@ -285,10 +309,14 @@ function generateUpdowns() {
         const nextRow = tbody.querySelectorAll('tr')[i - 1];
         const depDateInput = nextRow.querySelector('input[name*="tdepdate"]');
         const depTimeInput = nextRow.querySelector('input[name*="deptime"]');
+        const arrDateInput = nextRow.querySelector('input[name*="tarrdate"]');
 
+        // Set depDate to be the same as the previous row's arrDate
         depDateInput.value = arrDate;
+        arrDateInput.value = depDateInput.value;  // Set arrival date to match departure date
 
         if (arrTime) {
+            // Calculate new arrival time based on a fixed increment (e.g., 20 minutes)
             let [hours, minutes] = arrTime.split(':').map(num => parseInt(num));
             minutes += 20;
 
@@ -300,6 +328,7 @@ function generateUpdowns() {
             if (hours === 24) {
                 hours = 0;
                 depDateInput.value = new Date(new Date(depDateInput.value).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                arrDateInput.value = depDateInput.value; // If depDate is incremented, increment arrDate as well
             }
 
             depTimeInput.value = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
@@ -350,15 +379,6 @@ function generateUpdowns() {
     });
 }
 
-function validateDepartureArrival(depDateInput, arrDateInput, depTimeInput, arrTimeInput) {
-    const depDate = new Date(depDateInput.value + 'T' + depTimeInput.value);
-    const arrDate = new Date(arrDateInput.value + 'T' + arrTimeInput.value);
-
-    if (arrDate <= depDate) {
-        arrDate.setDate(depDate.getDate() + 1);
-        arrDateInput.value = arrDate.toISOString().split('T')[0];
-    }
-}
 
 function preventSameSourceDestination(index) {
     const sourceSelect = document.getElementById(`updowns[${index}][source]`);
@@ -374,7 +394,8 @@ function preventSameSourceDestination(index) {
         });
 
         if (selectedSource) {
-            destinationSelect.querySelector(`option[value="${selectedSource}"]`).disabled = true;
+            let option = destinationSelect.querySelector(`option[value="${selectedSource}"]`);
+            if (option) option.disabled = true;
         }
     }
 
@@ -386,13 +407,18 @@ function preventSameSourceDestination(index) {
         });
 
         if (selectedDestination) {
-            sourceSelect.querySelector(`option[value="${selectedDestination}"]`).disabled = true;
+            let option = sourceSelect.querySelector(`option[value="${selectedDestination}"]`);
+            if (option) option.disabled = true;
         }
     }
 
     sourceSelect.addEventListener("change", updateDestinationOptions);
     destinationSelect.addEventListener("change", updateSourceOptions);
+
+    updateDestinationOptions();
+    updateSourceOptions();
 }
+
 
 function setMinDepartureTime(index, lastArrivalTime) {
     const deptimeInput = document.getElementById(`deptime_${index}`);
@@ -442,6 +468,10 @@ function validateDates() {
             const depDate = new Date(depDateInput.value);
             const arrDate = new Date(arrDateInput.value);
 
+            if (arrDateInput) {
+                arrDateInput.setAttribute("min", depDate.toISOString().split("T")[0]);
+            }
+
             if (arrDate < depDate) {
                 alert("Arrival date must be the same or after the departure date.");
                 arrDateInput.value = "";
@@ -451,7 +481,8 @@ function validateDates() {
             if (nextRow) {
                 const nextDepDateInput = nextRow.querySelector(".depdate");
                 if (nextDepDateInput) {
-                    nextDepDateInput.setAttribute("min", arrDateInput.value);
+                    const nextDepDate = new Date(depDateInput.value);
+                    nextDepDateInput.setAttribute("min", nextDepDate.toISOString().split("T")[0]);
                 }
             }
         });
