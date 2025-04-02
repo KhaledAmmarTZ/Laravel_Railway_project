@@ -311,12 +311,10 @@ function generateUpdowns() {
         const depTimeInput = nextRow.querySelector('input[name*="deptime"]');
         const arrDateInput = nextRow.querySelector('input[name*="tarrdate"]');
 
-        // Set depDate to be the same as the previous row's arrDate
         depDateInput.value = arrDate;
-        arrDateInput.value = depDateInput.value;  // Set arrival date to match departure date
+        arrDateInput.value = depDateInput.value;  
 
         if (arrTime) {
-            // Calculate new arrival time based on a fixed increment (e.g., 20 minutes)
             let [hours, minutes] = arrTime.split(':').map(num => parseInt(num));
             minutes += 20;
 
@@ -328,7 +326,7 @@ function generateUpdowns() {
             if (hours === 24) {
                 hours = 0;
                 depDateInput.value = new Date(new Date(depDateInput.value).getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-                arrDateInput.value = depDateInput.value; // If depDate is incremented, increment arrDate as well
+                arrDateInput.value = depDateInput.value; 
             }
 
             depTimeInput.value = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;

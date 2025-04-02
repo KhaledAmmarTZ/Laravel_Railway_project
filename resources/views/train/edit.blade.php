@@ -130,11 +130,11 @@ function to12HourFormat(time24) {
     hours = parseInt(hours, 10);
     const suffix = hours >= 12 ? 'PM' : 'AM';
     if (hours > 12) hours -= 12;
-    if (hours === 0) hours = 12; // for midnight (00:00)
+    if (hours === 0) hours = 12; 
     return `${hours}:${minutes} ${suffix}`;
 }
 function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '', tsource: '', tdestination: '' }, index) {
-    const stations = @json($stations->toArray()); 
+    const stations = @json($stations->toArray());
 
     const updownRow = document.createElement('tr');
     updownRow.classList.add('updown-item');
@@ -142,24 +142,24 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
 
     const updownNumberField = document.getElementById('updownnumber');
     if (updownNumberField) {
-        updownNumberField.value = index + 1; 
+        updownNumberField.value = index + 1;
     }
 
     const rowStyle = new Date(`${updown.tdepdate}T${updown.tdeptime}`) > new Date() ? '' : 'background-color: #ffcccc;';
 
     if (!updown.id) {
-        updownRow.classList.add('new-compartment'); 
+        updownRow.classList.add('new-compartment');
     }
 
     updownRow.innerHTML = `
         <input type="hidden" name="updowns[${index}][id]" value="${updown.id}">
-        <td style="${rowStyle}">
+        <td style="${rowStyle}" class="align-middle" style="width: 250px;">
             <select name="updowns[${index}][tsource]" class="form-control updown-input" required>
                 <option value="">Select Source</option>
                 ${stations.map(station => `<option value="${station.stationname}" ${station.stationname === updown.tsource ? 'selected' : ''}>${station.stationname}</option>`).join('')}
             </select>
         </td>
-        <td style="${rowStyle}">
+        <td style="${rowStyle}" class="align-middle" style="width: 250px;">
             <select name="updowns[${index}][tdestination]" class="form-control updown-input" required>
                 <option value="">Select Destination</option>
                 ${stations.map(station => {
@@ -167,26 +167,34 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
                 }).join('')}
             </select>
         </td>
-        <td style="${rowStyle}" class="align-middle">
+        <td style="${rowStyle}" class="align-middle" style="width: 180px;">
             <input type="date" name="updowns[${index}][tdepdate]" class="form-control updown-input" value="${updown.tdepdate}" required>
         </td>
-        <td style="${rowStyle}" class="align-middle">
+        <td style="${rowStyle}" class="align-middle" style="width: 180px;">
             <input type="date" name="updowns[${index}][tarrdate]" class="form-control updown-input" value="${updown.tarrdate}" required>
         </td>
-        <td style="${rowStyle}" class="align-middle">
+        <td style="${rowStyle}" class="align-middle" style="width: 180px;">
             <input type="time" name="updowns[${index}][tdeptime]" class="form-control updown-input" value="${updown.tdeptime}" required>
         </td>
-        <td style="${rowStyle}" class="align-middle">
+        <td style="${rowStyle}" class="align-middle" style="width: 150px;">
             <input type="time" name="updowns[${index}][tarrtime]" class="form-control updown-input" value="${updown.tarrtime}" required>
         </td>
-        <td class="align-middle">
-            <button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button>
-            <button type="button" class="btn btn-warning" onclick="autoUpdateNextRow(${index})">Auto Update Next Row</button>
+        <td class="align-middle" style="width: 200px;">
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn btn-danger" onclick="removeUpdown(${index})">Delete</button>
+                <button type="button" class="btn btn-warning" onclick="autoUpdateNextRow(${index})">Auto Update Next Row</button>
+            </div>
         </td>
     `;
 
     updownRow.querySelectorAll('.updown-input').forEach(input => {
         input.addEventListener('input', showUpdownData);
+        if (input.name.includes('tdeptime')) {
+            input.addEventListener('change', () => autoUpdateArrivalTimeAndDate(index)); 
+        }
+        if (input.name.includes('tarrtime')) {
+            input.addEventListener('change', () => autoUpdateNextRow(index));
+        }
     });
 
     const displayDiv = document.getElementById('updown-data-display');
@@ -204,12 +212,13 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
         table.innerHTML = `
             <thead>
                 <tr>
-                    <th class="font-weight-bold text-white">Source</th>
-                    <th class="font-weight-bold text-white">Destination</th>
-                    <th class="font-weight-bold text-white">Departure Date</th>
-                    <th class="font-weight-bold text-white">Arrival Date</th>
-                    <th class="font-weight-bold text-white">Departure Time</th>
-                    <th class="font-weight-bold text-white">Arrival Time</th>
+                    <th class="font-weight-bold text-white" style="width: 250px;">Source</th>
+                    <th class="font-weight-bold text-white" style="width: 250px;">Destination</th>
+                    <th class="font-weight-bold text-white" style="width: 180px;">Departure Date</th>
+                    <th class="font-weight-bold text-white" style="width: 180px;">Arrival Date</th>
+                    <th class="font-weight-bold text-white" style="width: 180px;">Departure Time</th>
+                    <th class="font-weight-bold text-white" style="width: 150px;">Arrival Time</th>
+                    
                 </tr>
             </thead>
             <tbody id="updown-data-body"></tbody>
@@ -234,6 +243,44 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
 
     return updownRow;
 }
+
+
+function autoUpdateArrivalTimeAndDate(index) {
+    const row = document.querySelectorAll('.updown-item')[index];
+    const depDate = row.querySelector('[name*="tdepdate"]').value;
+    const depTime = row.querySelector('[name*="tdeptime"]').value;
+    const arrTimeInput = row.querySelector('[name*="tarrtime"]');
+    const arrDateInput = row.querySelector('[name*="tarrdate"]');
+
+    if (depDate && depTime) {
+        const randomHours = Math.floor(Math.random() * 3) + 6;
+        const randomMinutes = Math.floor(Math.random() * 60);
+
+        const newArrTime = addTimeToTime(depTime, randomHours, randomMinutes);
+        const newArrDate = adjustDateForArrival(depDate, depTime, newArrTime);
+
+        arrTimeInput.value = newArrTime;
+        arrDateInput.value = newArrDate;
+    }
+}
+
+function addTimeToTime(time, hoursToAdd, minutesToAdd) {
+    let [hours, minutes] = time.split(':').map(Number);
+    minutes += minutesToAdd;
+    hours += hoursToAdd;
+
+    if (minutes >= 60) {
+        hours += Math.floor(minutes / 60);
+        minutes = minutes % 60;
+    }
+
+    if (hours >= 24) {
+        hours -= 24; 
+    }
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+}
+
 
 function addUpdown() {
     const updownContainer = document.getElementById('updown-sections');
@@ -272,30 +319,59 @@ function addUpdown() {
     updateDestinationOptionsForNewRow(newUpdownRow);
 }
 function autoUpdateNextRow(firstRowIndex) {
-    const firstRow = document.querySelectorAll('.updown-item')[firstRowIndex];
-    const secondRow = document.querySelectorAll('.updown-item')[firstRowIndex + 1];
+    const rows = document.querySelectorAll('.updown-item');
+    const firstRow = rows[firstRowIndex];
+    const secondRow = rows[firstRowIndex + 1];
+
+    if (!firstRow || !secondRow) return;
 
     const firstDepDate = firstRow.querySelector('[name*="tdepdate"]').value;
     const firstArrDate = firstRow.querySelector('[name*="tarrdate"]').value;
-    const firstDepTime = firstRow.querySelector('[name*="tdeptime"]').value;
     const firstArrTime = firstRow.querySelector('[name*="tarrtime"]').value;
 
-    if (firstDepDate && firstArrDate && firstDepTime && firstArrTime) {
+    if (firstDepDate && firstArrDate && firstArrTime) {
         const secondDepDateInput = secondRow.querySelector('[name*="tdepdate"]');
         const secondArrDateInput = secondRow.querySelector('[name*="tarrdate"]');
         const secondDepTimeInput = secondRow.querySelector('[name*="tdeptime"]');
         const secondArrTimeInput = secondRow.querySelector('[name*="tarrtime"]');
-        secondDepDateInput.value = firstArrDate; 
-        secondArrDateInput.value = firstArrDate;  
 
+        secondArrDateInput.value = firstArrDate;  
+        
         const newDepTime = calculateNewDepTime(firstArrTime);
         const newDepDate = adjustDate(firstArrDate, firstArrTime, newDepTime);
 
-        secondDepTimeInput.value = newDepTime;
-        secondArrTimeInput.value = newDepTime;
         secondDepDateInput.value = newDepDate;
+        secondDepTimeInput.value = newDepTime;
+
+        let randomHours = Math.floor(Math.random() * 3) + 6; // 6 to 8 hours
+        let randomMinutes = Math.floor(Math.random() * 60); // 0 to 59 minutes for randomness
+        
+        let newArrTime = addTimeToTime(newDepTime, randomHours, randomMinutes);
+        let newArrDate = adjustDate(newDepDate, newDepTime, newArrTime);
+
+        secondArrTimeInput.value = newArrTime;
+        secondArrDateInput.value = newArrDate;
     }
 }
+
+
+function adjustDate(currentDate, currentTime, newTime) {
+    let [curHours] = currentTime.split(':').map(Number);
+    let [newHours] = newTime.split(':').map(Number);
+    let dateObj = new Date(currentDate);
+
+    if (newHours < curHours) {
+        dateObj.setDate(dateObj.getDate() + 1); 
+    }
+
+    return dateObj.toISOString().split('T')[0]; 
+}
+
+function calculateNewDepTime(arrivalTime) {
+    return addTimeToTime(arrivalTime, 0, 20);
+}
+
+
 function updateDestinationOptionsForNewRow(row) {
     const sourceSelect = row.querySelector('[name*="tsource"]');
     const destinationSelect = row.querySelector('[name*="tdestination"]');
@@ -320,7 +396,13 @@ function updateDestinationOptionsForNewRow(row) {
         });
     }
 }
+function autoUpdateAllRows() {
+    const rows = document.querySelectorAll('.updown-item');
 
+    for (let i = 0; i < rows.length - 1; i++) {
+        autoUpdateNextRow(i);
+    }
+}
 function applyDateValidation() {
     document.querySelectorAll('.updown-item').forEach(row => {
         const depDateInput = row.querySelector('[name*="tdepdate"]');
@@ -345,7 +427,11 @@ function applyDateValidation() {
         }
     });
 }
-
+function adjustNextDate(arrDate) {
+    let dateObj = new Date(arrDate);
+    dateObj.setDate(dateObj.getDate() + 1); // Move to the next day
+    return dateObj.toISOString().split('T')[0]; // Return in YYYY-MM-DD format
+}
 function calculateNewDepTime(arrTime) {
     let [hours, minutes] = arrTime.split(':').map(Number);
     let suffix = hours >= 12 ? 'PM' : 'AM';
@@ -384,7 +470,7 @@ function validateRouteBeforeSubmit(event) {
         const lastDestination = updownRows[updownRows.length - 1].querySelector('[name*="[tdestination]"]').value;
 
         if (firstSource !== lastDestination) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
             alert("Route is not set correctly. The first source and last destination must match.");
             return false;
         }
@@ -652,7 +738,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                     </div>
                     <div class="modal fade bd-example-modal-xl" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg fullscreen-modal">
+                        <div class="modal-dialog modal-xl fullscreen-modal">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">Train Route</h5>
@@ -661,18 +747,17 @@ document.addEventListener("DOMContentLoaded", function () {
                                     </button>
                                 </div>
                                 <input type="hidden" name="updownnumber" id="updownnumber" value="{{ count($train->trainupdowns) }}">
-                                                        
                                 <div class="table-responsive" id="updown-sections">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th style="width: 265px;">Source</th>
-                                                <th style="width: 265px;">Destination</th>
+                                                <th style="width: 250px;">Source</th>
+                                                <th style="width: 250px;">Destination</th>
                                                 <th style="width: 180px;">Departure Date</th>
                                                 <th style="width: 180px;">Arrival Date</th>
                                                 <th style="width: 180px;">Departure Time</th>
                                                 <th style="width: 150px;">Arrival Time</th>
-                                                <th>Actions</th>
+                                                <th style="width: 200px;">Actions</th> 
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -680,12 +765,14 @@ document.addEventListener("DOMContentLoaded", function () {
                                     </table>
                                 </div>
                                 <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                                <div class="mb-3">
-                                    <button type="button" class="btn btn-success" onclick="addUpdown()">Add Schedule</button>
+                                <div class="mb-3" style="display: flex; gap: 10px;">
+                                    <button type="button" class="btn btn-success mt-3" onclick="addUpdown()">Add Schedule</button>
+                                    <button type="button" class="btn btn-primary mt-3" onclick="autoUpdateAllRows()">Auto Update All Rows</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">                    
 
                     <button type="submit" class="btn search-btn btn-block">Update Train</button>
