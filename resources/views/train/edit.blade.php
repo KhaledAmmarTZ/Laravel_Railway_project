@@ -125,14 +125,7 @@ function removeCompartment(index) {
 }
 
 let updownCount = 0; 
-function to12HourFormat(time24) {
-    let [hours, minutes] = time24.split(':');
-    hours = parseInt(hours, 10);
-    const suffix = hours >= 12 ? 'PM' : 'AM';
-    if (hours > 12) hours -= 12;
-    if (hours === 0) hours = 12; 
-    return `${hours}:${minutes} ${suffix}`;
-}
+
 function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrdate: '', tdepdate: '', tsource: '', tdestination: '' }, index) {
     const stations = @json($stations->toArray());
 
@@ -201,30 +194,29 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
     let table = document.getElementById('updown-data-table');
 
     if (!table) {
-        table = document.createElement('table');
-        table.id = 'updown-data-table';
-        table.classList.add('table', 'table-bordered', 'mt-2');
+    table = document.createElement('table');
+    table.id = 'updown-data-table';
+    table.classList.add('table', 'table-bordered', 'mt-2');
 
-        const responsiveDiv = document.createElement('div');
-        responsiveDiv.classList.add('table-responsive');
-        responsiveDiv.appendChild(table);
+    const responsiveDiv = document.createElement('div');
+    responsiveDiv.classList.add('table-responsive');
+    responsiveDiv.appendChild(table);
 
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th class="font-weight-bold text-white" style="width: 250px;">Source</th>
-                    <th class="font-weight-bold text-white" style="width: 250px;">Destination</th>
-                    <th class="font-weight-bold text-white" style="width: 180px;">Departure Date</th>
-                    <th class="font-weight-bold text-white" style="width: 180px;">Arrival Date</th>
-                    <th class="font-weight-bold text-white" style="width: 180px;">Departure Time</th>
-                    <th class="font-weight-bold text-white" style="width: 150px;">Arrival Time</th>
-                    
-                </tr>
-            </thead>
-            <tbody id="updown-data-body"></tbody>
-        `;
+    table.innerHTML = `
+        <thead>
+            <tr>
+                <th class="font-weight-bold text-white" style="width: 250px;">Source</th>
+                <th class="font-weight-bold text-white" style="width: 250px;">Destination</th>
+                <th class="font-weight-bold text-white" style="width: 180px;">Departure Date</th>
+                <th class="font-weight-bold text-white" style="width: 180px;">Arrival Date</th>
+                <th class="font-weight-bold text-white" style="width: 180px;">Departure Time</th>
+                <th class="font-weight-bold text-white" style="width: 150px;">Arrival Time</th>
+            </tr>
+        </thead>
+        <tbody id="updown-data-body"></tbody>
+    `;
 
-        displayDiv.appendChild(responsiveDiv);
+    displayDiv.appendChild(responsiveDiv);
     }
 
     const tbody = document.getElementById('updown-data-body');
@@ -233,8 +225,8 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
     updownDataRow.innerHTML = `
         <td class="font-weight-bold text-white">${updown.tsource || 'N/A'}</td>
         <td class="font-weight-bold text-white">${updown.tdestination || 'N/A'}</td>
-        <td class="font-weight-bold text-white">${updown.tdepdate || 'N/A'}</td>
-        <td class="font-weight-bold text-white">${updown.tarrdate || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${formatDate(updown.tdepdate) || 'N/A'}</td>
+        <td class="font-weight-bold text-white">${formatDate(updown.tarrdate) || 'N/A'}</td>
         <td class="font-weight-bold text-white">${updown.tdeptime ? to12HourFormat(updown.tdeptime) : 'N/A'}</td>
         <td class="font-weight-bold text-white">${updown.tarrtime ? to12HourFormat(updown.tarrtime) : 'N/A'}</td>
     `;
@@ -244,6 +236,22 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
     return updownRow;
 }
 
+function formatDate(dateString) {
+    if (!dateString) return ''; 
+    const dateParts = dateString.split('-'); 
+    if (dateParts.length === 3) {
+        return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; 
+    }
+    return dateString; 
+}
+
+function to12HourFormat(timeString) {
+    if (!timeString) return '';
+    let [hours, minutes, seconds] = timeString.split(':').map(Number);
+    let period = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12 || 12; 
+    return `${hours}:${minutes.toString().padStart(2, '0')} ${period}`;
+}
 
 function autoUpdateArrivalTimeAndDate(index) {
     const row = document.querySelectorAll('.updown-item')[index];
@@ -530,10 +538,14 @@ function showUpdownData() {
     document.querySelectorAll('#updown-sections .updown-item').forEach((updownRow) => {
         const source = updownRow.querySelector(`[name*="[tsource]"]`)?.value || '';
         const destination = updownRow.querySelector(`[name*="[tdestination]"]`)?.value || '';
-        const depDate = updownRow.querySelector(`[name*="[tdepdate]"]`)?.value || '';
-        const arrDate = updownRow.querySelector(`[name*="[tarrdate]"]`)?.value || '';
+        let depDate = updownRow.querySelector(`[name*="[tdepdate]"]`)?.value || '';
+        let arrDate = updownRow.querySelector(`[name*="[tarrdate]"]`)?.value || '';
         const depTime = updownRow.querySelector(`[name*="[tdeptime]"]`)?.value || '';
         const arrTime = updownRow.querySelector(`[name*="[tarrtime]"]`)?.value || '';
+
+        // Convert date format from YYYY-MM-DD to DD/MM/YYYY
+        depDate = formatDate(depDate);
+        arrDate = formatDate(arrDate);
 
         if (source || destination || depDate || arrDate || depTime || arrTime) {
             displayHTML += `
@@ -552,6 +564,17 @@ function showUpdownData() {
     displayHTML += `</tbody></table></div>`;
     document.getElementById('updown-data-display').innerHTML = displayHTML;
 }
+
+// Function to convert date from YYYY-MM-DD to DD/MM/YYYY
+function formatDate(dateString) {
+    if (!dateString) return ''; // Return empty if no date
+    const dateParts = dateString.split('-'); // Split date by "-"
+    if (dateParts.length === 3) {
+        return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`; // Rearrange to DD/MM/YYYY
+    }
+    return dateString; // Return original if format is incorrect
+}
+
 
 
 document.addEventListener("DOMContentLoaded", function () {

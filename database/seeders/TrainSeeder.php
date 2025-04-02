@@ -57,16 +57,15 @@ class TrainSeeder extends Seeder
 
             for ($j = 1; $j <= $compartmentNumber; $j++) {
                 $compartmentType = $compartmentTypes[array_rand($compartmentTypes)];
-            
-                // Generate a random value between 30 and 40 for both total_seats and available_seats
+
                 $seats = rand(30, 40); 
             
                 $price = round(rand(8000, 10576) / 100, 2);
             
                 DB::table('traincompartments')->insert([
                     'trainid' => $trainId,
-                    'total_seats' => $seats, // Assigning the same value for total_seats
-                    'available_seats' => $seats, // Assigning the same value for available_seats
+                    'total_seats' => $seats, 
+                    'available_seats' => $seats,
                     'booked_seats' => 0,
                     'compartmentname' => 'Compartment ' . $j,
                     'compartmenttype' => $compartmentType,
@@ -76,50 +75,51 @@ class TrainSeeder extends Seeder
                 ]);
             }
 
-
             $baseDate = now()->addDays(rand(10, 15)); 
             $prevArrDate = $baseDate;
             $prevArrTime = now()->addHours(rand(6, 12))->format('H:i:s'); 
 
             for ($k = 0; $k < $updownNumber; $k++) {
                 $tsource = $route[$k];
-                $tdestination = $route[$k + 1];
-
+                $tdestination = $route[$k + 1] ?? null;
+            
                 $tdepdate = $prevArrDate->format('Y-m-d');
-
-                $tarrdate = clone $prevArrDate;
-                if (rand(0, 1) == 1) {
-                    $tarrdate = $prevArrDate->addDays(1);
-                }
-
-                if ($tarrdate->format('Y-m-d') == $tdepdate) {
-                    $tarrtime = now()->setTime(rand(14, 23), rand(0, 59))->format('H:i:s');
-                } else {
-                    $tarrtime = now()->setTime(rand(0, 23), rand(0, 59))->format('H:i:s');
-                }
-
+            
                 if ($k == 0) {
-                    $tdeptime = $prevArrTime;
+                    $tdeptime = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime)
+                        ->format('H:i:00'); 
                 } else {
                     $prevArrTimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime);
-                    $tdeptime = $prevArrTimeObj->addMinutes(15)->format('H:i:s');
+                    $tdeptime = $prevArrTimeObj->addMinutes(15)->format('H:i:00'); 
                 }
-
+            
+                $tdeptimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $tdeptime);
+            
+                $hoursToAdd = rand(6, 8);
+                $tarrtimeObj = $tdeptimeObj->copy()->addHours($hoursToAdd);
+                $tarrtime = $tarrtimeObj->format('H:i:00'); 
+            
+                if ($tdeptimeObj->hour >= 12 && $tarrtimeObj->hour < 12) {
+                    $tarrdate = $prevArrDate->copy()->addDay()->format('Y-m-d');
+                } else {
+                    $tarrdate = $tdepdate;
+                }
+            
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
-                    'tarrtime' => $tarrtime, 
+                    'tarrtime' => $tarrtime,
                     'tdeptime' => $tdeptime,
                     'tdepdate' => $tdepdate,
-                    'tarrdate' => $tarrdate->format('Y-m-d'),
+                    'tarrdate' => $tarrdate,
                     'tsource' => $tsource . ' Railway Station',
-                    'tdestination' => $tdestination . ' Railway Station',
+                    'tdestination' => $tdestination ? $tdestination . ' Railway Station' : null,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-
-                $prevArrDate = $tarrdate;
+            
+                $prevArrDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tarrdate);
                 $prevArrTime = $tarrtime;
-            }
+            }            
         }
     }
 }

@@ -25,14 +25,13 @@ class TrainController extends Controller
 
     public function store(Request $request)
     {
-        // Validation for incoming request
         $validatedData = $request->validate([
             'tname' => 'required|string',
             'numofcompartment' => 'required|integer|min:1',
             'compartments.*.name' => 'required|string',
             'compartments.*.seats' => 'required|integer|min:1',
-            'compartments.*.type' => 'nullable|string', // compartment type is optional
-            'compartments.*.price' => 'nullable|numeric|min:0', // Validate price field (optional and numeric)
+            'compartments.*.type' => 'nullable|string', 
+            'compartments.*.price' => 'nullable|numeric|min:0', 
             'updownnumber' => 'required|integer|min:1',
             'updowns.*.source' => 'required|string',
             'updowns.*.destination' => 'required|string',
@@ -40,40 +39,36 @@ class TrainController extends Controller
             'updowns.*.arrtime' => 'required|date_format:H:i',
             'updowns.*.tarrdate' => 'required|date_format:Y-m-d',
             'updowns.*.tdepdate' => 'required|date_format:Y-m-d',
-            'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validate the image
+            'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
         ]);
-    
-        // Handle train image upload
+
         $trainImage = null;
         if ($request->hasFile('train_image')) {
             $trainImage = $request->file('train_image')->store('train_images', 'public');
         }
-    
-        // Create the train record
+
         $train = Train::create([
             'trainname' => $validatedData['tname'],
             'compartmentnumber' => $validatedData['numofcompartment'],
             'updownnumber' => $validatedData['updownnumber'],
-            'train_image' => $trainImage,  // Save the image path in the database
+            'train_image' => $trainImage, 
         ]);
-    
-        // Create compartments for the train
+
         foreach ($validatedData['compartments'] as $compartment) {
-            compartment::create([  // Fixed: TrainCompartment model
-                'trainid' => $train->trainid,  // Fixed: Using `id` instead of `trainid`
+            compartment::create([  
+                'trainid' => $train->trainid,  
                 'compartmentname' => $compartment['name'],
                 'total_seats' => $compartment['seats'],
-                'available_seats' => $compartment['seats'],  // Fixed: Assigning the same value for available_seats
+                'available_seats' => $compartment['seats'],  
                 'booked_seats' => 0,
-                'compartmenttype' => $compartment['type'],  // Correct column
-                'price' => $compartment['price'] ?? null,  // Price field (optional)
+                'compartmenttype' => $compartment['type'],  
+                'price' => $compartment['price'] ?? null,  
             ]);
         }
-    
-        // Create up-down route records for the train
+
         foreach ($validatedData['updowns'] as $updown) {
             Updown::create([
-                'trainid' => $train->trainid,  // Fixed: Using `id` instead of `trainid`
+                'trainid' => $train->trainid,  
                 'tsource' => $updown['source'],
                 'tdestination' => $updown['destination'],
                 'tdeptime' => $this->convertTo24HourFormat($updown['deptime']),
@@ -83,7 +78,6 @@ class TrainController extends Controller
             ]);
         }
 
-        // After storing, redirect to the PDF generation route
         return redirect()->route('train.data', ['id' => $train->trainid])
                      ->with('success', 'Train created successfully!');
     }
@@ -156,7 +150,6 @@ class TrainController extends Controller
     }
    public function viewTrainData($id)
     {
-        // Retrieve the train with its related updowns and compartments
         $train = Train::with(['traincompartments', 'trainupdowns'])->findOrFail($id);
     
         return view('train.data', compact('train'));
@@ -233,34 +226,26 @@ class TrainController extends Controller
             'updowns' => 'array',
             'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
-        // Retrieve the train by its ID
+
         $train = Train::findOrFail($trainId);
-    
-        // Handle image upload if a new file is provided
+
         if ($request->hasFile('train_image')) {
-            // Delete the old image from storage if it exists
             if ($train->train_image && Storage::exists('public/' . $train->train_image)) {
                 Storage::delete('public/' . $train->train_image);
             }
     
-            // Store the new image and get the path
             $trainImage = $request->file('train_image')->store('train_images', 'public');
             $train->train_image = $trainImage;
         }
     
-        // Update train details
         $train->trainname = $request->trainname;
         $train->compartmentnumber = $request->compartmentnumber;
         $train->updownnumber = $request->updownnumber;
         $train->save();
     
-        // Update compartments
         if ($request->has('compartments')) {
-            // Delete existing compartments associated with the train
             $train->traincompartments()->delete();
-    
-            // Insert new compartment records
+
             foreach ($request->compartments as $compartmentData) {
                 $train->traincompartments()->create([
                     'compartmentname' => $compartmentData['compartmentname'],
@@ -272,13 +257,10 @@ class TrainController extends Controller
                 ]);
             }
         }
-    
-        // Update updowns
+
         if ($request->has('updowns')) {
-            // Delete existing updowns associated with the train
             $train->trainupdowns()->delete();
-    
-            // Insert new updown records
+
             foreach ($request->updowns as $updownData) {
                 $train->trainupdowns()->create([
                     'tarrtime' => $updownData['tarrtime'],
