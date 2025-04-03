@@ -574,24 +574,22 @@ function formatDate(dateString) {
     }
     return dateString; // Return original if format is incorrect
 }
-
-
-
 document.addEventListener("DOMContentLoaded", function () {
     const stations = @json($stations->toArray());
     const existingUpdowns = @json($train->trainupdowns);
     generateCompartments(@json($train->traincompartments));
+
     existingUpdowns.forEach((updown) => {
         const updownRow = generateUpdownRow(updown, updownCount);
         document.getElementById('updown-sections').appendChild(updownRow);
         updownCount++;
     });
+
     const updowns = @json($train->trainupdowns);
     const routeDisplay = document.getElementById("route-display");
     routeDisplay.innerHTML = ""; 
 
     let previousDestination = null;
-    let boxIndex = 1;
 
     updowns.forEach((updown, index) => {
         if (index === 0 || updown.tsource !== previousDestination) {
@@ -599,6 +597,12 @@ document.addEventListener("DOMContentLoaded", function () {
             sourceBox.className = "route-box";
             sourceBox.textContent = updown.tsource;
             routeDisplay.appendChild(sourceBox);
+
+            // Add arrow after source (if it's not the last box)
+            const arrow = document.createElement("span");
+            arrow.className = "route-arrow";
+            arrow.textContent = " → ";
+            routeDisplay.appendChild(arrow);
         }
 
         const destinationBox = document.createElement("div");
@@ -606,9 +610,17 @@ document.addEventListener("DOMContentLoaded", function () {
         destinationBox.textContent = updown.tdestination;
         routeDisplay.appendChild(destinationBox);
 
+        if (index !== updowns.length - 1) {
+            const arrow = document.createElement("span");
+            arrow.className = "route-arrow";
+            arrow.textContent = " → ";
+            routeDisplay.appendChild(arrow);
+        }
+
         previousDestination = updown.tdestination;
     });
 });
+
 </script>
 
 @if(session('success'))

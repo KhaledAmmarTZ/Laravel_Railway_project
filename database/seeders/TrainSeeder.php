@@ -82,29 +82,33 @@ class TrainSeeder extends Seeder
             for ($k = 0; $k < $updownNumber; $k++) {
                 $tsource = $route[$k];
                 $tdestination = $route[$k + 1] ?? null;
-            
+
                 $tdepdate = $prevArrDate->format('Y-m-d');
-            
+
                 if ($k == 0) {
-                    $tdeptime = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime)
-                        ->format('H:i:00'); 
+                    $tdeptimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime);
                 } else {
                     $prevArrTimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $prevArrTime);
-                    $tdeptime = $prevArrTimeObj->addMinutes(15)->format('H:i:00'); 
+                    $tdeptimeObj = $prevArrTimeObj->copy()->addMinutes(20);
+
+                    if ($prevArrTimeObj->hour >= 12 && $tdeptimeObj->hour < 12) {
+                        $tdepdate = $prevArrDate->copy()->addDay()->format('Y-m-d');
+                    }
                 }
-            
-                $tdeptimeObj = \Carbon\Carbon::createFromFormat('H:i:s', $tdeptime);
-            
+
+                $tdeptime = $tdeptimeObj->format('H:i:00');
+
                 $hoursToAdd = rand(6, 8);
-                $tarrtimeObj = $tdeptimeObj->copy()->addHours($hoursToAdd);
+                $minutesToAdd = rand(0, 59);
+                $tarrtimeObj = $tdeptimeObj->copy()->addHours($hoursToAdd)->addMinutes($minutesToAdd);
                 $tarrtime = $tarrtimeObj->format('H:i:00'); 
-            
+
                 if ($tdeptimeObj->hour >= 12 && $tarrtimeObj->hour < 12) {
-                    $tarrdate = $prevArrDate->copy()->addDay()->format('Y-m-d');
+                    $tarrdate = \Carbon\Carbon::createFromFormat('Y-m-d', $tdepdate)->addDay()->format('Y-m-d');
                 } else {
                     $tarrdate = $tdepdate;
                 }
-            
+
                 DB::table('trainupdowns')->insert([
                     'trainid' => $trainId,
                     'tarrtime' => $tarrtime,
@@ -116,10 +120,10 @@ class TrainSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
-            
+
                 $prevArrDate = \Carbon\Carbon::createFromFormat('Y-m-d', $tarrdate);
                 $prevArrTime = $tarrtime;
-            }            
+            }
         }
     }
 }
