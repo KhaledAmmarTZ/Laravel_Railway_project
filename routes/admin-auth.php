@@ -21,18 +21,19 @@ Route::prefix('admin')->middleware('guest:admin')->group(function () {
     Route::get('login', [AdminLoginController::class, 'create'])->name('admin.login');
     Route::post('login', [AdminLoginController::class, 'store']);
 
-    Route::get('forgot-password', [PasswordResetLinkController::class, 'admin.create'])
-        ->name('password.request');
+    Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+        ->name('admin.password.request'); 
 
-    Route::post('forgot-password', [PasswordResetLinkController::class, 'admin.store'])
-        ->name('password.email');
+    Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+        ->name('admin.password.email'); 
 
-    Route::get('reset-password/{token}', [NewPasswordController::class, 'admin.create'])
-        ->name('password.reset');
+    Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+        ->name('admin.password.reset'); 
 
-    Route::post('reset-password', [NewPasswordController::class, 'admin.store'])
-        ->name('password.store');
+    Route::post('reset-password', [NewPasswordController::class, 'store'])
+        ->name('admin.password.store'); 
 });
+
 
 Route::prefix('admin')->middleware('auth:admin')->group(function () {
 

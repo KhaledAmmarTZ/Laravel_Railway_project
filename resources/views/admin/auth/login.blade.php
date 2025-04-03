@@ -76,7 +76,7 @@
 
                     <!-- Forgot Password & Submit -->
                     <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ route('password.request') }}" class="text-decoration-none small">Forgot password?</a>
+                        <a href="{{ route('admin.password.request') }}" class="text-decoration-none small">Forgot password?</a>
                         <button type="submit" class="btn btn-primary">Log in</button>
                     </div>
                 </form>
