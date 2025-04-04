@@ -57,7 +57,7 @@
     }
 </style>
 
-<div class="table-responsive">
+<<div class="table-responsive">
     <table class="table custom-table">
         <thead>
             <tr>
@@ -96,7 +96,11 @@
                                 @endif
                             </td>
                             
-                            <td rowspan="{{ count($train->trainupdowns) }}">{{ $train->trainname }}</td>
+                            <td rowspan="{{ count($train->trainupdowns) }}">
+                                <a href="{{ route('train.data', ['id' => $train->trainid]) }}" class="train-name-link">
+                                    {{ $train->trainname }}
+                                </a>
+                            </td>
                         @endif
                         <td>
                             {{ \Carbon\Carbon::parse($updown->tdepdate)->format('d-m-Y') }} 
@@ -113,7 +117,7 @@
                         </td>
                         @if ($index == 0)
                             <td rowspan="{{ count($train->trainupdowns) }}">
-                                <a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary btn-sm" >View</a>
+                                <a href="{{ route('train.edit', $train->trainid) }}" class="btn btn-primary btn-sm">Edit</a>
                                 <form action="{{ route('train.destroy', $train->trainid) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('DELETE')
@@ -128,6 +132,18 @@
         </tbody>
     </table>
 </div>
+
+<!-- Add this CSS to style the hover effect -->
+<style>
+    .train-name-link {
+        color: black; /* Default color */
+        text-decoration: none; /* Remove underline */
+    }
+
+    .train-name-link:hover {
+        color: darkgreen; /* Color on hover */
+    }
+</style>
 
 <!-- Pagination -->
 <div class="d-flex justify-content-center mt-3">

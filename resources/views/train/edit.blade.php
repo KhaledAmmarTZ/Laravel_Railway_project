@@ -598,7 +598,6 @@ document.addEventListener("DOMContentLoaded", function () {
             sourceBox.textContent = updown.tsource;
             routeDisplay.appendChild(sourceBox);
 
-            // Add arrow after source (if it's not the last box)
             const arrow = document.createElement("span");
             arrow.className = "route-arrow";
             arrow.textContent = " → ";
@@ -658,7 +657,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         </label>
                     </div>
                     <div class="mb-3 d-flex align-items-center">
-                        <!-- Train Image Label -->
+
                         <label for="train_image" class="form-label me-3" style="width: 250px; text-align: right; font-weight: bold; color: white;">
                             Train Image : &nbsp;
                         </label>
@@ -688,12 +687,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 
             <div class="col-md-3 col-12">
                 <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
-                <!-- Button to trigger modal -->
+
                 <button type="button" class="btn btn-success btn-block d-flex justify-content-center align-items-center" data-toggle="modal" data-target="#trainModal" style="height: 50px;">
                     Image and Name
                 </button>
 
-                <!-- Modal -->
                 <div class="modal fade" id="trainModal" tabindex="-1" role="dialog" aria-labelledby="trainModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -708,28 +706,24 @@ document.addEventListener("DOMContentLoaded", function () {
                                     @csrf
                                     @method('PUT')
 
-                                    <!-- Train Name -->
                                     <div class="mb-3 d-flex align-items-center">
                                         <label class="form-label me-3" style="width: 250px; text-align: right;">Train Name:  </label>
                                         <div class="flex-grow-1">
                                             <input type="text" name="trainname" class="form-control" value="{{ $train->trainname }}" required>
                                         </div>
                                     </div>
-                   
-                                    <!-- Train Image -->
+
                                     <div class="mb-3 d-flex align-items-center">
                                         <label class="form-label me-3" style="width: 250px; text-align: right;">Train Image: </label>
                                         <div class="flex-grow-1">
                                             <input type="file" name="train_image" class="form-control" id="train_image_input" onchange="previewImage(event)">
-                                            
-                                            <!-- Placeholder for the new image preview -->
+
                                             <div class="mt-2" id="new_image_preview_container" style="display: none;">
                                                 <img id="new_image_preview" class="img-fluid" />
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Submit Button -->
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -879,7 +873,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 .route-arrow {
                     font-size: 20px;
                     font-weight: bold;
-                    color: #005F56;
+                    color:rgb(255, 255, 255);
                     display: flex;
                     align-items: center;
                     justify-content: center;
@@ -904,7 +898,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                     .new-compartment {
                         background-color: green;
-                        color: white; /* Ensure the text is visible */
+                        color: white; 
                     }
 
             </style>
