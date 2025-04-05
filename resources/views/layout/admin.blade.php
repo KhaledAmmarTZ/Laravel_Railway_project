@@ -117,9 +117,8 @@
                                 <i class="fas fa-subway"></i>&nbsp;Station
                                 </button>
                                 <div class="collapse pl-3" id="StationOptions">
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Edit Station</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Station</a>
-                                    <a href="{{ url('#') }}" class="btn sidebar-btn btn-block mb-2">➤ View Stations</a>
+                                    <a href="{{ route('station.create') }}" class="btn sidebar-btn btn-block mb-2">➤ Add Station</a>
+                                    <a href="{{ route('station.index') }}" class="btn sidebar-btn btn-block mb-2">➤ View Stations</a>
                                 </div>
                                 <button class="btn btn-success btn-block mb-2" type="button" data-toggle="collapse" data-target="#StuffOptions">
                                 <i class="fas fa-user-tie"></i>&nbsp;Stuffs

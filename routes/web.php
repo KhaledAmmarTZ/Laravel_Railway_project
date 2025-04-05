@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RouteController;
+use App\Http\Controllers\PdfController;
+use App\Http\Controllers\StationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
