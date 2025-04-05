@@ -13,20 +13,15 @@ class StationSeeder extends Seeder
      */
     public function run(): void
     {
-        $cities = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
+        $stations = ['Dhaka', 'Faridpur', 'Gazipur', 'Gopalganj', 'Jamalpur', 
         'Kishoreganj', 'Madaripur', 'Manikganj', 'Chittagong', 'Khulna',
         'Kamalpur','Airport','Sylhet','Rajshahi'];
 
-        foreach ($cities as $city) {
-            $arrivalTime = Carbon::now()->addHours(rand(1, 6));
-            $departureTime = (clone $arrivalTime)->addHours(rand(1, 6));
+        foreach ($stations as $city) {
 
-            DB::table('stations')->insert([
+            DB::table('station')->insert([
                 'stationname' => $city . ' Railway Station',
-                'artime' => $arrivalTime->format('H:i:s'),
-                'deeptime' => $departureTime->format('H:i:s'),
-                'created_at' => now(),
-                'updated_at' => now(),
+                'city' => $city,
             ]);
         }
     }

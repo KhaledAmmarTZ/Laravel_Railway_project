@@ -9,8 +9,12 @@ class Station extends Model
 {
     use HasFactory;
 
-    protected $table = 'stations'; // Ensure the table name is correct
-    protected $fillable = ['stationname', 'deeptime', 'artime']; // Add relevant columns
+    protected $table = 'station';
+    protected $primaryKey = 'stid';
+    public $incrementing = true;
+    protected $keyType = 'int';
+    public $timestamps = false;
+    protected $fillable = ['stationname', 'city'];
 
     public function trainRoutes()
     {

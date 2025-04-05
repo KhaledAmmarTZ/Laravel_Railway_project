@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\Auth\VerifyEmailController;
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\StationController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
@@ -75,6 +76,7 @@ Route::prefix('admin')->middleware('auth:admin')->group(function () {
 
     // Train Routes (Admin Only)
     Route::get('/stations', [TrainController::class, 'getStations']);
+    Route::resource('station', StationController::class);
 
     Route::get('/train/create', [TrainController::class, 'create'])->name('train.create');
     Route::post('/train', [TrainController::class, 'store'])->name('train.store');
