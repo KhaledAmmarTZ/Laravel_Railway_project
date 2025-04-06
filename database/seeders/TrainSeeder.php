@@ -117,6 +117,7 @@ class TrainSeeder extends Seeder
                     'tarrdate' => $tarrdate,
                     'tsource' => $tsource . ' Railway Station',
                     'tdestination' => $tdestination ? $tdestination . ' Railway Station' : null,
+                    'sequence' => $k + 1,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

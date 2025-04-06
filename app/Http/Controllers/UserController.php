@@ -8,6 +8,6 @@ class UserController extends Controller
 {
     public function showProfile()
     {
-        return view('user.profiles'); // Ensure 'resources/views/user/profiles.blade.php' exists
+        return view('passenger'); // Ensure 'resources/views/user/profiles.blade.php' exists
     }
 }

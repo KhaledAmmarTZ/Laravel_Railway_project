@@ -178,6 +178,7 @@ function generateUpdownRow(updown = { id: '', tarrtime: '', tdeptime: '', tarrda
                 <button type="button" class="btn btn-warning" onclick="autoUpdateNextRow(${index})">Auto Update Next Row</button>
             </div>
         </td>
+        <input type="hidden" name="updowns[${index}][sequence]" value="${index}">
     `;
 
     updownRow.querySelectorAll('.updown-input').forEach(input => {

@@ -10,7 +10,7 @@ class updown extends Model
     use HasFactory;
     protected $table = 'trainupdowns';
     protected $primaryKey = 'id';
-    protected $fillable = ['trainid', 'tarrtime', 'tdeptime', 'tarrdate', 'tdepdate', 'tsource', 'tdestination'];
+    protected $fillable = ['trainid', 'tarrtime', 'tdeptime', 'tarrdate', 'tdepdate', 'tsource', 'tdestination', 'sequence'];
 
     public function train()
     {

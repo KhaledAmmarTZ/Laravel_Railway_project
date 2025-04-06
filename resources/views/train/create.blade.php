@@ -296,6 +296,7 @@ function generateUpdowns() {
             <td>
                 <input type="time" name="updowns[${i}][arrtime]" id="arrtime_${i}" class="form-control updown-input" value="${existingValues[`updowns[${i}][arrtime]`] || ''}" required>
             </td>
+            <input type="hidden" name="updowns[${i}][sequence]" value="${i}">
         </tr>                            
     `;
 

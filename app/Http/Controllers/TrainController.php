@@ -39,6 +39,7 @@ class TrainController extends Controller
             'updowns.*.arrtime' => 'required|date_format:H:i',
             'updowns.*.tarrdate' => 'required|date_format:Y-m-d',
             'updowns.*.tdepdate' => 'required|date_format:Y-m-d',
+            'updowns.*.sequence' => 'nullable|string',
             'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
         ]);
 
@@ -75,6 +76,7 @@ class TrainController extends Controller
                 'tarrtime' => $this->convertTo24HourFormat($updown['arrtime']),
                 'tarrdate' => $updown['tarrdate'],
                 'tdepdate' => $updown['tdepdate'],
+                'sequence' => $updown['sequence'] ?? null,
             ]);
         }
 
@@ -207,8 +209,6 @@ class TrainController extends Controller
 
         return view('train.list_edit', compact('trains'));
     }
-    
-    
 
     public function loadTrainData(Request $request)
     {
@@ -269,6 +269,7 @@ class TrainController extends Controller
                     'tdepdate' => $updownData['tdepdate'],
                     'tsource' => $updownData['tsource'],
                     'tdestination' => $updownData['tdestination'],
+                    'sequence' => $updownData['sequence'],
                 ]);
             }
         }
