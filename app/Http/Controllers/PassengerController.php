@@ -143,7 +143,7 @@ class PassengerController extends Controller
         for ($i = 0; $i < $request->ticket_count; $i++) {
             $passengerData[] = [
                 'mealop' => $request->mealop == true ? 1 : 0,
-                'uid' => Auth::id(),
+                'id' => Auth::id(),
                 'trainid' => $tra['trainid'],
                 'tsource' => $tra['tsource'],
                 'tdest' => $tra['tdestination'],
@@ -157,8 +157,8 @@ class PassengerController extends Controller
         }
         // dd($passengerData);
         DB::table('passengers')->insert($passengerData);
-        $uid = collect($passengerData)->pluck('uid')->first();
-        return redirect()->route('payment.index', ['pnr' => $uid])->with('msg', 'Please complete your payment within 15 minutes, otherwise your seat(s) will be cancelled.');
+        $id = collect($passengerData)->pluck('id')->first();
+        return redirect()->route('payment.index', ['pnr' => $id])->with('msg', 'Please complete your payment within 15 minutes, otherwise your seat(s) will be cancelled.');
     }
 
     /**
@@ -167,12 +167,12 @@ class PassengerController extends Controller
     public function create()
     {
         $ticket_count = DB::table('passengers')
-            ->where('uid', Auth::id())
+            ->where('id', Auth::id())
             ->where('pstatus', 'waiting')
             ->count();
         if ($ticket_count > 0) {
             DB::table('passengers')
-                ->where('uid', Auth::id())
+                ->where('id', Auth::id())
                 ->where('pstatus', 'waiting')
                 ->delete();
         }
@@ -206,12 +206,12 @@ class PassengerController extends Controller
     public function store(Request $request)
     {
         $ticket_count = DB::table('passengers')
-            ->where('uid', Auth::id())
+            ->where('id', Auth::id())
             ->where('pstatus', 'waiting')
             ->count();
         if ($ticket_count > 0) {
             DB::table('passengers')
-                ->where('uid', Auth::id())
+                ->where('id', Auth::id())
                 ->where('pstatus', 'waiting')
                 ->delete();
         }
@@ -277,7 +277,7 @@ class PassengerController extends Controller
         for ($i = 0; $i < $request->ticket_count; $i++) {
             $passengerData[] = [
                 'mealop' => $request->mealop == true ? 1 : 0,
-                'uid' => Auth::id(),
+                'id' => Auth::id(),
                 'trainid' => $tra['trainid'],
                 'tsource' => $tra['tsource'],
                 'tdest' => $tra['tdestination'],
@@ -291,8 +291,8 @@ class PassengerController extends Controller
         }
         // dd($passengerData);
         DB::table('passengers')->insert($passengerData);
-        $uid = collect($passengerData)->pluck('uid')->first();
-        return redirect()->route('payment.index', ['pnr' => $uid])->with('msg', 'Please complete your payment within 15 minutes, otherwise your seat(s) will be cancelled.');
+        $id = collect($passengerData)->pluck('id')->first();
+        return redirect()->route('payment.index', ['pnr' => $id])->with('msg', 'Please complete your payment within 15 minutes, otherwise your seat(s) will be cancelled.');
     }
 
     /**

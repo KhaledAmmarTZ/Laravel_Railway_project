@@ -12,8 +12,8 @@ class CreateTraincompartmentsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('trainid');
             $table->integer('total_seats');
-            $table->integer('available_seats');
-            $table->integer('booked_seats');
+            $table->integer('available_seats_up');
+            $table->integer('available_seats_down');
             $table->string('compartmentname');
             $table->string('compartmenttype')->nullable();  // Corrected line
             $table->double('price')->nullable();  // Corrected line

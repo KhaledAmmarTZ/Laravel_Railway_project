@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('dob')->nullable();
             $table->string('images')->nullable();
             $table->string('gender')->nullable();
+            $table->string('userType')->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

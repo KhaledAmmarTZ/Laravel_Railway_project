@@ -65,8 +65,8 @@ class TrainSeeder extends Seeder
                 DB::table('traincompartments')->insert([
                     'trainid' => $trainId,
                     'total_seats' => $seats, 
-                    'available_seats' => $seats,
-                    'booked_seats' => 0,
+                    'available_seats_up' => $seats,
+                    'available_seats_down' => $seats,
                     'compartmentname' => 'Compartment ' . $j,
                     'compartmenttype' => $compartmentType,
                     'price' => $price,

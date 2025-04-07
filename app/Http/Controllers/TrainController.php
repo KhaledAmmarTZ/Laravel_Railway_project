@@ -39,7 +39,6 @@ class TrainController extends Controller
             'updowns.*.arrtime' => 'required|date_format:H:i',
             'updowns.*.tarrdate' => 'required|date_format:Y-m-d',
             'updowns.*.tdepdate' => 'required|date_format:Y-m-d',
-            'updowns.*.sequence' => 'nullable|string',
             'train_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', 
         ]);
 
@@ -60,13 +59,13 @@ class TrainController extends Controller
                 'trainid' => $train->trainid,  
                 'compartmentname' => $compartment['name'],
                 'total_seats' => $compartment['seats'],
-                'available_seats' => $compartment['seats'],  
-                'booked_seats' => 0,
+                'available_seats_up' => $compartment['seats'],
+                'available_seats_down' => $compartment['seats'],
                 'compartmenttype' => $compartment['type'],  
                 'price' => $compartment['price'] ?? null,  
             ]);
         }
-
+        $i = 1;
         foreach ($validatedData['updowns'] as $updown) {
             Updown::create([
                 'trainid' => $train->trainid,  
@@ -76,7 +75,7 @@ class TrainController extends Controller
                 'tarrtime' => $this->convertTo24HourFormat($updown['arrtime']),
                 'tarrdate' => $updown['tarrdate'],
                 'tdepdate' => $updown['tdepdate'],
-                'sequence' => $updown['sequence'] ?? null,
+                'sequence' => $i,
             ]);
         }
 
@@ -209,6 +208,8 @@ class TrainController extends Controller
 
         return view('train.list_edit', compact('trains'));
     }
+    
+    
 
     public function loadTrainData(Request $request)
     {
@@ -250,8 +251,8 @@ class TrainController extends Controller
                 $train->traincompartments()->create([
                     'compartmentname' => $compartmentData['compartmentname'],
                     'total_seats' => $compartmentData['total_seats'],
-                    'available_seats' => $compartmentData['total_seats'],
-                    'booked_seats' => $compartmentData['booked_seats'] ?? 0,
+                    'available_seats_up' => $compartmentData['total_seats'],
+                    'available_seats_down' => $compartmentData['total_seats'],
                     'compartmenttype' => $compartmentData['compartmenttype'],
                     'price' => $compartmentData['price'],
                 ]);

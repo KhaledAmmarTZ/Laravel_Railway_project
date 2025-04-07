@@ -12,7 +12,7 @@
         </div>
     @endsession
 
-    <h1 class="mb-4 text-center text-primary">Available Trains</h1>
+    <h1 class="mb-4 text-center " style="color: #005F56">Available Trains</h1>
 
     <div class="row g-4">
         @foreach ($trains as $train)
@@ -105,6 +105,7 @@
                                             <form method="GET" action="{{ route('passenger.traininfosubmission') }}">
                                                 @csrf
                                                 <input type="hidden" name="trainid" value="{{ $train->trainid }}">
+                                                <input type="hidden" name="trainname" value="{{ $train->trainname }}">
                                                 <input type="hidden" name="compartment" value="{{ $compartment['compartment_name'] }}">
                                                 <input type="hidden" name="price" value="{{ $compartment['price'] }}">
                                                 <input type="hidden" name="available_seats" value="{{ $compartment['available_seats'] }}">

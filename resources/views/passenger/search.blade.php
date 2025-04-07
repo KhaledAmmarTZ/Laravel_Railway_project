@@ -4,6 +4,7 @@
 @endsection
 
 @section('content')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-10 col-lg-8">
@@ -16,7 +17,7 @@
             @endsession
 
             <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white" style="background-color: #005F56"> 
                     <h4 class="mb-0">Plan Your Journey</h4>
                 </div>
                 
@@ -50,7 +51,7 @@
                                        value="{{ old('arrdate') }}"
                                        required 
                                        min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                       max="{{ \Carbon\Carbon::today()->addDays(10)->toDateString() }}">
+                                       max="{{ \Carbon\Carbon::today()->addDays(20)->toDateString() }}">
                                 <span class="input-group-text">
                                     <i class="bi bi-calendar3"></i>
                                 </span>
@@ -61,7 +62,7 @@
                         </div>
 
                         <div class="d-grid mt-5">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <button type="submit" class="btn search-btn">
                                 <i class="bi bi-search me-2"></i>Search Trains
                             </button>
                         </div>
