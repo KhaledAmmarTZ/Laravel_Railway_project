@@ -76,7 +76,6 @@ class ThrottlesExceptions
      *
      * @param  int  $maxAttempts
      * @param  int  $decaySeconds
-     * @return void
      */
     public function __construct($maxAttempts = 10, $decaySeconds = 600)
     {
@@ -171,7 +170,7 @@ class ThrottlesExceptions
             return $this->prefix.$job->job->uuid();
         }
 
-        return $this->prefix.md5(get_class($job));
+        return $this->prefix.hash('xxh128', get_class($job));
     }
 
     /**

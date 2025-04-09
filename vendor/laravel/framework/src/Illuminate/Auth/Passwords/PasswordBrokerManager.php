@@ -28,7 +28,6 @@ class PasswordBrokerManager implements FactoryContract
      * Create a new PasswordBroker manager instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
      */
     public function __construct($app)
     {
@@ -104,8 +103,8 @@ class PasswordBrokerManager implements FactoryContract
             $this->app['hash'],
             $config['table'],
             $key,
-            $config['expire'],
-            $config['throttle'] ?? 0
+            ($config['expire'] ?? 60) * 60,
+            $config['throttle'] ?? 0,
         );
     }
 

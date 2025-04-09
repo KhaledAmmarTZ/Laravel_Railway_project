@@ -41,7 +41,6 @@ class CallQueuedHandler
      *
      * @param  \Illuminate\Contracts\Bus\Dispatcher  $dispatcher
      * @param  \Illuminate\Contracts\Container\Container  $container
-     * @return void
      */
     public function __construct(Dispatcher $dispatcher, Container $container)
     {
@@ -218,7 +217,7 @@ class CallQueuedHandler
      */
     protected function handleModelNotFound(Job $job, $e)
     {
-        $class = $job->resolveName();
+        $class = $job->resolveQueuedJobClass();
 
         try {
             $reflectionClass = new ReflectionClass($class);
