@@ -161,8 +161,8 @@ class SQLiteGrammar extends Grammar
     protected function compileIndexHint(Builder $query, $indexHint)
     {
         return $indexHint->type === 'force'
-            ? "indexed by {$indexHint->index}"
-            : '';
+                ? "indexed by {$indexHint->index}"
+                : '';
     }
 
     /**
@@ -439,12 +439,8 @@ class SQLiteGrammar extends Grammar
      */
     public function compileTruncate(Builder $query)
     {
-        [$schema, $table] = $query->getConnection()->getSchemaBuilder()->parseSchemaAndTable($query->from);
-
-        $schema = $schema ? $this->wrapValue($schema).'.' : '';
-
         return [
-            'delete from '.$schema.'sqlite_sequence where name = ?' => [$query->getConnection()->getTablePrefix().$table],
+            'delete from sqlite_sequence where name = ?' => [$this->getTablePrefix().$query->from],
             'delete from '.$this->wrapTable($query->from) => [],
         ];
     }

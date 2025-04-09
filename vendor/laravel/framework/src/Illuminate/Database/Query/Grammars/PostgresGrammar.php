@@ -108,14 +108,9 @@ class PostgresGrammar extends Grammar
      */
     protected function whereDate(Builder $query, $where)
     {
-        $column = $this->wrap($where['column']);
         $value = $this->parameter($where['value']);
 
-        if ($this->isJsonSelector($where['column'])) {
-            $column = '('.$column.')';
-        }
-
-        return $column.'::date '.$where['operator'].' '.$value;
+        return $this->wrap($where['column']).'::date '.$where['operator'].' '.$value;
     }
 
     /**
@@ -127,14 +122,9 @@ class PostgresGrammar extends Grammar
      */
     protected function whereTime(Builder $query, $where)
     {
-        $column = $this->wrap($where['column']);
         $value = $this->parameter($where['value']);
 
-        if ($this->isJsonSelector($where['column'])) {
-            $column = '('.$column.')';
-        }
-
-        return $column.'::time '.$where['operator'].' '.$value;
+        return $this->wrap($where['column']).'::time '.$where['operator'].' '.$value;
     }
 
     /**
@@ -383,7 +373,7 @@ class PostgresGrammar extends Grammar
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
-     * @param  string|null  $sequence
+     * @param  string  $sequence
      * @return string
      */
     public function compileInsertGetId(Builder $query, $values, $sequence)
@@ -831,16 +821,8 @@ class PostgresGrammar extends Grammar
      * @param  bool  $value
      * @return void
      */
-    public static function cascadeOnTruncate(bool $value = true)
-    {
-        static::$cascadeTruncate = $value;
-    }
-
-    /**
-     * @deprecated use cascadeOnTruncate
-     */
     public static function cascadeOnTrucate(bool $value = true)
     {
-        self::cascadeOnTruncate($value);
+        static::$cascadeTruncate = $value;
     }
 }

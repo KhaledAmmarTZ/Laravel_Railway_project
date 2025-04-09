@@ -67,6 +67,7 @@ class DynamoDbStore implements LockProvider, Store
      * @param  string  $valueAttribute
      * @param  string  $expirationAttribute
      * @param  string  $prefix
+     * @return void
      */
     public function __construct(
         DynamoDbClient $dynamo,
@@ -413,7 +414,7 @@ class DynamoDbStore implements LockProvider, Store
      */
     public function lock($name, $seconds = 0, $owner = null)
     {
-        return new DynamoDbLock($this, $name, $seconds, $owner);
+        return new DynamoDbLock($this, $this->prefix.$name, $seconds, $owner);
     }
 
     /**
@@ -469,8 +470,8 @@ class DynamoDbStore implements LockProvider, Store
     protected function toTimestamp($seconds)
     {
         return $seconds > 0
-            ? $this->availableAt($seconds)
-            : $this->currentTime();
+                    ? $this->availableAt($seconds)
+                    : $this->currentTime();
     }
 
     /**

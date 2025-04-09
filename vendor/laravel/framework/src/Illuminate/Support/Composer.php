@@ -29,6 +29,7 @@ class Composer
      *
      * @param  \Illuminate\Filesystem\Filesystem  $files
      * @param  string|null  $workingPath
+     * @return void
      */
     public function __construct(Filesystem $files, $workingPath = null)
     {
@@ -44,7 +45,7 @@ class Composer
      *
      * @throw \RuntimeException
      */
-    public function hasPackage($package)
+    protected function hasPackage($package)
     {
         $composer = json_decode(file_get_contents($this->findComposerFile()), true);
 

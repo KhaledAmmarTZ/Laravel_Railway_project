@@ -36,6 +36,7 @@ class RateLimited
      * Create a new middleware instance.
      *
      * @param  \BackedEnum|\UnitEnum|string  $limiterName
+     * @return void
      */
     public function __construct($limiterName)
     {
@@ -89,8 +90,8 @@ class RateLimited
         foreach ($limits as $limit) {
             if ($this->limiter->tooManyAttempts($limit->key, $limit->maxAttempts)) {
                 return $this->shouldRelease
-                    ? $job->release($this->getTimeUntilNextRetry($limit->key))
-                    : false;
+                        ? $job->release($this->getTimeUntilNextRetry($limit->key))
+                        : false;
             }
 
             $this->limiter->hit($limit->key, $limit->decaySeconds);

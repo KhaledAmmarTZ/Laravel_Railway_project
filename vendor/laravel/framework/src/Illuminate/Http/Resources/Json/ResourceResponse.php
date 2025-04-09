@@ -19,6 +19,7 @@ class ResourceResponse implements Responsable
      * Create a new resource response.
      *
      * @param  mixed  $resource
+     * @return void
      */
     public function __construct($resource)
     {

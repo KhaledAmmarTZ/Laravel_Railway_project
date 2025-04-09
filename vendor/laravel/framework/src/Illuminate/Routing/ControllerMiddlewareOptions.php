@@ -15,6 +15,7 @@ class ControllerMiddlewareOptions
      * Create a new middleware option instance.
      *
      * @param  array  $options
+     * @return void
      */
     public function __construct(array &$options)
     {

@@ -39,6 +39,7 @@ class ChainedBatch implements ShouldQueue
      * Create a new chained batch instance.
      *
      * @param  \Illuminate\Bus\PendingBatch  $batch
+     * @return void
      */
     public function __construct(PendingBatch $batch)
     {

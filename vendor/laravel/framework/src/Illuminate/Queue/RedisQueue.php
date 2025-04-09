@@ -75,6 +75,7 @@ class RedisQueue extends Queue implements QueueContract, ClearableQueue
      * @param  int|null  $blockFor
      * @param  bool  $dispatchAfterCommit
      * @param  int  $migrationBatchSize
+     * @return void
      */
     public function __construct(
         Redis $redis,

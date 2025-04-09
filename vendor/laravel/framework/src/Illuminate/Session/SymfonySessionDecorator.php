@@ -21,6 +21,7 @@ class SymfonySessionDecorator implements SessionInterface
      * Create a new session decorator.
      *
      * @param  \Illuminate\Contracts\Session\Session  $store
+     * @return void
      */
     public function __construct(Session $store)
     {

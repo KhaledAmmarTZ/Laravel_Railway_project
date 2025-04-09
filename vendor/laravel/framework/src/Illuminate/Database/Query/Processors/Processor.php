@@ -37,25 +37,6 @@ class Processor
     }
 
     /**
-     * Process the results of a schemas query.
-     *
-     * @param  array  $results
-     * @return array
-     */
-    public function processSchemas($results)
-    {
-        return array_map(function ($result) {
-            $result = (object) $result;
-
-            return [
-                'name' => $result->name,
-                'path' => $result->path ?? null, // SQLite Only...
-                'default' => (bool) $result->default,
-            ];
-        }, $results);
-    }
-
-    /**
      * Process the results of a tables query.
      *
      * @param  array  $results
@@ -68,8 +49,7 @@ class Processor
 
             return [
                 'name' => $result->name,
-                'schema' => $result->schema ?? null,
-                'schema_qualified_name' => isset($result->schema) ? $result->schema.'.'.$result->name : $result->name,
+                'schema' => $result->schema ?? null, // PostgreSQL and SQL Server
                 'size' => isset($result->size) ? (int) $result->size : null,
                 'comment' => $result->comment ?? null, // MySQL and PostgreSQL
                 'collation' => $result->collation ?? null, // MySQL only
@@ -91,8 +71,7 @@ class Processor
 
             return [
                 'name' => $result->name,
-                'schema' => $result->schema ?? null,
-                'schema_qualified_name' => isset($result->schema) ? $result->schema.'.'.$result->name : $result->name,
+                'schema' => $result->schema ?? null, // PostgreSQL and SQL Server
                 'definition' => $result->definition,
             ];
         }, $results);

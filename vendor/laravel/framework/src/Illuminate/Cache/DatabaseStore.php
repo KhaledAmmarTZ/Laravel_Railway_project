@@ -76,6 +76,7 @@ class DatabaseStore implements LockProvider, Store
      * @param  string  $prefix
      * @param  string  $lockTable
      * @param  array  $lockLottery
+     * @return void
      */
     public function __construct(
         ConnectionInterface $connection,

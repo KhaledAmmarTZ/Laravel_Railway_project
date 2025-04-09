@@ -25,6 +25,7 @@ class AwsS3V3Adapter extends FilesystemAdapter
      * @param  \League\Flysystem\AwsS3V3\AwsS3V3Adapter  $adapter
      * @param  array  $config
      * @param  \Aws\S3\S3Client  $client
+     * @return void
      */
     public function __construct(FilesystemOperator $driver, S3Adapter $adapter, array $config, S3Client $client)
     {

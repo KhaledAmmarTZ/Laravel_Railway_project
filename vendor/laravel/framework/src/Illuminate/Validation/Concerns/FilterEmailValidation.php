@@ -19,6 +19,7 @@ class FilterEmailValidation implements EmailValidation
      * Create a new validation instance.
      *
      * @param  int  $flags
+     * @return void
      */
     public function __construct($flags = null)
     {
@@ -45,8 +46,8 @@ class FilterEmailValidation implements EmailValidation
     public function isValid(string $email, EmailLexer $emailLexer): bool
     {
         return is_null($this->flags)
-            ? filter_var($email, FILTER_VALIDATE_EMAIL) !== false
-            : filter_var($email, FILTER_VALIDATE_EMAIL, $this->flags) !== false;
+                    ? filter_var($email, FILTER_VALIDATE_EMAIL) !== false
+                    : filter_var($email, FILTER_VALIDATE_EMAIL, $this->flags) !== false;
     }
 
     /**

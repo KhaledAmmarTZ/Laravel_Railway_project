@@ -31,6 +31,7 @@ class MessageLogged
      * @param  string  $level
      * @param  string  $message
      * @param  array  $context
+     * @return void
      */
     public function __construct($level, $message, array $context = [])
     {

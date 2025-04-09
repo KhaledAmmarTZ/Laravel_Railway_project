@@ -142,7 +142,7 @@ class DbCommand extends Command
     {
         return [
             'mysql' => 'mysql',
-            'mariadb' => 'mariadb',
+            'mariadb' => 'mysql',
             'pgsql' => 'psql',
             'sqlite' => 'sqlite3',
             'sqlsrv' => 'sqlcmd',

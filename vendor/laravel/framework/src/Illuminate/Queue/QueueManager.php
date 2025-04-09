@@ -37,6 +37,7 @@ class QueueManager implements FactoryContract, MonitorContract
      * Create a new queue manager instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
      */
     public function __construct($app)
     {

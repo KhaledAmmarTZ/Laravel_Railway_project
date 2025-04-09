@@ -31,6 +31,7 @@ class HigherOrderCollectionProxy
      *
      * @param  \Illuminate\Support\Enumerable<TKey, TValue>  $collection
      * @param  string  $method
+     * @return void
      */
     public function __construct(Enumerable $collection, $method)
     {

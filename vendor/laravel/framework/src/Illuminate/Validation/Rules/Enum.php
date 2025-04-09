@@ -45,6 +45,7 @@ class Enum implements Rule, ValidatorAwareRule
      * Create a new rule instance.
      *
      * @param  class-string  $type
+     * @return void
      */
     public function __construct($type)
     {

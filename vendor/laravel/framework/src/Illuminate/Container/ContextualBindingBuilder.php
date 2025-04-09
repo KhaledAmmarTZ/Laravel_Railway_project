@@ -33,6 +33,7 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
      *
      * @param  \Illuminate\Contracts\Container\Container  $container
      * @param  string|array  $concrete
+     * @return void
      */
     public function __construct(Container $container, $concrete)
     {

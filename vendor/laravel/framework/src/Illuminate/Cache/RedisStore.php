@@ -51,6 +51,7 @@ class RedisStore extends TaggableStore implements LockProvider
      * @param  \Illuminate\Contracts\Redis\Factory  $redis
      * @param  string  $prefix
      * @param  string  $connection
+     * @return void
      */
     public function __construct(Redis $redis, $prefix = '', $connection = 'default')
     {

@@ -57,6 +57,7 @@ class DatabaseSessionHandler implements ExistenceAwareInterface, SessionHandlerI
      * @param  string  $table
      * @param  int  $minutes
      * @param  \Illuminate\Contracts\Container\Container|null  $container
+     * @return void
      */
     public function __construct(ConnectionInterface $connection, $table, $minutes, ?Container $container = null)
     {

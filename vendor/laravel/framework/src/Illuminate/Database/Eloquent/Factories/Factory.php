@@ -146,6 +146,7 @@ abstract class Factory
      * @param  string|null  $connection
      * @param  \Illuminate\Support\Collection|null  $recycle
      * @param  bool  $expandRelationships
+     * @return void
      */
     public function __construct(
         $count = null,
@@ -826,8 +827,8 @@ abstract class Factory
             $appNamespace = static::appNamespace();
 
             return class_exists($appNamespace.'Models\\'.$namespacedFactoryBasename)
-                ? $appNamespace.'Models\\'.$namespacedFactoryBasename
-                : $appNamespace.$factoryBasename;
+                        ? $appNamespace.'Models\\'.$namespacedFactoryBasename
+                        : $appNamespace.$factoryBasename;
         };
 
         return $resolver($this);

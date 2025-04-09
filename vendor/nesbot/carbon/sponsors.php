@@ -52,8 +52,6 @@ function getOpenCollectiveSponsors(): string
             'website' => 'https://lgcnews.com/',
         ],
         663069 => [
-            // alt attribute
-            'name' => 'Ставки на спорт Favbet',
             // href attribute
             'website' => 'https://www.favbet.ua/uk/',
         ],

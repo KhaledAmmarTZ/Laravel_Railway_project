@@ -208,6 +208,7 @@ class Connection implements ConnectionInterface
      * @param  string  $database
      * @param  string  $tablePrefix
      * @param  array  $config
+     * @return void
      */
     public function __construct($pdo, $database = '', $tablePrefix = '', array $config = [])
     {
@@ -247,7 +248,9 @@ class Connection implements ConnectionInterface
      */
     protected function getDefaultQueryGrammar()
     {
-        return new QueryGrammar($this);
+        ($grammar = new QueryGrammar)->setConnection($this);
+
+        return $grammar;
     }
 
     /**
@@ -1623,26 +1626,41 @@ class Connection implements ConnectionInterface
     {
         $this->tablePrefix = $prefix;
 
+        $this->getQueryGrammar()->setTablePrefix($prefix);
+
         return $this;
+    }
+
+    /**
+     * Set the table prefix and return the grammar.
+     *
+     * @template TGrammar of \Illuminate\Database\Grammar
+     *
+     * @param  TGrammar  $grammar
+     * @return TGrammar
+     */
+    public function withTablePrefix(Grammar $grammar)
+    {
+        $grammar->setTablePrefix($this->tablePrefix);
+
+        return $grammar;
     }
 
     /**
      * Execute the given callback without table prefix.
      *
      * @param  \Closure  $callback
-     * @return mixed
+     * @return void
      */
-    public function withoutTablePrefix(Closure $callback): mixed
+    public function withoutTablePrefix(Closure $callback): void
     {
         $tablePrefix = $this->getTablePrefix();
 
         $this->setTablePrefix('');
 
-        try {
-            return $callback($this);
-        } finally {
-            $this->setTablePrefix($tablePrefix);
-        }
+        $callback($this);
+
+        $this->setTablePrefix($tablePrefix);
     }
 
     /**

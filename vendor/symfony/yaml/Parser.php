@@ -1165,18 +1165,7 @@ class Parser
     private function lexUnquotedString(int &$cursor): string
     {
         $offset = $cursor;
-
-        while ($cursor < strlen($this->currentLine)) {
-            if (in_array($this->currentLine[$cursor], ['[', ']', '{', '}', ',', ':'], true)) {
-                break;
-            }
-
-            if (\in_array($this->currentLine[$cursor], [' ', "\t"], true) && '#' === ($this->currentLine[$cursor + 1] ?? '')) {
-                break;
-            }
-
-            ++$cursor;
-        }
+        $cursor += strcspn($this->currentLine, '[]{},:', $cursor);
 
         if ($cursor === $offset) {
             throw new ParseException('Malformed unquoted YAML string.');
@@ -1253,7 +1242,7 @@ class Parser
         $whitespacesConsumed = 0;
 
         do {
-            $whitespaceOnlyTokenLength = strspn($this->currentLine, " \t", $cursor);
+            $whitespaceOnlyTokenLength = strspn($this->currentLine, ' ', $cursor);
             $whitespacesConsumed += $whitespaceOnlyTokenLength;
             $cursor += $whitespaceOnlyTokenLength;
 

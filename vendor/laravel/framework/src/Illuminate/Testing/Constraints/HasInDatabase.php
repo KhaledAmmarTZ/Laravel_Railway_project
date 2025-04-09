@@ -34,6 +34,7 @@ class HasInDatabase extends Constraint
      *
      * @param  \Illuminate\Database\Connection  $database
      * @param  array<string, mixed>  $data
+     * @return void
      */
     public function __construct(Connection $database, array $data)
     {

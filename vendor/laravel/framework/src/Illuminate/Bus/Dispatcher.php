@@ -56,6 +56,7 @@ class Dispatcher implements QueueingDispatcher
      *
      * @param  \Illuminate\Contracts\Container\Container  $container
      * @param  \Closure|null  $queueResolver
+     * @return void
      */
     public function __construct(Container $container, ?Closure $queueResolver = null)
     {
@@ -73,8 +74,8 @@ class Dispatcher implements QueueingDispatcher
     public function dispatch($command)
     {
         return $this->queueResolver && $this->commandShouldBeQueued($command)
-            ? $this->dispatchToQueue($command)
-            : $this->dispatchNow($command);
+                        ? $this->dispatchToQueue($command)
+                        : $this->dispatchNow($command);
     }
 
     /**

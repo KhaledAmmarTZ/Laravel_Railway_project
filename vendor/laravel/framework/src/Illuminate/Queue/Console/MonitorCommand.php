@@ -47,6 +47,7 @@ class MonitorCommand extends Command
      *
      * @param  \Illuminate\Contracts\Queue\Factory  $manager
      * @param  \Illuminate\Contracts\Events\Dispatcher  $events
+     * @return void
      */
     public function __construct(Factory $manager, Dispatcher $events)
     {

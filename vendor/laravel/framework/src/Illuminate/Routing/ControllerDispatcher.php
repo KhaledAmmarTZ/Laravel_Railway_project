@@ -21,6 +21,7 @@ class ControllerDispatcher implements ControllerDispatcherContract
      * Create a new controller dispatcher instance.
      *
      * @param  \Illuminate\Container\Container  $container
+     * @return void
      */
     public function __construct(Container $container)
     {

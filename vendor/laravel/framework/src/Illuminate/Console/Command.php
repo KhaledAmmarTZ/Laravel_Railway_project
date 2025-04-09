@@ -86,6 +86,8 @@ class Command extends SymfonyCommand
 
     /**
      * Create a new console command instance.
+     *
+     * @return void
      */
     public function __construct()
     {
@@ -201,8 +203,8 @@ class Command extends SymfonyCommand
             ));
 
             return (int) (is_numeric($this->option('isolated'))
-                ? $this->option('isolated')
-                : $this->isolatedExitCode);
+                        ? $this->option('isolated')
+                        : $this->isolatedExitCode);
         }
 
         $method = method_exists($this, 'handle') ? 'handle' : '__invoke';

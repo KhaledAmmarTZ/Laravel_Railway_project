@@ -248,8 +248,6 @@ if (! function_exists('when')) {
      */
     function when($condition, $value, $default = null)
     {
-        $condition = $condition instanceof Closure ? $condition() : $condition;
-
         if ($condition) {
             return value($value, $condition);
         }

@@ -29,6 +29,7 @@ class MessageBag implements Jsonable, JsonSerializable, MessageBagContract, Mess
      * Create a new message bag instance.
      *
      * @param  array  $messages
+     * @return void
      */
     public function __construct(array $messages = [])
     {

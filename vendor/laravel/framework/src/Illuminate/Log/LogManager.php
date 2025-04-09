@@ -3,7 +3,7 @@
 namespace Illuminate\Log;
 
 use Closure;
-use Illuminate\Contracts\Log\ContextLogProcessor;
+use Illuminate\Log\Context\Repository as ContextRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
@@ -69,6 +69,7 @@ class LogManager implements LoggerInterface
      * Create a new Log manager instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
+     * @return void
      */
     public function __construct($app)
     {
@@ -142,7 +143,16 @@ class LogManager implements LoggerInterface
                 )->withContext($this->sharedContext);
 
                 if (method_exists($loggerWithContext->getLogger(), 'pushProcessor')) {
-                    $loggerWithContext->pushProcessor($this->app->make(ContextLogProcessor::class));
+                    $loggerWithContext->pushProcessor(function ($record) {
+                        if (! $this->app->bound(ContextRepository::class)) {
+                            return $record;
+                        }
+
+                        return $record->with(extra: [
+                            ...$record->extra,
+                            ...$this->app[ContextRepository::class]->all(),
+                        ]);
+                    });
                 }
 
                 return $this->channels[$name] = $loggerWithContext;
@@ -514,14 +524,13 @@ class LogManager implements LoggerInterface
     /**
      * Flush the log context on all currently resolved channels.
      *
-     * @param  string[]|null  $keys
      * @return $this
      */
-    public function withoutContext(?array $keys = null)
+    public function withoutContext()
     {
         foreach ($this->channels as $channel) {
             if (method_exists($channel, 'withoutContext')) {
-                $channel->withoutContext($keys);
+                $channel->withoutContext();
             }
         }
 
@@ -554,7 +563,7 @@ class LogManager implements LoggerInterface
      * Get the log connection configuration.
      *
      * @param  string  $name
-     * @return array|null
+     * @return array
      */
     protected function configurationFor($name)
     {
@@ -587,9 +596,6 @@ class LogManager implements LoggerInterface
      *
      * @param  string  $driver
      * @param  \Closure  $callback
-     *
-     * @param-closure-this  $this  $callback
-     *
      * @return $this
      */
     public function extend($driver, Closure $callback)

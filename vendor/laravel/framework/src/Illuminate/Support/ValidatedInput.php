@@ -23,6 +23,7 @@ class ValidatedInput implements ValidatedData
      * Create a new validated input container.
      *
      * @param  array  $input
+     * @return void
      */
     public function __construct(array $input)
     {

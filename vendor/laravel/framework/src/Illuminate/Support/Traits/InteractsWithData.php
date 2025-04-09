@@ -338,10 +338,9 @@ trait InteractsWithData
             return [];
         }
 
-        return $this->collect($key)
-            ->map(fn ($value) => $enumClass::tryFrom($value))
-            ->filter()
-            ->all();
+        return $this->collect($key)->map(function ($value) use ($enumClass) {
+            return $enumClass::tryFrom($value);
+        })->filter()->all();
     }
 
     /**

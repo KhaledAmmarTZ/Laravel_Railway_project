@@ -36,6 +36,7 @@ class EloquentUserProvider implements UserProvider
      *
      * @param  \Illuminate\Contracts\Hashing\Hasher  $hasher
      * @param  string  $model
+     * @return void
      */
     public function __construct(HasherContract $hasher, $model)
     {
@@ -188,8 +189,8 @@ class EloquentUserProvider implements UserProvider
     protected function newModelQuery($model = null)
     {
         $query = is_null($model)
-            ? $this->createModel()->newQuery()
-            : $model->newQuery();
+                ? $this->createModel()->newQuery()
+                : $model->newQuery();
 
         with($query, $this->queryCallback);
 

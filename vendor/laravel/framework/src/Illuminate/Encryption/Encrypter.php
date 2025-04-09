@@ -48,6 +48,7 @@ class Encrypter implements EncrypterContract, StringEncrypter
      *
      * @param  string  $key
      * @param  string  $cipher
+     * @return void
      *
      * @throws \RuntimeException
      */

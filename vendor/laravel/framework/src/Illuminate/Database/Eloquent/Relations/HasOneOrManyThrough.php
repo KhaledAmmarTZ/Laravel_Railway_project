@@ -77,6 +77,7 @@ abstract class HasOneOrManyThrough extends Relation
      * @param  string  $secondKey
      * @param  string  $localKey
      * @param  string  $secondLocalKey
+     * @return void
      */
     public function __construct(Builder $query, Model $farParent, Model $throughParent, $firstKey, $secondKey, $localKey, $secondLocalKey)
     {
@@ -97,14 +98,12 @@ abstract class HasOneOrManyThrough extends Relation
      */
     public function addConstraints()
     {
-        $query = $this->getRelationQuery();
-
         $localValue = $this->farParent[$this->localKey];
 
-        $this->performJoin($query);
+        $this->performJoin();
 
         if (static::$constraints) {
-            $query->where($this->getQualifiedFirstKeyName(), '=', $localValue);
+            $this->query->where($this->getQualifiedFirstKeyName(), '=', $localValue);
         }
     }
 
@@ -116,7 +115,7 @@ abstract class HasOneOrManyThrough extends Relation
      */
     protected function performJoin(?Builder $query = null)
     {
-        $query ??= $this->query;
+        $query = $query ?: $this->query;
 
         $farKey = $this->getQualifiedFarKeyName();
 
@@ -169,8 +168,7 @@ abstract class HasOneOrManyThrough extends Relation
         $this->whereInEager(
             $whereIn,
             $this->getQualifiedFirstKeyName(),
-            $this->getKeys($models, $this->localKey),
-            $this->getRelationQuery(),
+            $this->getKeys($models, $this->localKey)
         );
     }
 

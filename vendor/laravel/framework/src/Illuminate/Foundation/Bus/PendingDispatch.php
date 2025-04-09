@@ -31,6 +31,7 @@ class PendingDispatch
      * Create a new pending job dispatch.
      *
      * @param  mixed  $job
+     * @return void
      */
     public function __construct($job)
     {

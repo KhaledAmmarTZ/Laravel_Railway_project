@@ -38,7 +38,7 @@ trait HasEvents
      */
     public static function bootHasEvents()
     {
-        static::whenBooted(fn () => static::observe(static::resolveObserveAttributes()));
+        static::observe(static::resolveObserveAttributes());
     }
 
     /**
@@ -134,7 +134,7 @@ trait HasEvents
             [
                 'retrieved', 'creating', 'created', 'updating', 'updated',
                 'saving', 'saved', 'restoring', 'restored', 'replicating',
-                'trashed', 'deleting', 'deleted', 'forceDeleting', 'forceDeleted',
+                'deleting', 'deleted', 'forceDeleting', 'forceDeleted',
             ],
             $this->observables
         );

@@ -69,6 +69,7 @@ class Store implements Session
      * @param  \SessionHandlerInterface  $handler
      * @param  string|null  $id
      * @param  string  $serialization
+     * @return void
      */
     public function __construct($name, SessionHandlerInterface $handler, $id = null, $serialization = 'php')
     {

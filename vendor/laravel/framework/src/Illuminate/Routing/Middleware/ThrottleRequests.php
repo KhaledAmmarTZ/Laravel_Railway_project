@@ -35,6 +35,7 @@ class ThrottleRequests
      * Create a new request throttler.
      *
      * @param  \Illuminate\Cache\RateLimiter  $limiter
+     * @return void
      */
     public function __construct(RateLimiter $limiter)
     {
@@ -240,8 +241,8 @@ class ThrottleRequests
         );
 
         return is_callable($responseCallback)
-            ? new HttpResponseException($responseCallback($request, $headers))
-            : new ThrottleRequestsException('Too Many Attempts.', null, $headers);
+                    ? new HttpResponseException($responseCallback($request, $headers))
+                    : new ThrottleRequestsException('Too Many Attempts.', null, $headers);
     }
 
     /**

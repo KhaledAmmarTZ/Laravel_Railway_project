@@ -84,6 +84,7 @@ class Factory
      * Create a new factory instance.
      *
      * @param  \Illuminate\Contracts\Events\Dispatcher|null  $dispatcher
+     * @return void
      */
     public function __construct(?Dispatcher $dispatcher = null)
     {
@@ -154,41 +155,15 @@ class Factory
      */
     public static function response($body = null, $status = 200, $headers = [])
     {
-        return Create::promiseFor(
-            static::psr7Response($body, $status, $headers)
-        );
-    }
-
-    /**
-     * Create a new PSR-7 response instance for use during stubbing.
-     *
-     * @param  array|string|null  $body
-     * @param  int  $status
-     * @param  array<string, mixed>  $headers
-     * @return \GuzzleHttp\Psr7\Response
-     */
-    public static function psr7Response($body = null, $status = 200, $headers = [])
-    {
         if (is_array($body)) {
             $body = json_encode($body);
 
             $headers['Content-Type'] = 'application/json';
         }
 
-        return new Psr7Response($status, $headers, $body);
-    }
+        $response = new Psr7Response($status, $headers, $body);
 
-    /**
-     * Create a new RequestException instance for use during stubbing.
-     *
-     * @param  array|string|null  $body
-     * @param  int  $status
-     * @param  array<string, mixed>  $headers
-     * @return \Illuminate\Http\Client\RequestException
-     */
-    public static function failedRequest($body = null, $status = 200, $headers = [])
-    {
-        return new RequestException(new Response(static::psr7Response($body, $status, $headers)));
+        return Create::promiseFor($response);
     }
 
     /**
@@ -347,7 +322,7 @@ class Factory
      *
      * @return $this
      */
-    public function record()
+    protected function record()
     {
         $this->recording = true;
 

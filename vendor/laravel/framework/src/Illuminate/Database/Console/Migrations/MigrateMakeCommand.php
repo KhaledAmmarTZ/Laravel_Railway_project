@@ -51,6 +51,7 @@ class MigrateMakeCommand extends BaseCommand implements PromptsForMissingInput
      *
      * @param  \Illuminate\Database\Migrations\MigrationCreator  $creator
      * @param  \Illuminate\Support\Composer  $composer
+     * @return void
      */
     public function __construct(MigrationCreator $creator, Composer $composer)
     {
@@ -124,8 +125,8 @@ class MigrateMakeCommand extends BaseCommand implements PromptsForMissingInput
     {
         if (! is_null($targetPath = $this->input->getOption('path'))) {
             return ! $this->usingRealPath()
-                ? $this->laravel->basePath().'/'.$targetPath
-                : $targetPath;
+                            ? $this->laravel->basePath().'/'.$targetPath
+                            : $targetPath;
         }
 
         return parent::getMigrationPath();

@@ -29,6 +29,7 @@ class RateLimitedWithRedis extends RateLimited
      * Create a new middleware instance.
      *
      * @param  string  $limiterName
+     * @return void
      */
     public function __construct($limiterName)
     {

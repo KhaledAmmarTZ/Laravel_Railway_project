@@ -180,19 +180,6 @@ trait EnumeratesValues
     }
 
     /**
-     * Create a new collection by decoding a JSON string.
-     *
-     * @param  string  $json
-     * @param  int  $depth
-     * @param  int  $flags
-     * @return static<TKey, TValue>
-     */
-    public static function fromJson($json, $depth = 512, $flags = 0)
-    {
-        return new static(json_decode($json, true, $depth, $flags));
-    }
-
-    /**
      * Get the average value of a given key.
      *
      * @param  (callable(TValue): float|int)|string|null  $callback
@@ -427,7 +414,7 @@ trait EnumeratesValues
     {
         $groups = $this->mapToDictionary($callback);
 
-        return $groups->map($this->make(...));
+        return $groups->map([$this, 'make']);
     }
 
     /**
@@ -472,7 +459,7 @@ trait EnumeratesValues
         $callback = $this->valueRetriever($callback);
 
         return $this->map(fn ($value) => $callback($value))
-            ->reject(fn ($value) => is_null($value))
+            ->filter(fn ($value) => ! is_null($value))
             ->reduce(fn ($result, $value) => is_null($result) || $value < $result ? $value : $result);
     }
 
@@ -486,7 +473,7 @@ trait EnumeratesValues
     {
         $callback = $this->valueRetriever($callback);
 
-        return $this->reject(fn ($value) => is_null($value))->reduce(function ($result, $item) use ($callback) {
+        return $this->filter(fn ($value) => ! is_null($value))->reduce(function ($result, $item) use ($callback) {
             $value = $callback($item);
 
             return is_null($result) || $value > $result ? $value : $result;
@@ -517,11 +504,20 @@ trait EnumeratesValues
      */
     public function partition($key, $operator = null, $value = null)
     {
-        $callback = func_num_args() === 1
-            ? $this->valueRetriever($key)
-            : $this->operatorForWhere(...func_get_args());
+        $passed = [];
+        $failed = [];
 
-        [$passed, $failed] = Arr::partition($this->getIterator(), $callback);
+        $callback = func_num_args() === 1
+                ? $this->valueRetriever($key)
+                : $this->operatorForWhere(...func_get_args());
+
+        foreach ($this as $key => $item) {
+            if ($callback($item, $key)) {
+                $passed[$key] = $item;
+            } else {
+                $failed[$key] = $item;
+            }
+        }
 
         return new static([new static($passed), new static($failed)]);
     }
@@ -548,10 +544,8 @@ trait EnumeratesValues
     /**
      * Get the sum of the given values.
      *
-     * @template TReturnType
-     *
-     * @param  (callable(TValue): TReturnType)|string|null  $callback
-     * @return ($callback is callable ? TReturnType : mixed)
+     * @param  (callable(TValue): mixed)|string|null  $callback
+     * @return mixed
      */
     public function sum($callback = null)
     {
@@ -1006,8 +1000,8 @@ trait EnumeratesValues
     public function __toString()
     {
         return $this->escapeWhenCastingToString
-            ? e($this->toJson())
-            : $this->toJson();
+                    ? e($this->toJson())
+                    : $this->toJson();
     }
 
     /**
@@ -1059,8 +1053,11 @@ trait EnumeratesValues
      */
     protected function getArrayableItems($items)
     {
+        if (is_array($items)) {
+            return $items;
+        }
+
         return match (true) {
-            is_array($items) => $items,
             $items instanceof WeakMap => throw new InvalidArgumentException('Collections can not be created using instances of WeakMap.'),
             $items instanceof Enumerable => $items->all(),
             $items instanceof Arrayable => $items->toArray(),

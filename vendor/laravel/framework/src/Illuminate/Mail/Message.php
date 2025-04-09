@@ -38,6 +38,7 @@ class Message
      * Create a new message instance.
      *
      * @param  \Symfony\Component\Mime\Email  $message
+     * @return void
      */
     public function __construct(Email $message)
     {

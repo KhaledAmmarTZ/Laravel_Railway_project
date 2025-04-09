@@ -36,6 +36,7 @@ class AliasLoader
      * Create a new AliasLoader instance.
      *
      * @param  array  $aliases
+     * @return void
      */
     private function __construct($aliases)
     {
@@ -163,7 +164,7 @@ class AliasLoader
      */
     protected function prependToLoaderStack()
     {
-        spl_autoload_register($this->load(...), true, true);
+        spl_autoload_register([$this, 'load'], true, true);
     }
 
     /**

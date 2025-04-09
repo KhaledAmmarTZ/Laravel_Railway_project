@@ -51,6 +51,7 @@ class BroadcastManager implements FactoryContract
      * Create a new manager instance.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
      */
     public function __construct($app)
     {
