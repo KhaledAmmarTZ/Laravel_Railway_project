@@ -212,8 +212,8 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -369,8 +369,8 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -450,8 +450,8 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -605,15 +605,21 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\TrainController' => __DIR__ . '/../..' . '/app/Http/Controllers/TrainController.php',
+        'App\\Http\\Requests\\StoreAdminRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreAdminRequest.php',
         'App\\Http\\Requests\\StoreTrainRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreTrainRequest.php',
+        'App\\Http\\Requests\\UpdateAdminRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateAdminRequest.php',
         'App\\Http\\Requests\\UpdateTrainRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UpdateTrainRequest.php',
         'App\\Livewire\\Actions\\Logout' => __DIR__ . '/../..' . '/app/Livewire/Actions/Logout.php',
+        'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Compartment' => __DIR__ . '/../..' . '/app/Models/Compartment.php',
         'App\\Models\\Train' => __DIR__ . '/../..' . '/app/Models/Train.php',
+        'App\\Models\\Updown' => __DIR__ . '/../..' . '/app/Models/Updown.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Policies\\AdminPolicy' => __DIR__ . '/../..' . '/app/Policies/AdminPolicy.php',
         'App\\Policies\\TrainPolicy' => __DIR__ . '/../..' . '/app/Policies/TrainPolicy.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
         'App\\Providers\\VoltServiceProvider' => __DIR__ . '/../..' . '/app/Providers/VoltServiceProvider.php',
@@ -734,8 +740,10 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         'Cron\\HoursField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/HoursField.php',
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
+        'Database\\Factories\\AdminFactory' => __DIR__ . '/../..' . '/database/factories/AdminFactory.php',
         'Database\\Factories\\TrainFactory' => __DIR__ . '/../..' . '/database/factories/TrainFactory.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
+        'Database\\Seeders\\AdminSeeder' => __DIR__ . '/../..' . '/database/seeders/AdminSeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
         'Database\\Seeders\\TrainSeeder' => __DIR__ . '/../..' . '/database/seeders/TrainSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
