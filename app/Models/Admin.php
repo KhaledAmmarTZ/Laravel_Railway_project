@@ -13,6 +13,8 @@ class Admin extends Authenticatable
 
     protected $guard = 'admin';
 
+    protected $connection = 'mysql1';
+
     /**
      * The attributes that are mass assignable.
      *
