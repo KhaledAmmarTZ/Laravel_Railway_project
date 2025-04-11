@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
+class ComposerStaticInit727f7f8638c8a94787f84b898bf69220
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -608,6 +608,7 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         'App\\Http\\Controllers\\AdminController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\StationController' => __DIR__ . '/../..' . '/app/Http/Controllers/StationController.php',
         'App\\Http\\Controllers\\TrainController' => __DIR__ . '/../..' . '/app/Http/Controllers/TrainController.php',
         'App\\Http\\Requests\\StoreAdminRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreAdminRequest.php',
         'App\\Http\\Requests\\StoreTrainRequest' => __DIR__ . '/../..' . '/app/Http/Requests/StoreTrainRequest.php',
@@ -616,6 +617,7 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         'App\\Livewire\\Actions\\Logout' => __DIR__ . '/../..' . '/app/Livewire/Actions/Logout.php',
         'App\\Models\\Admin' => __DIR__ . '/../..' . '/app/Models/Admin.php',
         'App\\Models\\Compartment' => __DIR__ . '/../..' . '/app/Models/Compartment.php',
+        'App\\Models\\Station' => __DIR__ . '/../..' . '/app/Models/Station.php',
         'App\\Models\\Train' => __DIR__ . '/../..' . '/app/Models/Train.php',
         'App\\Models\\Updown' => __DIR__ . '/../..' . '/app/Models/Updown.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
@@ -745,6 +747,7 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
         'Database\\Seeders\\AdminSeeder' => __DIR__ . '/../..' . '/database/seeders/AdminSeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\StationSeeder' => __DIR__ . '/../..' . '/database/seeders/StationSeeder.php',
         'Database\\Seeders\\TrainSeeder' => __DIR__ . '/../..' . '/database/seeders/TrainSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
         'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
@@ -7808,9 +7811,9 @@ class ComposerStaticInitce145b7dd278df9a92db4272f3898fda
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitce145b7dd278df9a92db4272f3898fda::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitce145b7dd278df9a92db4272f3898fda::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitce145b7dd278df9a92db4272f3898fda::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit727f7f8638c8a94787f84b898bf69220::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit727f7f8638c8a94787f84b898bf69220::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit727f7f8638c8a94787f84b898bf69220::$classMap;
 
         }, null, ClassLoader::class);
     }
