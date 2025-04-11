@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\TrainController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\StationController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->middleware('guest:admin')->group(function () {
