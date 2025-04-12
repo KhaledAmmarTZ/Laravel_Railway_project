@@ -8,7 +8,10 @@
             <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
             <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
+            <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 30px; width: auto; margin-right: 10px;">
+                <span>
+                    Bangladesh Railway
+                </span>
             </a>
 
             <flux:navlist variant="outline">
