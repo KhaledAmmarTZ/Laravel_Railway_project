@@ -1,0 +1,72 @@
+<form action="{{ route('train.update', $train->trainid) }}" method="POST" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
+    <div class="card text-center" style="width: 100%; min-width: 1400px; background-color: #f8f9fa; border: 1px solid #ccc;">
+    <div class="card-header text-white" style="background-color: #005F56">
+    {{ $train->trainname }} Train
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card-body">
+            <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label me-3" style="width: 250px; text-align: right; font-weight:bold;">Train Name: {{ $train->trainname }} </label>    
+                </div>
+                @if ($train->train_image)
+                    <div class="mb-3 d-flex align-items-center">
+                        <label for="train_image" class="form-label me-3"style="width: 150px; text-align: right; font-weight:bold;">Train Image: &nbsp</label>
+                        <img src="{{ asset('storage/' . $train->train_image) }}" alt="Train Image" class="img-fluid" id="train_image_preview">
+                    </div>
+                @endif
+
+                
+
+                <div id="compartment-data-display" class="mt-3"></div>
+                <div id="updown-data-display" class="mt-3">
+                    <h3>Train Route:</h3>  
+                </div>
+                <!-- Shown Train Routes -->
+                <div class="card" style="background-color: transparent; border: none;">
+                    <div class="card-body" style="background-color: transparent; border: none;">
+                        <div class="mb-3 d-flex align-items-center">
+                            <h5 class="card-title" style="width: 150px;">Shown Train Routes:&nbsp</h5>
+                            <div id="route-display" style="background-color: transparent; border: none; width: 100%;">
+                                <div class="route-box" id="route-box-1"></div>
+                                <div class="route-box" id="route-box-2"></div>
+                                <div class="route-box" id="route-box-3"></div>
+                                <div class="route-box" id="route-box-4"></div>
+                                <div class="route-box" id="route-box-5"></div>
+                                <div class="route-box" id="route-box-6"></div>
+                                <div class="route-box" id="route-box-7"></div>
+                                <div class="route-box" id="route-box-8"></div>
+                                <div class="route-box" id="route-box-9"></div>
+                                <div class="route-box" id="route-box-10"></div>
+                                <div class="route-box" id="route-box-11"></div>
+                                <div class="route-box" id="route-box-12"></div>
+                                <div class="route-box" id="route-box-13"></div>
+                                <div class="route-box" id="route-box-14"></div>
+                                <div class="route-box" id="route-box-15"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card-body d-flex flex-column align-items-center">
+            <hr style="width: 100%; height: 0px; background-color: transparent; border: none;">
+                <button type="button" class="btn btn-add mb-2 w-75" data-toggle="modal" data-target="#trainModal">
+                    Edit Image and Name
+                </button>
+                <button type="button" class="btn btn-add mb-2 w-75" data-toggle="modal" data-target=".bd-example-modal-xl-compartment">
+                    Edit Train Compartment
+                </button>
+                <button type="button" class="btn btn-add mb-2 w-75" data-toggle="modal" data-target=".bd-example-modal-xl">
+                    Edit Train Route
+                </button>
+                <button type="submit" class="btn search-btn w-75">Update Train</button>
+            </div>
+        </div>
+    </div>
+</div>
