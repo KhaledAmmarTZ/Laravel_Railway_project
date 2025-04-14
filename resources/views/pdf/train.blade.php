@@ -161,8 +161,6 @@
                     <th>Compartment Name</th>
                     <th>Type</th>
                     <th>Total Seats</th>
-                    <th>Available Seats</th>
-                    <th>Booked Seats</th>
                     <th>Price</th>
                 </tr>
                 @foreach($train->traincompartments as $compartment)
@@ -170,8 +168,6 @@
                     <td>{{ $compartment->compartmentname }}</td>
                     <td>{{ $compartment->compartmenttype ?? 'N/A' }}</td>
                     <td>{{ $compartment->total_seats }}</td>
-                    <td>{{ $compartment->available_seats }}</td>
-                    <td>{{ $compartment->booked_seats }}</td>
                     <td>{{ $compartment->price ? '$' . number_format($compartment->price, 2) : 'N/A' }}</td>
                 </tr>
                 @endforeach

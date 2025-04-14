@@ -19,16 +19,16 @@ class PdfController extends Controller
         return $pdf->download('Train_Details_' . $train->trainname . '.pdf');
     }
     
-    public function generatePdf($id)
-    {
-        $train = Train::with(['traincompartments', 'trainupdowns'])->findOrFail($id);
-        $admin = auth()->guard('admin')->user();
+    // public function generatePdf($id)
+    // {
+    //     $train = Train::with(['traincompartments', 'trainupdowns'])->findOrFail($id);
+    //     $admin = auth()->guard('admin')->user();
 
-        $pdf = Pdf::loadView('pdf.train', compact('train'));
+    //     $pdf = Pdf::loadView('pdf.train', compact('train'));
         
-        session()->flash('success', 'Train created and PDF generated successfully!');
+    //     session()->flash('success', 'Train created and PDF generated successfully!');
 
-        return $pdf->download('Train_Details_' . $train->trainname . '.pdf');
-    }
+    //     return $pdf->download('Train_Details_' . $train->trainname . '.pdf');
+    // }
     // public function generatePdf($id) is for test only, it will be removed later
 }
