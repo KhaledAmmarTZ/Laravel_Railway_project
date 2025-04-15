@@ -13,6 +13,8 @@ class User extends Authenticatable implements MustVerifyEmail
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $connection = 'mysql1';
+
     /**
      * The attributes that are mass assignable.
      *

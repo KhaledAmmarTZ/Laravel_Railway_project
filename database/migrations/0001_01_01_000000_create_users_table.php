@@ -11,7 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        // Create users table
+        Schema::connection('mysql1')->create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
@@ -21,15 +22,19 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+        // Create password_reset_tokens table
+        Schema::connection('mysql1')->create('password_reset_tokens', function (Blueprint $table) {
+            $table->id(); // Use an auto-incrementing primary key
+            $table->string('email');
             $table->string('token');
             $table->timestamp('created_at')->nullable();
+            $table->unique(['email', 'token']); // Add unique constraint on email and token
         });
 
-        Schema::create('sessions', function (Blueprint $table) {
+        // Create sessions table (if you need it)
+        Schema::connection('mysql1')->create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->constrained('users')->index(); // Correct foreign key setup
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
@@ -42,8 +47,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
     }
 };

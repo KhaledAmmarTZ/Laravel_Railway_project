@@ -8,7 +8,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/trains', [TrainController::class, 'index'])->name('train.index');
+// Route accessible by everyone (train.index)
+Route::get('/train', [TrainController::class, 'index'])->name('train.index');
+
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
