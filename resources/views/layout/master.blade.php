@@ -82,8 +82,16 @@
             </ul>
             <div class="ml-auto d-flex align-items-center">
                 <div id="datetime" class="text-white text-center mr-3" style="font-size: 18px; font-weight: bold;"></div>
-                <a href="{{ route('login') }}" class="custom-btn mx-2">Login</a>
-                <a href="{{ route('register') }}" class="custom-btn mx-2">Register</a>
+                @if(Auth::check())
+                  @if(Auth::guard('admin')->check())
+                    <a href="{{ route('admin.dashboard') }}" class="custom-btn mx-2">Home</a>
+                  @else
+                    <a href="{{ route('dashboard') }}" class="custom-btn mx-2">Home</a>
+                  @endif
+                @else
+                  <a href="{{ route('login') }}" class="custom-btn mx-2">Login</a>
+                  <a href="{{ route('register') }}" class="custom-btn mx-2">Register</a>
+                @endif
             </div>
         </div>
     </nav>
