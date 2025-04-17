@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             TrainSeeder::class,
             AdminSeeder::class,
             StationSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

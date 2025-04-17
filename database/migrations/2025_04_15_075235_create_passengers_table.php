@@ -12,9 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('passengers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->id('pnr');
+            $table->unsignedBigInteger('user_id'); // Foreign key for users
+            $table->unsignedBigInteger('trainid');
+            $table->string('tsource');
+            $table->string('tdest');
+            $table->date('arrdate');
+            $table->time('arrtime');
+            $table->time('dptime');
+            $table->string('tclass');
+            $table->boolean('mealop');
+            $table->string('pstatus');
+            $table->float('price');
+
+            $table->foreign('trainid')->references('trainid')->on('train')->onDelete('cascade')->onUpdate('cascade');
         });
+        
     }
 
     /**

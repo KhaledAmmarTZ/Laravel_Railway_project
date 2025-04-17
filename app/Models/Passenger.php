@@ -12,12 +12,9 @@ class Passenger extends Model
     protected $primaryKey = 'pnr';   
     public $timestamps = false;
     protected $fillable = [
-        'dpdate', 'arrdate', 'arrtime', 'mealop', 'uid', 'tsource', 'tdest', 'pstatus', 'tclass', 'price'
+        'dpdate', 'arrdate', 'arrtime', 'mealop', 'user_id', 'tsource', 'tdest', 'pstatus', 'tclass', 'price'
     ];
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'uid');
-    }
+
     public function train(): BelongsTo
     {
         return $this->belongsTo(Train::class, 'trainid'); 

@@ -74,23 +74,23 @@
                     <a class="custom-btn mx-2 {{ Request::is('train') ? 'active' : '' }}" href="{{ url('/train') }}">Train</a>
                 </li>
                 <li class="nav-item">
-                    <a class="custom-btn mx-2" href="#">Ticket</a>
+                    <a class="custom-btn mx-2" href="{{route('passenger.search')}}">Ticket</a>
                 </li>
                 <li class="nav-item">
                     <a class="custom-btn mx-2" href="#">Contact Us</a>
                 </li>
             </ul>
             <div class="ml-auto d-flex align-items-center">
-    <div id="datetime" class="text-white text-center mr-3" style="font-size: 18px; font-weight: bold;"></div>
-    @if (Auth::guard('admin')->check())
-        <a href="{{ route('admin.dashboard') }}" class="custom-btn mx-2">Home</a>
-    @elseif (Auth::check())
-        <a href="{{ route('dashboard') }}" class="custom-btn mx-2">Home</a>
-    @else
-        <a href="{{ route('login') }}" class="custom-btn mx-2">Login</a>
-        <a href="{{ route('register') }}" class="custom-btn mx-2">Register</a>
-    @endif
-</div>
+                <div id="datetime" class="text-white text-center mr-3" style="font-size: 18px; font-weight: bold;"></div>
+                @if (Auth::guard('admin')->check())
+                    <a href="{{ route('admin.dashboard') }}" class="custom-btn mx-2">Home</a>
+                @elseif (Auth::check())
+                    <a href="{{ route('dashboard') }}" class="custom-btn mx-2">Home</a>
+                @else
+                    <a href="{{ route('login') }}" class="custom-btn mx-2">Login</a>
+                    <a href="{{ route('register') }}" class="custom-btn mx-2">Register</a>
+                @endif
+            </div>
         </div>
     </nav>
     
