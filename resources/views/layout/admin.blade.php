@@ -46,7 +46,7 @@
 <div class="background-image"></div>
     <div class="container-fluid">
             <nav class="navbar navbar-expand-lg navbar-light" style=" margin: 10px 17px; border-radius: 5px; background-color: #005F56; font-family: 'Sansation', sans-serif; font-weight: 700;">
-                <a class="navbar-brand text-white" href="#">
+                <a class="navbar-brand text-white" href="{{ route('home') }}" style="margin-left: 20px; font-weight: bold;">
                 <img src="{{ asset('images/Trainlogo.png') }}" alt="Logo" style="height: 30px; width: auto; margin-right: 10px;">
                 <span class="font-weight-bold">Bangladesh Railway</span>
                 </a>
