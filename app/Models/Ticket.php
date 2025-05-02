@@ -9,7 +9,7 @@ class Ticket extends Model
 {
 
 
-    protected $table = 'ticket';
+    protected $table = 'tickets';
     protected $primaryKey = 'ticid';
     public $incrementing = true;
     protected $keyType = 'int';

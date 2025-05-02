@@ -19,6 +19,6 @@ class Payment extends Model
         'pmethod',
         'ticket_count',
         'mealop',
-        'uid',
+        'user_id',
     ];
 }

@@ -17,9 +17,12 @@ class TicketController extends Controller
      */
     public function index()
     {
-        // Correct relationship query with specific database connection
-        $tickets = Ticket::whereHas('passenger', function($query) {
-            $query->where('user_id', Auth::id());
+        // Get the authenticated user's ID from the `mysql1` connection
+        $userId = DB::connection('mysql1')->table('users')->where('id', Auth::id())->value('id');
+
+        // Fetch tickets for the authenticated user
+        $tickets = Ticket::whereHas('passenger', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
         })
         ->with('passenger')
         ->get();
@@ -35,11 +38,14 @@ class TicketController extends Controller
      */
     public function show($pnr)
     {
-        // Ensure the query is on the correct connection for the user and the ticket
+        // Get the authenticated user's ID from the `mysql1` connection
+        $userId = DB::connection('mysql1')->table('users')->where('id', Auth::id())->value('id');
+
+        // Fetch the ticket for the authenticated user
         $ticket = Ticket::with('passenger')
             ->where('pnr', $pnr)
-            ->whereHas('passenger', function($query) {
-                $query->where('user_id', Auth::id());
+            ->whereHas('passenger', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
             })
             ->firstOrFail();
 
@@ -51,17 +57,20 @@ class TicketController extends Controller
      */
     public function download($pnr)
     {
-        // Ensure the query is on the correct connection for the user and the ticket
+        // Get the authenticated user's ID from the `mysql1` connection
+        $userId = DB::connection('mysql1')->table('users')->where('id', Auth::id())->value('id');
+
+        // Fetch the ticket for the authenticated user
         $ticket = Ticket::with('passenger')
             ->where('pnr', $pnr)
-            ->whereHas('passenger', function($query) {
-                $query->where('user_id', Auth::id());
+            ->whereHas('passenger', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
             })
             ->firstOrFail();
 
         // Load PDF view for ticket
         $pdf = Pdf::loadView('ticket.pdf', compact('ticket'));
-        
+
         return $pdf->download("ticket-{$ticket->pnr}.pdf");
     }
 
@@ -70,15 +79,18 @@ class TicketController extends Controller
      */
     public function cancel($pnr)
     {
-        // Ensure the query is on the correct connection for the user and the ticket
+        // Get the authenticated user's ID from the `mysql1` connection
+        $userId = DB::connection('mysql1')->table('users')->where('id', Auth::id())->value('id');
+
+        // Fetch the ticket for the authenticated user
         $ticket = Ticket::with('passenger')
             ->where('pnr', $pnr)
-            ->whereHas('passenger', function($query) {
-                $query->where('user_id', Auth::id());
+            ->whereHas('passenger', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
             })
             ->firstOrFail();
 
-        // Update passenger status to 'cancelled' on the correct database
+        // Update passenger status to 'cancelled'
         $ticket->passenger->update(['pstatus' => 'cancelled']);
 
         // Optionally update ticket status if you have that field

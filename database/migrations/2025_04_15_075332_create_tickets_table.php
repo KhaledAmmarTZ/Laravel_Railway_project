@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tickets', function (Blueprint $table) {
-            $table->id();
+            $table->id('ticid');
+            $table->unsignedBigInteger('user_id');
+            $table->string('tclass');
+            $table->string('tseat');
+            $table->string('tcompt');
             $table->timestamps();
+            
         });
     }
 

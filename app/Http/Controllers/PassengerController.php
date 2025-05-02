@@ -412,12 +412,12 @@ class PassengerController extends Controller
             if ($request->get('type') === 'tsource') {
                 $data = $query->select("stid as id", "stationname as name")
                             ->where('stationname', 'LIKE', '%' . $request->get('q') . '%')
-                            ->take(10)
+                            ->take(20)
                             ->get();
             } elseif ($request->get('type') === 'tdestination') {
                 $data = $query->select("stid as id", "stationname as name")
                             ->where('stationname', 'LIKE', '%' . $request->get('q') . '%')
-                            ->take(10)
+                            ->take(20)
                             ->get();
             }
         }

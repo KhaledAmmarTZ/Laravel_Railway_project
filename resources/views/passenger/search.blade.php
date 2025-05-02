@@ -51,7 +51,7 @@
                                        value="{{ old('arrdate') }}"
                                        required 
                                        min="{{ \Carbon\Carbon::today()->toDateString() }}"
-                                       max="{{ \Carbon\Carbon::today()->addDays(10)->toDateString() }}">
+                                       max="{{ \Carbon\Carbon::today()->addDays(20)->toDateString() }}">
                                 <span class="input-group-text">
                                     <i class="bi bi-calendar3"></i>
                                 </span>
